@@ -332,7 +332,7 @@ export const ZONES: Zone[] = [
     themeColor: 'hsl(145,35%,42%)',
     buildings: CAMPUS_BUILDINGS,
     tileMap: CAMPUS_TILE_MAP,
-    locked: true,
+    locked: false,
   },
   {
     id: 'harbor',
@@ -344,7 +344,7 @@ export const ZONES: Zone[] = [
     themeColor: 'hsl(205,50%,45%)',
     buildings: [],
     tileMap: [],
-    locked: true,
+    locked: false,
   },
   {
     id: 'industrial',
@@ -356,7 +356,7 @@ export const ZONES: Zone[] = [
     themeColor: 'hsl(220,5%,45%)',
     buildings: [],
     tileMap: [],
-    locked: true,
+    locked: false,
   },
   {
     id: 'residential',
@@ -368,7 +368,7 @@ export const ZONES: Zone[] = [
     themeColor: 'hsl(280,30%,45%)',
     buildings: [],
     tileMap: [],
-    locked: true,
+    locked: false,
   },
 ];
 
