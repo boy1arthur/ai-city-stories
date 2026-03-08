@@ -112,12 +112,15 @@ export const IsometricMap: React.FC<Props> = ({
             const buildingAds = adSlots.filter(s => s.buildingId === b.id);
             const wallWrapAd = buildingAds.find(s => s.type === 'wall_wrap' && s.brand);
             const namingAd = buildingAds.find(s => s.type === 'naming_rights' && s.brand);
+            // Find BRAND_BUILDING slot from DB for flagship skin
+            const brandSlot = zoneSlots.find(s => s.type === 'BRAND_BUILDING' && s.location.buildingId === b.id && s.ownerType === 'brand');
             return (
               <BuildingRenderer
                 key={b.id}
                 b={b}
                 namingBrand={namingAd?.brand ?? null}
                 wallWrapBrand={wallWrapAd?.brand ?? null}
+                brandSkin={brandSlot ? { name: brandSlot.ownerName || '', color: brandSlot.displayConfig?.color as string || 'hsl(38,75%,50%)' } : null}
                 onClick={() => onBuildingClick(b)}
               />
             );
