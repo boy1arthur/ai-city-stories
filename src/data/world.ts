@@ -246,7 +246,7 @@ const PLAZA_BUILDINGS: Building[] = [
     wallColor: 'hsl(25,22%,45%)', roofColor: 'hsl(15,28%,32%)', buildingType: 'shop' },
 
   { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
-    gridX: 9, gridY: 12, width: 4, height: 3,
+    gridX: 10, gridY: 12, width: 3, height: 3,
     description: '제작 & 크래프팅 공방',
     adSlots: ['wall_wrap', 'billboard', 'kiosk'],
     heightLevel: 2, roofShape: 'gear',
