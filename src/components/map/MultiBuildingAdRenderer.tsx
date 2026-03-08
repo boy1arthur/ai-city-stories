@@ -155,41 +155,33 @@ const RooftopBillboard: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }>
   const b = buildings.find(bld => ad.buildingIds.includes(bld.id));
   if (!b) return null;
   const wallH = WALL_H_UNIT * b.heightLevel;
-  const signW = Math.max(24, b.width * 2.5);
-  const signH = 14;
-  const postH = 6;
+  const signW = Math.max(32, b.width * 3);
+  const signH = 18;
+  const postH = 8;
 
   const sw = iso(b.gridX, b.gridY + b.height);
   const se = iso(b.gridX + b.width, b.gridY + b.height);
   const cx = (sw.x + se.x) / 2;
   const roofY = (sw.y + se.y) / 2 - wallH;
   const signCy = roofY - postH - signH / 2;
-  const angle = Math.atan2(se.y - sw.y, se.x - sw.x) * (180 / Math.PI);
 
   return (
     <g>
       {/* Support posts */}
-      <line x1={cx - 4} y1={roofY} x2={cx - 4} y2={roofY - postH} stroke="hsl(220,5%,45%)" strokeWidth={1.2} />
-      <line x1={cx + 4} y1={roofY} x2={cx + 4} y2={roofY - postH} stroke="hsl(220,5%,45%)" strokeWidth={1.2} />
+      <line x1={cx - 5} y1={roofY} x2={cx - 5} y2={roofY - postH} stroke="hsl(220,5%,45%)" strokeWidth={1.5} />
+      <line x1={cx + 5} y1={roofY} x2={cx + 5} y2={roofY - postH} stroke="hsl(220,5%,45%)" strokeWidth={1.5} />
 
       {/* Billboard panel */}
       <g>
-        {/* Back panel frame */}
-        <rect x={cx - signW / 2 - 1} y={signCy - signH / 2 - 1} width={signW + 2} height={signH + 2} rx={2}
-          fill="hsl(220,5%,30%)" stroke="hsl(220,5%,45%)" strokeWidth={0.8} />
-        {/* Main panel */}
+        <rect x={cx - signW / 2 - 1.5} y={signCy - signH / 2 - 1.5} width={signW + 3} height={signH + 3} rx={2}
+          fill="hsl(220,5%,30%)" stroke="hsl(220,5%,50%)" strokeWidth={1} />
         <rect x={cx - signW / 2} y={signCy - signH / 2} width={signW} height={signH} rx={1.5}
           fill={ad.brandColor} />
 
-        {/* Brand initial */}
-        <text x={cx} y={signCy - 2} textAnchor="middle" fontSize={6}
+        <text x={cx} y={signCy - 1} textAnchor="middle" fontSize={8}
           fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-        {/* Brand name */}
-        <text x={cx} y={signCy + 3} textAnchor="middle" fontSize={3.5}
-          fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="0.8">{ad.brandName}</text>
-        {/* Tagline */}
-        <text x={cx} y={signCy + 6} textAnchor="middle" fontSize={2.5}
-          fill="hsl(0,0%,100%)" fillOpacity={0.7} fontFamily="Inter" fontWeight={400} fontStyle="italic">{ad.tagline}</text>
+        <text x={cx} y={signCy + 5} textAnchor="middle" fontSize={5}
+          fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="1">{ad.brandName}</text>
       </g>
     </g>
   );
