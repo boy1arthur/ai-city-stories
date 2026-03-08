@@ -217,8 +217,6 @@ const PLAZA_BUILDINGS: Building[] = [
     heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
 
-  // ─── CENTER: (fountain/monument rendered as ground decoration, not a building) ───
-
   // ─── SW QUADRANT ───
   { id: 'library', name: 'Library', emoji: '📚', color: 'primary',
     gridX: 4, gridY: 20, width: 8, height: 6,
@@ -234,8 +232,15 @@ const PLAZA_BUILDINGS: Building[] = [
     heightLevel: 1, roofShape: 'gabled',
     wallColor: 'hsl(25,22%,45%)', roofColor: 'hsl(15,28%,32%)', buildingType: 'shop' },
 
+  { id: 'food_market', name: 'Food Market', emoji: '🍜', color: 'accent',
+    gridX: 2, gridY: 30, width: 6, height: 4,
+    description: '스트리트 푸드 & 로컬 맛집 거리',
+    adSlots: ['kiosk', 'billboard', 'bus_stop'],
+    heightLevel: 1, roofShape: 'flat',
+    wallColor: 'hsl(15,25%,48%)', roofColor: 'hsl(10,20%,38%)', buildingType: 'shop' },
+
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
-    gridX: 2, gridY: 32, width: 12, height: 4,
+    gridX: 8, gridY: 32, width: 6, height: 4,
     description: '힐링 & 명상 정원',
     adSlots: ['kiosk', 'bus_stop'],
     heightLevel: 1, roofShape: 'garden',
@@ -248,6 +253,13 @@ const PLAZA_BUILDINGS: Building[] = [
     adSlots: ['kiosk', 'billboard'],
     heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(38,20%,45%)', roofColor: 'hsl(38,15%,38%)', buildingType: 'shop' },
+
+  { id: 'museum', name: 'Museum', emoji: '🏛️', color: 'secondary',
+    gridX: 24, gridY: 24, width: 6, height: 6,
+    description: '브랜드 역사관 & 문화 전시 공간',
+    adSlots: ['naming_rights', 'wall_wrap', 'billboard'],
+    heightLevel: 2, roofShape: 'dome',
+    wallColor: 'hsl(30,15%,55%)', roofColor: 'hsl(25,12%,42%)', buildingType: 'civic' },
 
   { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
     gridX: 20, gridY: 26, width: 6, height: 6,
@@ -262,6 +274,13 @@ const PLAZA_BUILDINGS: Building[] = [
     adSlots: ['naming_rights', 'kiosk'],
     heightLevel: 3, roofShape: 'dome',
     wallColor: 'hsl(215,10%,50%)', roofColor: 'hsl(215,8%,40%)', buildingType: 'tower' },
+
+  { id: 'arcade', name: 'Arcade', emoji: '🎮', color: 'accent',
+    gridX: 28, gridY: 32, width: 4, height: 4,
+    description: '게임 아케이드 & 에이전트 놀이터',
+    adSlots: ['wall_wrap', 'kiosk', 'billboard'],
+    heightLevel: 1, roofShape: 'flat',
+    wallColor: 'hsl(280,15%,48%)', roofColor: 'hsl(280,12%,38%)', buildingType: 'shop' },
 ];
 
 // ===== CAMPUS DISTRICT =====
