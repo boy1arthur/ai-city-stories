@@ -36,13 +36,14 @@ interface Props {
 }
 
 // ===== GROUND LAYER - Filled diamond tiles =====
-const GroundLayer: React.FC = React.memo(() => {
+const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
   const tiles: React.ReactNode[] = [];
+  const GRID = zone.gridSize;
 
   // Render back-to-front (Y-sort)
   for (let gy = 0; gy < GRID; gy++) {
     for (let gx = 0; gx < GRID; gx++) {
-      const type = getTileType(gx, gy);
+      const type = getTileTypeFromMap(zone.tileMap, gx, gy, GRID);
       const colors = TILE_COLORS[type];
       const pos = iso(gx, gy);
 
