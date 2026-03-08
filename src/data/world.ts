@@ -310,7 +310,7 @@ export const ZONES: Zone[] = [
     name: 'Plaza District',
     emoji: '🏛️',
     description: '중심 상업 지구 — 프리미엄 광고 슬롯 집중 구역',
-    gridSize: 18,
+    gridSize: 36,
     theme: 'commercial',
     themeColor: 'hsl(38,75%,50%)',
     buildings: PLAZA_BUILDINGS,
