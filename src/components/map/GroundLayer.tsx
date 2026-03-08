@@ -74,7 +74,7 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
       if (type === 'road') {
         const isIntersection =
           isRoadCenterInZone(zone.tileMap, gx, gy, GRID) &&
-          (gy === 8) && (gx === 9);
+          (gy === 8) && (gx === 8);
         if (isIntersection) {
           tiles.push(
             <g key={`cw_${gx}_${gy}`}>
