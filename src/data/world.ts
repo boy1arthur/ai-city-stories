@@ -279,7 +279,7 @@ const PLAZA_BUILDINGS: Building[] = [
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
     gridX: 18, gridY: 24, width: 6, height: 6,
     description: '힐링 & 명상 정원',
-    adSlots: ['kiosk', 'bus_stop'],
+    adSlots: ['bus_stop'],
     heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,20%,35%)', buildingType: 'park_structure' },
 
