@@ -117,6 +117,14 @@ const Index = () => {
       </div>
 
       <WorldLog logs={worldLog} isPaused={isPaused} onTogglePause={() => setIsPaused(!isPaused)} />
+
+      {selectedAgent && (
+        <AgentProfilePanel
+          agent={selectedAgent}
+          worldLog={worldLog}
+          onClose={() => setSelectedAgent(null)}
+        />
+      )}
     </div>
   );
 };
