@@ -69,6 +69,23 @@ export const FullCityMap: React.FC<Props> = ({
   const dragStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
 
+  // Auto-zoom when autoFocusZoneId changes from parent (e.g. TopBar zone click)
+  const [lastAutoFocus, setLastAutoFocus] = useState<string | null>(null);
+  useEffect(() => {
+    if (autoFocusZoneId && autoFocusZoneId !== lastAutoFocus) {
+      setLastAutoFocus(autoFocusZoneId);
+      // Trigger zoom
+      const offset = ZONE_GRID_OFFSETS[autoFocusZoneId];
+      if (!offset) return;
+      const isoOff = getIsoOffset(offset.gx + 18, offset.gy + 18);
+      const targetX = -(500 + isoOff.x) * 0.7 + window.innerWidth / 2;
+      const targetY = -(40 + isoOff.y) * 0.7 + window.innerHeight / 2;
+      setPan({ x: targetX, y: targetY });
+      setZoom(0.7);
+      onZoneFocus(autoFocusZoneId);
+    }
+  }, [autoFocusZoneId]); // eslint-disable-line
+
   // No RAF loop — rendering is driven by tick/state changes from parent
 
   // Pan/zoom handlers
