@@ -280,7 +280,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 26, gridY: 18, width: 6, height: 6,
     description: '게임 아케이드 & 에이전트 놀이터',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
-    heightLevel: 1, roofShape: 'flat',
+    heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(280,15%,48%)', roofColor: 'hsl(280,12%,38%)', buildingType: 'shop' },
 
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
