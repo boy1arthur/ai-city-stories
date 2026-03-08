@@ -59,7 +59,7 @@ const LOD_FULL_THRESHOLD = 0.45; // Above this zoom, focused zone gets full deta
 
 export const FullCityMap: React.FC<Props> = ({
   zones, zoneDataMap, energyStatus,
-  focusedZoneId,
+  focusedZoneId, autoFocusZoneId,
   onBuildingClick, onAgentClick, onSlotClick, onAdSlotClick,
   onZoneFocus,
 }) => {
