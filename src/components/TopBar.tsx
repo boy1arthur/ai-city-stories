@@ -1,5 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Zone } from '@/data/world';
+import type { User } from '@supabase/supabase-js';
 
 interface Props {
   tick: number;
@@ -13,6 +15,8 @@ interface Props {
   energyBar?: React.ReactNode;
   isFullView?: boolean;
   onToggleFullView?: () => void;
+  user?: User | null;
+  onSignOut?: () => void;
 }
 
 export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard, onHome, energyBar, isFullView, onToggleFullView }) => {
