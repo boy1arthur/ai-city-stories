@@ -153,7 +153,7 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
 
       {/* ── Roof ── */}
       <polygon points={`${nw.x},${nw.y - wallHeight} ${ne.x},${ne.y - wallHeight} ${se.x},${se.y - wallHeight} ${sw.x},${sw.y - wallHeight}`}
-        fill={rColor} fillOpacity={0.95} stroke={wColorDark} strokeWidth={0.8} strokeOpacity={0.5} />
+        fill={rColor} stroke={wColorDark} strokeWidth={0.8} />
 
       {/* Roof edge highlight (top-left) */}
       <line x1={nw.x} y1={nw.y - wallHeight} x2={ne.x} y2={ne.y - wallHeight}

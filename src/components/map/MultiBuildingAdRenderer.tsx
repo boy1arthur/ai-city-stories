@@ -94,19 +94,23 @@ const WallPaintedAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = 
           fill={ad.brandColor}
           stroke={ad.brandColor} strokeWidth={0.7} />
 
-        {/* Brand initial */}
-        <text x={mx - panelW / 2 + panelH * 0.6} y={my + panelH * 0.15}
-          textAnchor="middle" fontSize={panelH * 0.5}
-          fill="hsl(0,0%,100%)"
-          fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
+        {/* Brand initial — flip text so it reads correctly */}
+        <g transform={`translate(${mx - panelW / 2 + panelH * 0.6}, ${my + panelH * 0.15}) scale(-1,1)`}>
+          <text x={0} y={0}
+            textAnchor="middle" fontSize={panelH * 0.5}
+            fill="hsl(0,0%,100%)"
+            fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
+        </g>
 
-        {/* Brand name */}
-        <text x={mx + 4} y={my + panelH * 0.12}
-          textAnchor="middle" fontSize={panelH * 0.3}
-          fill="hsl(0,0%,100%)"
-          fontFamily="Inter" fontWeight={800} letterSpacing="0.8">
-          {ad.brandName}
-        </text>
+        {/* Brand name — flip text */}
+        <g transform={`translate(${mx + 4}, ${my + panelH * 0.12}) scale(-1,1)`}>
+          <text x={0} y={0}
+            textAnchor="middle" fontSize={panelH * 0.3}
+            fill="hsl(0,0%,100%)"
+            fontFamily="Inter" fontWeight={800} letterSpacing="0.8">
+            {ad.brandName}
+          </text>
+        </g>
       </g>
     );
   }
