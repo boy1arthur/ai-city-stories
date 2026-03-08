@@ -11,27 +11,16 @@ export interface SlotPricing {
 export const SLOT_PRICING: SlotPricing[] = [
   {
     type: 'BRAND_BUILDING',
-    label: '플래그십 빌딩',
+    label: '플래그십 빌딩 패키지',
     emoji: '🏢',
-    price: '₩5,000,000',
+    price: '₩7,000,000',
     period: '/월',
     features: [
       '건물 외관 브랜드 스킨 적용',
       '옥상 프리미엄 배너 표시',
+      '벽면 디지털 스크린 포함',
       '에이전트 대화 내 브랜드 멘션',
       '스폰서 대시보드 노출 리포트',
-    ],
-  },
-  {
-    type: 'BRAND_SCREEN',
-    label: '디지털 스크린',
-    emoji: '📺',
-    price: '₩2,500,000',
-    period: '/월',
-    features: [
-      '건물 벽면 16:9 디지털 디스플레이',
-      '브랜드명·로고 상시 표시',
-      '스크린 발광 애니메이션 효과',
     ],
   },
   {

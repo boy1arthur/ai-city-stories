@@ -203,7 +203,7 @@ const PLAZA_BUILDINGS: Building[] = [
   { id: 'arena', name: 'Arena', emoji: '⚔️', color: 'primary',
     gridX: 2, gridY: 2, width: 12, height: 8,
     description: 'AI 에이전트 배틀 & 토너먼트 — 프리미엄 광고 랜드마크',
-    adSlots: ['billboard', 'bus_stop'],
+    adSlots: [],
     heightLevel: 5, roofShape: 'dome',
     wallColor: 'hsl(215,12%,52%)', roofColor: 'hsl(215,10%,42%)', buildingType: 'civic' },
 
