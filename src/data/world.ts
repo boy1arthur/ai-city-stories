@@ -153,28 +153,32 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 // Legend:  R=road(ped spine)  S=sidewalk  P=plaza_stone  K=park  G=grass  D=dirt
 // Buildings occupy sidewalk tiles. Single-tile pedestrian spines: col 9 (vert), row 8 (horiz).
 // Core: rows 2-13, cols 1-16  |  Outskirts: row 0-1, 14-17 & col 0, 17
-const PLAZA_TILE_MAP = [
-  // A=Arena E=FeedTower O=Oracle L=Lab C=Cafe B=Library N=News T=Tavern H=Workshop V=Observatory
-  // col: 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
-  'KKGSSSSSRSSSSGKKK', // 0
-  'KGSSSSSSRSSSSSKKK', // 1
-  'SSAAAASSREEESOOSSS', // 2  Arena(2-5,2-5) Feed(9-11,2-4) Oracle(13-14,2-4)
-  'SSAAAASSREEESOOSSS', // 3
-  'SSAAAASSREEESOOSSS', // 4
-  'SSAAAASSRLLLSSPPS', // 5  Lab(9-11,5-7)
-  'SSCCCSSRRLLLSSPPS', // 6  Cafe(2-4,6-7)
-  'SSCCCSSRRLLLSSPPS', // 7
-  'RRRRRRRRRRRRRRRRRR', // 8  ── boulevard ──
-  'SSBBBBSRRNNNSPPSS', // 9  Library(2-5,9-11) News(9-11,9-10)
-  'SSBBBBSRRNNNSPPSS', // 10
-  'SSBBBBSRRSSSSSPSS', // 11
-  'STTTSSKKSHHHHSPSS', // 12 Tavern(1-3,12-13) Workshop(9-12,12-14)
-  'STTTSSKKSHHHHSSSS', // 13
-  'SKKKKKKKSHHHHSSSS', // 14 Garden(1-7,14-16)
-  'SKKKKKKKSVVVSSKKK', // 15 Observatory(9-11,15-16)
-  'SKKKKKKKSVVVSSKKK', // 16
-  'GKKKKKKKSSSSSSKKK', // 17
-];
+const PLAZA_TILE_MAP: string[] = (() => {
+  // A=Arena E=Feed O=Oracle L=Lab C=Cafe B=Library N=News T=Tavern H=Workshop V=Obs
+  // Grid: 18x18. Vert spine col 8. Horiz boulevard row 8.
+  const rows = [
+    'KKGSSSSSRSSSSGKKKK', // 0  -- will be trimmed to 18
+    'KGSSSSSSRSSSSSKKSS',
+    'SSAAAASSREEESOOSSKK',
+    'SSAAAASSREEESOOSSKK',
+    'SSAAAASSREEESOOSSKK',
+    'SSAAAASSRLLLSSPPSKK',
+    'SSCCCSSRRLLLSSPPSKK',
+    'SSCCCSSRRLLLSSPPSKK',
+    'RRRRRRRRRRRRRRRRRR',
+    'SSBBBBSRRNNNSPPSSS',
+    'SSBBBBSRRNNNSPPSSS',
+    'SSBBBBSRRSSSSPPSKK',
+    'STTTSSKKSHHHHSPSSS',
+    'STTTSSKKSHHHHSSSSS',
+    'SKKKKKKKSHHHSSSSSS',
+    'SKKKKKKKSVVVSSSKKK',
+    'SKKKKKKKSVVVSSSKKK',
+    'GKKKKKKKSSSSSSKKKG',
+  ];
+  // Ensure exactly 18 chars per row
+  return rows.map(r => r.slice(0, 18).padEnd(18, 'G'));
+})();
 
 const PLAZA_BUILDINGS: Building[] = [
   // ─── CORE NORTH: Entertainment + Media ───
