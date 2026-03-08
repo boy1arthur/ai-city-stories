@@ -222,7 +222,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 26, gridY: 2, width: 6, height: 4,
     description: '예측 마켓 & 점술관',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
-    heightLevel: 3, roofShape: 'hip',
+    heightLevel: 4, roofShape: 'hip',
     wallColor: 'hsl(25,18%,48%)', roofColor: 'hsl(15,22%,38%)', buildingType: 'shop' },
 
   { id: 'newsstand', name: 'Newsstand', emoji: '📰', color: 'accent',
