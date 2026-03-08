@@ -44,28 +44,28 @@ const WallPaintedAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = 
     const wallH = WALL_H_UNIT * minH;
 
     const mx = (sw.x + se.x) / 2;
-    const my = (sw.y + se.y) / 2 - wallH * 0.5;
+    const my = (sw.y + se.y) / 2 - wallH * 0.65;
     const panelW = Math.hypot(se.x - sw.x, se.y - sw.y) * 0.8;
-    const panelH = wallH * 0.55;
+    const panelH = wallH * 0.45;
 
     return (
       <g transform={`rotate(${SOUTH_ANGLE}, ${mx}, ${my})`}>
         {/* Wall panel tint */}
         <rect x={mx - panelW / 2} y={my - panelH / 2}
           width={panelW} height={panelH} rx={2}
-          fill={ad.brandColor} fillOpacity={0.12}
-          stroke={ad.brandColor} strokeWidth={0.5} strokeOpacity={0.25} />
+          fill={ad.brandColor} fillOpacity={0.3}
+          stroke={ad.brandColor} strokeWidth={0.7} strokeOpacity={0.4} />
 
         {/* Brand initial */}
         <text x={mx - panelW / 2 + panelH * 0.6} y={my + panelH * 0.15}
           textAnchor="middle" fontSize={panelH * 0.55}
-          fill={ad.brandColor} fillOpacity={0.6}
+          fill={ad.brandColor} fillOpacity={0.85}
           fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
 
         {/* Brand name */}
         <text x={mx + 4} y={my + panelH * 0.12}
           textAnchor="middle" fontSize={panelH * 0.32}
-          fill={ad.brandColor} fillOpacity={0.7}
+          fill={ad.brandColor} fillOpacity={0.9}
           fontFamily="Inter" fontWeight={800} letterSpacing="1">
           {ad.brandName}
         </text>
@@ -82,28 +82,28 @@ const WallPaintedAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = 
     const wallH = WALL_H_UNIT * minH;
 
     const mx = (ne.x + se.x) / 2;
-    const my = (ne.y + se.y) / 2 - wallH * 0.5;
+    const my = (ne.y + se.y) / 2 - wallH * 0.65;
     const panelW = Math.hypot(se.x - ne.x, se.y - ne.y) * 0.75;
-    const panelH = wallH * 0.5;
+    const panelH = wallH * 0.4;
 
     return (
       <g transform={`rotate(${EAST_ANGLE}, ${mx}, ${my})`}>
         {/* Wall panel tint */}
         <rect x={mx - panelW / 2} y={my - panelH / 2}
           width={panelW} height={panelH} rx={2}
-          fill={ad.brandColor} fillOpacity={0.1}
-          stroke={ad.brandColor} strokeWidth={0.5} strokeOpacity={0.2} />
+          fill={ad.brandColor} fillOpacity={0.25}
+          stroke={ad.brandColor} strokeWidth={0.7} strokeOpacity={0.35} />
 
         {/* Brand initial */}
         <text x={mx - panelW / 2 + panelH * 0.6} y={my + panelH * 0.15}
           textAnchor="middle" fontSize={panelH * 0.5}
-          fill={ad.brandColor} fillOpacity={0.5}
+          fill={ad.brandColor} fillOpacity={0.8}
           fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
 
         {/* Brand name */}
         <text x={mx + 4} y={my + panelH * 0.12}
           textAnchor="middle" fontSize={panelH * 0.3}
-          fill={ad.brandColor} fillOpacity={0.6}
+          fill={ad.brandColor} fillOpacity={0.85}
           fontFamily="Inter" fontWeight={800} letterSpacing="0.8">
           {ad.brandName}
         </text>
