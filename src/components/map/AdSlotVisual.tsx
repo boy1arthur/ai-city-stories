@@ -1,7 +1,12 @@
 import React from 'react';
 import type { Building, AdSlot } from '@/data/world';
-import { iso, WALL_H_UNIT } from './constants';
+import { iso, TILE_W, TILE_H, WALL_H_UNIT } from './constants';
 import { VIRTUAL_BRANDS } from '@/data/demoSeed';
+
+// Isometric angle for south wall baseline (radians)
+const SOUTH_ANGLE_DEG = Math.atan2(TILE_H, TILE_W) * (180 / Math.PI); // ≈ 26.57°
+// Isometric angle for east wall baseline
+const EAST_ANGLE_DEG = Math.atan2(TILE_H, -TILE_W) * (180 / Math.PI); // ≈ -26.57°
 
 interface Props {
   building: Building;
