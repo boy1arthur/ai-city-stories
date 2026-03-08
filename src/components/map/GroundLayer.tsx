@@ -3,10 +3,48 @@ import type { Zone } from '@/data/world';
 import { getTileTypeFromMap, isRoadCenterInZone, getZonePalette } from '@/data/world';
 import { iso, diamond, TILE_W, TILE_H } from './constants';
 
+// Street furniture positions (grid coords) for Plaza district
+const LAMPPOST_POSITIONS = [
+  // Along north road (row 5) at key spots
+  { gx: 0, gy: 5 }, { gx: 5, gy: 5 }, { gx: 8, gy: 5 }, { gx: 11, gy: 5 }, { gx: 16, gy: 5 },
+  // Along south road (row 10)
+  { gx: 0, gy: 10 }, { gx: 5, gy: 10 }, { gx: 8, gy: 10 }, { gx: 11, gy: 10 }, { gx: 16, gy: 10 },
+  // Along west road (col 6) between intersections
+  { gx: 6, gy: 2 }, { gx: 6, gy: 8 }, { gx: 6, gy: 13 }, { gx: 6, gy: 16 },
+  // Along east road (col 13)
+  { gx: 13, gy: 2 }, { gx: 13, gy: 8 }, { gx: 13, gy: 13 }, { gx: 13, gy: 16 },
+];
+
+const BENCH_POSITIONS = [
+  // Near Plaza
+  { gx: 8, gy: 5, dir: 'h' as const }, { gx: 11, gy: 10, dir: 'h' as const },
+  // Near Garden
+  { gx: 8, gy: 11, dir: 'h' as const }, { gx: 11, gy: 11, dir: 'h' as const },
+  // Near Library
+  { gx: 5, gy: 7, dir: 'v' as const },
+  // Near Arena
+  { gx: 5, gy: 2, dir: 'v' as const },
+  // Near Tavern
+  { gx: 4, gy: 12, dir: 'v' as const },
+];
+
+const PLANTER_POSITIONS = [
+  // Plaza perimeter
+  { gx: 8, gy: 6 }, { gx: 11, gy: 6 }, { gx: 8, gy: 9 }, { gx: 11, gy: 9 },
+  // Road corners
+  { gx: 5, gy: 4 }, { gx: 5, gy: 11 }, { gx: 16, gy: 4 }, { gx: 16, gy: 11 },
+];
+
+const TRASHCAN_POSITIONS = [
+  { gx: 0, gy: 5 }, { gx: 17, gy: 5 }, { gx: 0, gy: 10 }, { gx: 17, gy: 10 },
+  { gx: 5, gy: 0 }, { gx: 16, gy: 0 }, { gx: 5, gy: 17 },
+];
+
 export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
   const tiles: React.ReactNode[] = [];
   const GRID = zone.gridSize;
   const palette = getZonePalette(zone.id);
+  const isPlaza = zone.id === 'plaza';
 
   for (let gy = 0; gy < GRID; gy++) {
     for (let gx = 0; gx < GRID; gx++) {
@@ -99,7 +137,6 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
 
       // Sidewalk curb detail
       if (type === 'sidewalk') {
-        // Check if adjacent to road for curb effect
         const leftType = getTileTypeFromMap(zone.tileMap, gx - 1, gy, GRID);
         const topType = getTileTypeFromMap(zone.tileMap, gx, gy - 1, GRID);
         if (leftType === 'road') {
@@ -121,6 +158,83 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
       }
     }
   }
+
+  // ─── Street furniture (Plaza district only) ───
+  if (isPlaza) {
+    // Lampposts
+    for (const lp of LAMPPOST_POSITIONS) {
+      if (lp.gx >= GRID || lp.gy >= GRID) continue;
+      const pos = iso(lp.gx, lp.gy);
+      tiles.push(
+        <g key={`lamp_${lp.gx}_${lp.gy}`}>
+          {/* Pole */}
+          <line x1={pos.x} y1={pos.y} x2={pos.x} y2={pos.y - 16}
+            stroke="hsl(215,8%,42%)" strokeWidth={1.2} strokeLinecap="round" />
+          {/* Arm */}
+          <line x1={pos.x} y1={pos.y - 15} x2={pos.x + 4} y2={pos.y - 16}
+            stroke="hsl(215,8%,42%)" strokeWidth={0.8} />
+          {/* Light */}
+          <circle cx={pos.x + 4} cy={pos.y - 17} r={2} fill="hsl(45,70%,65%)" fillOpacity={0.6}>
+            <animate attributeName="fillOpacity" values="0.4;0.7;0.4" dur="4s" repeatCount="indefinite" />
+          </circle>
+          {/* Light glow */}
+          <circle cx={pos.x + 4} cy={pos.y - 17} r={5} fill="hsl(45,60%,70%)" fillOpacity={0.1} />
+        </g>
+      );
+    }
+
+    // Benches
+    for (const bench of BENCH_POSITIONS) {
+      if (bench.gx >= GRID || bench.gy >= GRID) continue;
+      const pos = iso(bench.gx, bench.gy);
+      tiles.push(
+        <g key={`bench_${bench.gx}_${bench.gy}`}>
+          {/* Seat */}
+          <rect x={pos.x - 5} y={pos.y - 2} width={10} height={2} rx={0.5}
+            fill="hsl(25,30%,35%)" fillOpacity={0.7} />
+          {/* Back */}
+          <rect x={pos.x - 5} y={pos.y - 4.5} width={10} height={1.5} rx={0.5}
+            fill="hsl(25,25%,30%)" fillOpacity={0.5} />
+          {/* Legs */}
+          <line x1={pos.x - 4} y1={pos.y - 1} x2={pos.x - 4} y2={pos.y + 1}
+            stroke="hsl(215,6%,35%)" strokeWidth={0.8} />
+          <line x1={pos.x + 4} y1={pos.y - 1} x2={pos.x + 4} y2={pos.y + 1}
+            stroke="hsl(215,6%,35%)" strokeWidth={0.8} />
+        </g>
+      );
+    }
+
+    // Planters (small flower pots / green boxes)
+    for (const pl of PLANTER_POSITIONS) {
+      if (pl.gx >= GRID || pl.gy >= GRID) continue;
+      const pos = iso(pl.gx, pl.gy);
+      tiles.push(
+        <g key={`planter_${pl.gx}_${pl.gy}`}>
+          {/* Pot */}
+          <rect x={pos.x - 3} y={pos.y - 3} width={6} height={4} rx={1}
+            fill="hsl(25,15%,40%)" fillOpacity={0.6} />
+          {/* Plant */}
+          <circle cx={pos.x} cy={pos.y - 5} r={3} fill="hsl(130,30%,40%)" fillOpacity={0.7} />
+          <circle cx={pos.x - 1.5} cy={pos.y - 6.5} r={2} fill="hsl(135,35%,45%)" fillOpacity={0.6} />
+        </g>
+      );
+    }
+
+    // Trash cans
+    for (const tc of TRASHCAN_POSITIONS) {
+      if (tc.gx >= GRID || tc.gy >= GRID) continue;
+      const pos = iso(tc.gx, tc.gy);
+      tiles.push(
+        <g key={`trash_${tc.gx}_${tc.gy}`}>
+          <rect x={pos.x - 2} y={pos.y - 5} width={4} height={5} rx={0.5}
+            fill="hsl(215,6%,38%)" fillOpacity={0.5} />
+          <rect x={pos.x - 2.5} y={pos.y - 6} width={5} height={1.5} rx={0.5}
+            fill="hsl(215,6%,42%)" fillOpacity={0.5} />
+        </g>
+      );
+    }
+  }
+
   return <g>{tiles}</g>;
 });
 GroundLayer.displayName = 'GroundLayer';
