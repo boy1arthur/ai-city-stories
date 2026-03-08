@@ -144,9 +144,15 @@ export function useWorldSimulation() {
   const [adReactions, setAdReactions] = useState<AdReaction[]>([]);
   const [cityEnergy, setCityEnergy] = useState<CityEnergyState>(initCityEnergy);
   const [worldEvents, setWorldEvents] = useState<WorldEvent[]>([]);
+  const [aiConversationLog, setAiConversationLog] = useState<AIConversation[]>([]);
   const prevLeaderRef = useRef<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const agentVisualsRef = useRef<Map<string, AgentVisualState>>(new Map());
+
+  const { generateConversation, shouldTrigger, getNearbyBrands } = useAgentChat({
+    cooldownTicks: 20,
+    enabled: true,
+  });
 
   const currentZone = getZoneById(currentZoneId)!;
 
