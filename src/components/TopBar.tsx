@@ -15,7 +15,7 @@ interface Props {
   onToggleFullView?: () => void;
 }
 
-export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard, onHome, energyBar }) => {
+export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard, onHome, energyBar, isFullView, onToggleFullView }) => {
   return (
     <header className="h-12 bg-card/90 backdrop-blur-md border-b border-border flex items-center justify-between px-4 z-30">
       <div className="flex items-center gap-3">
