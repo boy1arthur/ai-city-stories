@@ -91,8 +91,8 @@ const WallPaintedAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = 
         {/* Wall panel tint */}
         <rect x={mx - panelW / 2} y={my - panelH / 2}
           width={panelW} height={panelH} rx={2}
-          fill={ad.brandColor} fillOpacity={0.25}
-          stroke={ad.brandColor} strokeWidth={0.7} strokeOpacity={0.35} />
+          fill={ad.brandColor}
+          stroke={ad.brandColor} strokeWidth={0.7} />
 
         {/* Brand initial */}
         <text x={mx - panelW / 2 + panelH * 0.6} y={my + panelH * 0.15}
