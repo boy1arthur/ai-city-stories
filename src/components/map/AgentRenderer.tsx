@@ -97,6 +97,7 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
 
   if (!building || !animPos) return null;
   const pos = animPos;
+  const isInside = !isMoving; // Agent is inside building when not walking
 
   // Walk cycle: gentle swing for legs and arms (~1 step per 600ms)
   const walkT = isMoving ? Math.sin((walkPhase / 600) * Math.PI * 2) : 0;
