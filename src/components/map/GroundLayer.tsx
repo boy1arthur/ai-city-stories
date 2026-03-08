@@ -3,15 +3,15 @@ import type { Zone } from '@/data/world';
 import { getTileTypeFromMap, isRoadCenterInZone, getZonePalette } from '@/data/world';
 import { iso, diamond, TILE_W, TILE_H } from './constants';
 
-// Street furniture positions for Plaza district (aligned to corrected layout)
+// Street furniture positions for Plaza district (with road buffer)
 const LAMPPOST_POSITIONS = [
   { gx: 1, gy: 8 }, { gx: 5, gy: 8 }, { gx: 12, gy: 8 }, { gx: 16, gy: 8 },
   { gx: 8, gy: 1 }, { gx: 8, gy: 5 }, { gx: 8, gy: 11 }, { gx: 8, gy: 15 },
-  { gx: 6, gy: 3 }, { gx: 6, gy: 10 }, { gx: 13, gy: 11 },
+  { gx: 6, gy: 3 }, { gx: 6, gy: 10 }, { gx: 14, gy: 11 },
 ];
 
 const BENCH_POSITIONS = [
-  { gx: 7, gy: 6, dir: 'h' as const },
+  { gx: 7, gy: 4, dir: 'h' as const },
   { gx: 7, gy: 10, dir: 'h' as const },
   { gx: 13, gy: 9, dir: 'v' as const },
   { gx: 3, gy: 1, dir: 'h' as const },
@@ -21,7 +21,7 @@ const BENCH_POSITIONS = [
 
 const PLANTER_POSITIONS = [
   { gx: 7, gy: 3 }, { gx: 7, gy: 10 },
-  { gx: 13, gy: 11 }, { gx: 1, gy: 15 }, { gx: 8, gy: 17 },
+  { gx: 14, gy: 11 }, { gx: 5, gy: 14 }, { gx: 7, gy: 17 },
 ];
 
 const TRASHCAN_POSITIONS = [

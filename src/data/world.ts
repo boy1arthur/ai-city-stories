@@ -253,7 +253,7 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── OUTSKIRTS ───
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
-    gridX: 1, gridY: 14, width: 7, height: 3,
+    gridX: 1, gridY: 15, width: 6, height: 2,
     description: '힐링 & 명상 정원',
     adSlots: ['kiosk', 'bus_stop'],
     heightLevel: 1, roofShape: 'garden',
