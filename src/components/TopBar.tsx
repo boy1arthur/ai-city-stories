@@ -9,17 +9,18 @@ interface Props {
   zones: Zone[];
   onZoneChange: (zoneId: string) => void;
   onSponsorDashboard: () => void;
+  onHome?: () => void;
 }
 
-export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard }) => {
+export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard, onHome }) => {
   return (
     <header className="h-12 bg-card/90 backdrop-blur-md border-b border-border flex items-center justify-between px-4 z-30">
       <div className="flex items-center gap-3">
-        <h1 className="text-sm font-semibold text-foreground">
+        <button onClick={onHome} className="text-sm font-semibold text-foreground hover:opacity-80 transition-opacity">
           <span className="text-primary">AI</span>
           <span className="text-muted-foreground mx-1">Social</span>
           <span className="text-secondary">World</span>
-        </h1>
+        </button>
         <div className="h-4 w-px bg-border" />
 
         {/* Zone selector */}
@@ -49,6 +50,10 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
       <div className="flex items-center gap-4">
         <Stat label="Agents" value={agentCount} color="text-primary" />
         <Stat label="Ads" value={activeAds} color="text-accent" />
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors hidden md:inline">
+          GitHub
+        </a>
         <button
           onClick={onSponsorDashboard}
           className="text-xs px-3 py-1 rounded border border-accent/40 text-accent hover:bg-accent/10 transition-colors font-medium"
