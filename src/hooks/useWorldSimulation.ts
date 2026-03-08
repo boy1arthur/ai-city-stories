@@ -329,6 +329,7 @@ export function useWorldSimulation() {
     allAgents: agents,
     adSlots: zoneAdSlots,
     allAdSlots: adSlots,
+    setAdSlots,
     worldLog,
     tick,
     isPaused,
@@ -345,5 +346,6 @@ export function useWorldSimulation() {
     agentVisuals,
     brandStats,
     highlights,
+    cityEnergy,
   };
 }
