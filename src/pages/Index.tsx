@@ -122,6 +122,8 @@ const Index = () => {
         <AgentProfilePanel
           agent={selectedAgent}
           worldLog={worldLog}
+          allAdSlots={adSlots}
+          onBrandClick={(brandId) => { setSelectedAgent(null); /* could open brand panel */ }}
           onClose={() => setSelectedAgent(null)}
         />
       )}
