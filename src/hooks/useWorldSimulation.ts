@@ -316,6 +316,67 @@ export function useWorldSimulation() {
 
         return agent;
       }));
+
+      // === Social Interactions: agents at the same building chat ===
+      setAgents(currentAgents => {
+        const agentsByBuilding = new Map<string, Agent[]>();
+        currentAgents.forEach(a => {
+          const key = `${a.currentZoneId}_${a.currentBuildingId}`;
+          const list = agentsByBuilding.get(key) || [];
+          list.push(a);
+          agentsByBuilding.set(key, list);
+        });
+
+        agentsByBuilding.forEach((group) => {
+          if (group.length < 2) return;
+          // ~15% chance per tick per group
+          if (Math.random() > 0.15) return;
+
+          const a1 = pickRandom(group);
+          const others = group.filter(a => a.id !== a1.id);
+          if (others.length === 0) return;
+          const a2 = pickRandom(others);
+
+          const dialogue = generateSocialDialogue(a1, a2);
+          if (!dialogue) return;
+
+          // Agent 1 speaks first
+          addSpeechBubble({
+            id: `social_${a1.id}_${now}_${Math.random().toString(36).slice(2, 6)}`,
+            agentId: a1.id,
+            text: dialogue.line1,
+            emoji: dialogue.topic === 'brand_chat' ? '💬' : dialogue.topic === 'gossip' ? '🗣️' : dialogue.topic === 'deep' ? '💭' : '👋',
+            timestamp: now,
+            type: 'dialogue',
+          });
+
+          // Agent 2 responds after a short delay
+          addSpeechBubble({
+            id: `social_${a2.id}_${now}_${Math.random().toString(36).slice(2, 6)}`,
+            agentId: a2.id,
+            text: dialogue.line2,
+            emoji: dialogue.topic === 'brand_chat' ? '💬' : '😄',
+            timestamp: now + 1500,
+            type: 'dialogue',
+          });
+
+          // Log the conversation
+          addLog(`💬 ${a1.avatar} ${a1.name} ↔ ${a2.avatar} ${a2.name}: "${dialogue.line1}" / "${dialogue.line2}"`);
+
+          // Social interactions can shift mood
+          if (Math.random() < 0.3) {
+            const happyMoods: Agent['mood'][] = ['happy', 'excited'];
+            return currentAgents.map(a => {
+              if (a.id === a1.id || a.id === a2.id) {
+                return { ...a, mood: pickRandom(happyMoods) };
+              }
+              return a;
+            });
+          }
+        });
+
+        return currentAgents;
+      });
     }, TICK_MS);
 
     return () => {
