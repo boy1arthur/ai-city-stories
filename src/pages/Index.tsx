@@ -8,6 +8,7 @@ import { EnergyBar } from '@/components/EnergyBar';
 import { SponsorDashboard } from '@/components/SponsorDashboard';
 import { TrendingOpinions } from '@/components/TrendingOpinions';
 import { WorldEventBanner } from '@/components/WorldEventBanner';
+import { AgentProfilePanel } from '@/components/agent/AgentProfilePanel';
 import { useWorldSimulation } from '@/hooks/useWorldSimulation';
 import { useCampaigns } from '@/hooks/useCampaigns';
 import { isCampaignActive } from '@/lib/adCampaign';
