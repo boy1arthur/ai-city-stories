@@ -11,7 +11,7 @@ interface Props {
 
 const RANK_MEDALS = ['🥇', '🥈', '🥉'];
 
-export const LeagueStandings: React.FC<Props> = ({ season, scores, currentTick }) => {
+export const LeagueStandings: React.FC<Props> = ({ season, scores, currentTick, onBrandClick }) => {
   if (!season || scores.length === 0) {
     return (
       <div className="bg-card border border-border rounded-lg p-4">
