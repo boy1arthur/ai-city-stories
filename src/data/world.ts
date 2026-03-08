@@ -158,129 +158,144 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 // Grid: 18x18. Vert road: col 8. Horiz boulevard: row 8.
 // All buildings have ≥1 tile buffer from roads (col 7/9 = sidewalk, row 7/9 = sidewalk).
 // Each row is exactly 18 chars.
+// ===== PLAZA TILE MAP =====
+// 18x18 tile map (each cell = 2x2 grid). Road: col 8 (vertical), row 8 (horizontal).
+// Buildings packed into tight street-wall blocks for maximum ad wall exposure.
+// NW: Arena(A)+Lab(L)+Café(C)  NE: Feed(E)+Oracle(O)+Newsstand(N)+Workshop(H)
+// SW: Library(B)+Tavern(T)+Museum(M)  SE: Observatory(V)+Arcade(D)+Garden(K)+TechLab(X)
 const PLAZA_TILE_MAP: string[] = [
-  'GSSSSSSSRSSSSSSSSG', // 0  outskirt
-  'GSSSSSSSRSSSSSSSSG', // 1
-  'SSAAAASSREEESOOSSG', // 2  Arena(2-5,2-5) Feed(9-11,2-4) Oracle(13-14,2-4)
-  'SSAAAASSREEESOOSSG', // 3
-  'SSAAAASSREEESOOSSG', // 4
-  'SSAAAASSRLLLSOOSSG', // 5  Lab(9-11,5-6)
-  'SSCCCSSSRLLLSSSSSG', // 6  Café(2-4,6)
-  'SSSSSSSSRSSSSSSSSS', // 7  buffer (road continues straight)
-  'RRRRRRRRRRRRRRRRRR', // 8  boulevard — plain crossroads
-  'SSSSSSSSRSSSSSSSSS', // 9  buffer
-  'SSBBBBSSRNNNSSSSSG', // 10 Library(2-5,10-12) News(9-11,10-11)
-  'SSBBBBSSRNNNSSSSSG', // 11
-  'SSBBBBSSRSSSMMMSSG', // 12 Museum(12-14,12-14)
-  'STTTSSSSRSHHHMMMSG', // 13 Tavern(1-3,13-14) Workshop(10-12,13-15) Museum
-  'STTTSSSSRSHHHMMMSG', // 14
-  'SFFFSSSSRSHHHSSSSG', // 15 FoodMarket(1-3,15-16) Workshop row15
-  'SFFFKKKSRSVVSSAASG', // 16 FoodMarket, Park(4-6,16-17) Obs(10-11,16-17) Arcade(14-15,16-17)
-  'SSSSKKKSRSVVSSAASG', // 17 outskirt
+  'GSSSSSSSRSSSSSSSSG', // 0  border
+  'SAAAAAARSEEEEOOOSG', // 1  Arena(1-6) Feed(9-12) Oracle(13-15)
+  'SAAAAAARSEEEEOOOSG', // 2
+  'SAAAAAARSEEEENNNSG', // 3  Newsstand(13-15) replaces Oracle
+  'SAAAAAARSEEEENNNSG', // 4
+  'SLLLCCCSRHHHHHHHSG', // 5  Lab(1-3) Café(4-6) Workshop(9-15)
+  'SLLLCCCSRHHHHHHHSG', // 6
+  'SSSSSSSSRSSSSSSSSS', // 7  sidewalk buffer
+  'RRRRRRRRRRRRRRRRRR', // 8  boulevard
+  'SBBBTTTSRVVVVDDDSG', // 9  Library(1-3) Tavern(4-6) Obs(9-12) Arcade(13-15)
+  'SBBBTTTSRVVVVDDDSG', // 10
+  'SBBBTTTSRVVVVDDDSG', // 11
+  'SBBBTTTSRKKKXXXXSG', // 12 Garden(9-11) TechLab(12-15)
+  'SMMMMMMSRKKKXXXXSG', // 13 Museum(1-6)
+  'SMMMMMMSRKKKXXXXSG', // 14
+  'SMMMMMMSRSSSSSSSSG', // 15
+  'SKKKKKKSRSSSSSSSSG', // 16 Park strip
+  'GGGGGGGSRSGGGGGGGG', // 17 border
 ];
 
 const PLAZA_BUILDINGS: Building[] = [
-  // ─── NW QUADRANT ───
+  // ═══ NW BLOCK — "Premium Tower District" ═══
+  // Arena + Lab + Café form L-shaped street wall
+  // Arena's E wall + Lab/Café's E walls = continuous vertical ad strip
+  // Lab + Café's S walls = continuous horizontal ad strip facing boulevard
   { id: 'arena', name: 'Arena', emoji: '⚔️', color: 'primary',
-    gridX: 4, gridY: 4, width: 8, height: 8,
-    description: 'AI 에이전트 배틀 & 토너먼트',
+    gridX: 2, gridY: 2, width: 12, height: 8,
+    description: 'AI 에이전트 배틀 & 토너먼트 — 프리미엄 광고 랜드마크',
     adSlots: ['billboard', 'naming_rights', 'wall_wrap', 'bus_stop'],
     heightLevel: 3, roofShape: 'dome',
     wallColor: 'hsl(215,12%,52%)', roofColor: 'hsl(215,10%,42%)', buildingType: 'civic' },
 
+  { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary',
+    gridX: 2, gridY: 10, width: 6, height: 4,
+    description: '실험 & 프로토타입 연구소',
+    adSlots: ['wall_wrap', 'kiosk', 'billboard'],
+    heightLevel: 2, roofShape: 'flat',
+    wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
+
   { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
-    gridX: 4, gridY: 12, width: 6, height: 2,
+    gridX: 8, gridY: 10, width: 6, height: 4,
     description: '에이전트 카페 & 미팅 포인트',
-    adSlots: ['kiosk', 'bus_stop'],
+    adSlots: ['kiosk', 'bus_stop', 'wall_wrap'],
     heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
-  // ─── NE QUADRANT ───
+  // ═══ NE BLOCK — "Media Strip" ═══
+  // Feed + Oracle stack vertically → combined E wall
+  // Newsstand below Oracle → continuous strip
+  // Workshop spans full width → massive S wall facing boulevard
   { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'primary',
-    gridX: 18, gridY: 4, width: 6, height: 6,
+    gridX: 18, gridY: 2, width: 8, height: 8,
     description: '소셜 피드 & 트렌드 센터',
     adSlots: ['billboard', 'kiosk', 'wall_wrap'],
     heightLevel: 3, roofShape: 'antenna',
     wallColor: 'hsl(210,10%,48%)', roofColor: 'hsl(210,8%,40%)', buildingType: 'tower' },
 
   { id: 'oracle', name: 'Oracle', emoji: '🔮', color: 'secondary',
-    gridX: 26, gridY: 4, width: 4, height: 6,
+    gridX: 26, gridY: 2, width: 6, height: 4,
     description: '예측 마켓 & 점술관',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
     heightLevel: 2, roofShape: 'hip',
     wallColor: 'hsl(25,18%,48%)', roofColor: 'hsl(15,22%,38%)', buildingType: 'shop' },
 
-  { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary',
-    gridX: 18, gridY: 10, width: 6, height: 4,
-    description: '실험 & 프로토타입 연구소',
-    adSlots: ['wall_wrap', 'kiosk', 'billboard'],
-    heightLevel: 2, roofShape: 'flat',
-    wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
+  { id: 'newsstand', name: 'Newsstand', emoji: '📰', color: 'accent',
+    gridX: 26, gridY: 6, width: 6, height: 4,
+    description: '뉴스 & 브랜드 캠페인 게시판',
+    adSlots: ['kiosk', 'billboard', 'wall_wrap'],
+    heightLevel: 1, roofShape: 'flat',
+    wallColor: 'hsl(38,20%,45%)', roofColor: 'hsl(38,15%,38%)', buildingType: 'shop' },
 
-  // ─── SW QUADRANT ───
+  { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
+    gridX: 18, gridY: 10, width: 14, height: 4,
+    description: '제작 & 크래프팅 공방 — 대형 벽면 광고 가능',
+    adSlots: ['wall_wrap', 'billboard', 'kiosk', 'naming_rights'],
+    heightLevel: 2, roofShape: 'gear',
+    wallColor: 'hsl(220,6%,46%)', roofColor: 'hsl(220,5%,38%)', buildingType: 'warehouse' },
+
+  // ═══ SW BLOCK — "Culture Quarter" ═══
+  // Library + Tavern side by side → combined S wall
+  // Museum below → massive continuous S wall (widest single building)
   { id: 'library', name: 'Library', emoji: '📚', color: 'primary',
-    gridX: 4, gridY: 20, width: 8, height: 6,
+    gridX: 2, gridY: 18, width: 6, height: 8,
     description: '지식 아카이브 & 학습 센터',
     adSlots: ['billboard', 'bus_stop', 'kiosk'],
     heightLevel: 2, roofShape: 'gabled',
     wallColor: 'hsl(20,20%,52%)', roofColor: 'hsl(10,25%,35%)', buildingType: 'campus' },
 
   { id: 'tavern', name: 'Tavern', emoji: '🍺', color: 'accent',
-    gridX: 2, gridY: 26, width: 6, height: 4,
+    gridX: 8, gridY: 18, width: 6, height: 8,
     description: '에이전트 사교장 & 루머 허브',
     adSlots: ['billboard', 'bus_stop', 'wall_wrap'],
     heightLevel: 1, roofShape: 'gabled',
     wallColor: 'hsl(25,22%,45%)', roofColor: 'hsl(15,28%,32%)', buildingType: 'shop' },
 
-  { id: 'food_market', name: 'Food Market', emoji: '🍜', color: 'accent',
-    gridX: 2, gridY: 30, width: 6, height: 4,
-    description: '스트리트 푸드 & 로컬 맛집 거리',
-    adSlots: ['kiosk', 'billboard', 'bus_stop'],
+  { id: 'museum', name: 'Museum', emoji: '🏛️', color: 'secondary',
+    gridX: 2, gridY: 26, width: 12, height: 6,
+    description: '브랜드 역사관 — 대형 벽면 광고 가능',
+    adSlots: ['naming_rights', 'wall_wrap', 'billboard'],
+    heightLevel: 2, roofShape: 'dome',
+    wallColor: 'hsl(30,15%,55%)', roofColor: 'hsl(25,12%,42%)', buildingType: 'civic' },
+
+  // ═══ SE BLOCK — "Innovation Hub" ═══
+  // Observatory + Arcade side by side → combined S wall
+  // Garden + TechLab below → continuous ad surface
+  { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'primary',
+    gridX: 18, gridY: 18, width: 8, height: 6,
+    description: '별 관측소 & 미래 탐색',
+    adSlots: ['naming_rights', 'kiosk', 'wall_wrap'],
+    heightLevel: 3, roofShape: 'dome',
+    wallColor: 'hsl(215,10%,50%)', roofColor: 'hsl(215,8%,40%)', buildingType: 'tower' },
+
+  { id: 'arcade', name: 'Arcade', emoji: '🎮', color: 'accent',
+    gridX: 26, gridY: 18, width: 6, height: 6,
+    description: '게임 아케이드 & 에이전트 놀이터',
+    adSlots: ['wall_wrap', 'kiosk', 'billboard'],
     heightLevel: 1, roofShape: 'flat',
-    wallColor: 'hsl(15,25%,48%)', roofColor: 'hsl(10,20%,38%)', buildingType: 'shop' },
+    wallColor: 'hsl(280,15%,48%)', roofColor: 'hsl(280,12%,38%)', buildingType: 'shop' },
 
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
-    gridX: 8, gridY: 32, width: 6, height: 4,
+    gridX: 18, gridY: 24, width: 6, height: 6,
     description: '힐링 & 명상 정원',
     adSlots: ['kiosk', 'bus_stop'],
     heightLevel: 1, roofShape: 'garden',
     wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,20%,35%)', buildingType: 'park_structure' },
 
-  // ─── SE QUADRANT ───
-  { id: 'newsstand', name: 'Newsstand', emoji: '📰', color: 'accent',
-    gridX: 18, gridY: 20, width: 6, height: 4,
-    description: '뉴스 & 브랜드 캠페인 게시판',
-    adSlots: ['kiosk', 'billboard'],
-    heightLevel: 1, roofShape: 'flat',
-    wallColor: 'hsl(38,20%,45%)', roofColor: 'hsl(38,15%,38%)', buildingType: 'shop' },
-
-  { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
-    gridX: 18, gridY: 26, width: 6, height: 6,
-    description: '제작 & 크래프팅 공방',
-    adSlots: ['wall_wrap', 'billboard', 'kiosk'],
-    heightLevel: 2, roofShape: 'gear',
-    wallColor: 'hsl(220,6%,46%)', roofColor: 'hsl(220,5%,38%)', buildingType: 'warehouse' },
-
-  { id: 'museum', name: 'Museum', emoji: '🏛️', color: 'secondary',
-    gridX: 26, gridY: 24, width: 6, height: 6,
-    description: '브랜드 역사관 & 문화 전시 공간',
-    adSlots: ['naming_rights', 'wall_wrap', 'billboard'],
-    heightLevel: 2, roofShape: 'dome',
-    wallColor: 'hsl(30,15%,55%)', roofColor: 'hsl(25,12%,42%)', buildingType: 'civic' },
-
-  { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'primary',
-    gridX: 18, gridY: 32, width: 4, height: 4,
-    description: '별 관측소 & 미래 탐색',
-    adSlots: ['naming_rights', 'kiosk'],
-    heightLevel: 3, roofShape: 'dome',
-    wallColor: 'hsl(215,10%,50%)', roofColor: 'hsl(215,8%,40%)', buildingType: 'tower' },
-
-  { id: 'arcade', name: 'Arcade', emoji: '🎮', color: 'accent',
-    gridX: 26, gridY: 32, width: 4, height: 4,
-    description: '게임 아케이드 & 에이전트 놀이터',
-    adSlots: ['wall_wrap', 'kiosk', 'billboard'],
-    heightLevel: 1, roofShape: 'flat',
-    wallColor: 'hsl(280,15%,48%)', roofColor: 'hsl(280,12%,38%)', buildingType: 'shop' },
+  { id: 'tech_lab', name: 'Tech Lab', emoji: '💻', color: 'primary',
+    gridX: 24, gridY: 24, width: 8, height: 6,
+    description: '테크 허브 & AI 스타트업 인큐베이터',
+    adSlots: ['wall_wrap', 'billboard', 'naming_rights'],
+    heightLevel: 2, roofShape: 'antenna',
+    wallColor: 'hsl(210,8%,48%)', roofColor: 'hsl(210,6%,40%)', buildingType: 'office' },
 ];
 
 // ===== CAMPUS DISTRICT =====
