@@ -221,7 +221,7 @@ const PLAZA_BUILDINGS: Building[] = [
   { id: 'oracle', name: 'Oracle', emoji: '🔮', color: 'secondary',
     gridX: 26, gridY: 2, width: 6, height: 4,
     description: '예측 마켓 & 점술관',
-    adSlots: ['wall_wrap', 'kiosk', 'billboard'],
+    adSlots: ['kiosk'],
     heightLevel: 5, roofShape: 'hip',
     wallColor: 'hsl(25,18%,48%)', roofColor: 'hsl(15,22%,38%)', buildingType: 'shop' },
 
