@@ -53,19 +53,19 @@ const WallPaintedAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = 
         {/* Wall panel tint */}
         <rect x={mx - panelW / 2} y={my - panelH / 2}
           width={panelW} height={panelH} rx={2}
-          fill={ad.brandColor} fillOpacity={0.3}
-          stroke={ad.brandColor} strokeWidth={0.7} strokeOpacity={0.4} />
+          fill={ad.brandColor}
+          stroke={ad.brandColor} strokeWidth={0.7} />
 
         {/* Brand initial */}
         <text x={mx - panelW / 2 + panelH * 0.6} y={my + panelH * 0.15}
           textAnchor="middle" fontSize={panelH * 0.55}
-          fill={ad.brandColor} fillOpacity={0.85}
+          fill="hsl(0,0%,100%)"
           fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
 
         {/* Brand name */}
         <text x={mx + 4} y={my + panelH * 0.12}
           textAnchor="middle" fontSize={panelH * 0.32}
-          fill={ad.brandColor} fillOpacity={0.9}
+          fill="hsl(0,0%,100%)"
           fontFamily="Inter" fontWeight={800} letterSpacing="1">
           {ad.brandName}
         </text>
@@ -91,19 +91,19 @@ const WallPaintedAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = 
         {/* Wall panel tint */}
         <rect x={mx - panelW / 2} y={my - panelH / 2}
           width={panelW} height={panelH} rx={2}
-          fill={ad.brandColor} fillOpacity={0.25}
-          stroke={ad.brandColor} strokeWidth={0.7} strokeOpacity={0.35} />
+          fill={ad.brandColor}
+          stroke={ad.brandColor} strokeWidth={0.7} />
 
         {/* Brand initial */}
         <text x={mx - panelW / 2 + panelH * 0.6} y={my + panelH * 0.15}
           textAnchor="middle" fontSize={panelH * 0.5}
-          fill={ad.brandColor} fillOpacity={0.8}
+          fill="hsl(0,0%,100%)"
           fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
 
         {/* Brand name */}
         <text x={mx + 4} y={my + panelH * 0.12}
           textAnchor="middle" fontSize={panelH * 0.3}
-          fill={ad.brandColor} fillOpacity={0.85}
+          fill="hsl(0,0%,100%)"
           fontFamily="Inter" fontWeight={800} letterSpacing="0.8">
           {ad.brandName}
         </text>
