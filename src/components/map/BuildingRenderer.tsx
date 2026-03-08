@@ -96,8 +96,8 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
               {glowAnim && (
                 <rect x={wx - winStyle.w / 2} y={winY - winStyle.h / 2}
                   width={winStyle.w} height={winStyle.h} rx={winStyle.rx}
-                  fill="hsl(45,60%,70%)" fillOpacity={0.12}>
-                  <animate attributeName="fillOpacity" values="0.06;0.18;0.06" dur={`${3 + (wi % 2)}s`} repeatCount="indefinite" />
+                  fill={hasSkin ? skinColor : 'hsl(45,60%,70%)'} fillOpacity={hasSkin ? 0.2 : 0.12}>
+                  <animate attributeName="fillOpacity" values={hasSkin ? '0.1;0.3;0.1' : '0.06;0.18;0.06'} dur={`${3 + (wi % 2)}s`} repeatCount="indefinite" />
                 </rect>
               )}
             </g>
