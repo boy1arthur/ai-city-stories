@@ -84,9 +84,9 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         const kPos = iso(b.gridX - 2.5, b.gridY + b.height - 1 + i * 2.5);
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
-        const pw = 22;
-        const ph = 10;
-        const postH = 12;
+        const pw = 28;
+        const ph = 14;
+        const postH = 14;
 
         return (
           <g key={slot.id}>
