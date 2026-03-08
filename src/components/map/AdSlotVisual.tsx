@@ -168,7 +168,7 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         );
       })}
 
-      {/* ===== NAMING RIGHTS — painted on south wall face ===== */}
+      {/* ===== NAMING RIGHTS — parallelogram on south wall ===== */}
       {adSlots.filter(s => s.type === 'naming_rights').map(slot => {
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
@@ -176,46 +176,44 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         // South wall endpoints
         const sw = iso(b.gridX, b.gridY + b.height);
         const se = iso(b.gridX + b.width, b.gridY + b.height);
-        const mx = (sw.x + se.x) / 2;
-        const my = (sw.y + se.y) / 2 - wallHeight * 0.75;
 
-        // Panel dimensions on wall (isometric-aware)
-        const panelW = Math.hypot(se.x - sw.x, se.y - sw.y) * 0.7;
-        const panelH = wallHeight * 0.3;
+        // Banner occupies top portion of wall
+        const topRatio = 0.85;
+        const botRatio = 0.55;
+        const topL = { x: sw.x, y: sw.y - wallHeight * topRatio };
+        const topR = { x: se.x, y: se.y - wallHeight * topRatio };
+        const botL = { x: sw.x, y: sw.y - wallHeight * botRatio };
+        const botR = { x: se.x, y: se.y - wallHeight * botRatio };
+
+        const cx = (topL.x + topR.x + botL.x + botR.x) / 4;
+        const cy = (topL.y + topR.y + botL.y + botR.y) / 4;
+        const angle = Math.atan2(se.y - sw.y, se.x - sw.x) * (180 / Math.PI);
+        const bannerH = wallHeight * (topRatio - botRatio);
+        const fontSize = Math.max(5, bannerH * 0.5);
+        const fontSizeName = Math.max(3.5, bannerH * 0.3);
 
         return (
           <g key={slot.id}>
             {has && bv ? (
-              <g transform={`rotate(${SOUTH_ANGLE_DEG}, ${mx}, ${my})`}>
-                {/* Wall panel background */}
-                <rect x={mx - panelW / 2} y={my - panelH / 2}
-                  width={panelW} height={panelH} rx={2}
-                  fill={bv.color}
-                  stroke={bv.color} strokeWidth={0.8} />
-
-                {/* Brand initial — large */}
-                <text x={mx - panelW / 2 + panelH * 0.55} y={my + panelH * 0.15}
-                  textAnchor="middle" fontSize={panelH * 0.6}
-                  fill="hsl(0,0%,100%)"
-                  fontFamily="Inter" fontWeight={900}>{bv.initial}</text>
-
-                {/* Brand name */}
-                <text x={mx + 4} y={my + panelH * 0.12}
-                  textAnchor="middle" fontSize={panelH * 0.35}
-                  fill="hsl(0,0%,100%)"
-                  fontFamily="Inter" fontWeight={800} letterSpacing="1">
-                  {fitText(slot.brand!, 10)}
-                </text>
+              <g>
+                <polygon
+                  points={`${topL.x},${topL.y} ${topR.x},${topR.y} ${botR.x},${botR.y} ${botL.x},${botL.y}`}
+                  fill={bv.color} stroke={bv.color} strokeWidth={0.5} />
+                <g transform={`rotate(${angle}, ${cx}, ${cy})`}>
+                  <text x={cx - fontSize * 1.2} y={cy + fontSize * 0.15}
+                    textAnchor="middle" fontSize={fontSize}
+                    fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>{bv.initial}</text>
+                  <text x={cx + fontSizeName * 0.5} y={cy + fontSizeName * 0.15}
+                    textAnchor="middle" fontSize={fontSizeName}
+                    fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="1">
+                    {fitText(slot.brand!, 10)}
+                  </text>
+                </g>
               </g>
             ) : (
-              /* Empty slot — subtle dashed outline on wall */
-              <g transform={`rotate(${SOUTH_ANGLE_DEG}, ${mx}, ${my})`}>
-                <rect x={mx - panelW / 2} y={my - panelH / 2}
-                  width={panelW} height={panelH} rx={2}
-                  fill="none"
-                  stroke="hsl(215,5%,38%)" strokeWidth={0.4} strokeOpacity={0.3}
-                  strokeDasharray="4 3" />
-              </g>
+              <polygon
+                points={`${topL.x},${topL.y} ${topR.x},${topR.y} ${botR.x},${botR.y} ${botL.x},${botL.y}`}
+                fill="none" stroke="hsl(215,5%,38%)" strokeWidth={0.4} strokeDasharray="4 3" />
             )}
           </g>
         );
