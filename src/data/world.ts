@@ -166,10 +166,10 @@ const PLAZA_TILE_MAP: string[] = [
   //0123456789012345678
   // col:    01234567R9.......17
   'GSSSSSSSRSSSSSSSSG', // 0  border
-  'SAAAAASRSEEEEOOOSG', // 1  Arena(1-6) R(8) Feed(9-12) Oracle(13-15)
-  'SAAAAASRSEEEEOOOSG', // 2
-  'SAAAAASRSEEEENNNSG', // 3  Newsstand(13-15)
-  'SAAAAASRSEEEENNNSG', // 4
+  'SAAAAASSREEEEOOOSG', // 1  Arena(1-6) S(7) R(8) Feed(9-12) Oracle(13-15)
+  'SAAAAASSREEEEOOOSG', // 2
+  'SAAAAASSREEEENNNSG', // 3  Newsstand(13-15)
+  'SAAAAASSREEEENNNSG', // 4
   'SSSSSSSSRSSSSSSSSG', // 5  sidewalk (arena entrance)
   'SSSSSSSSRSSSSSSSSG', // 6
   'SSSSSSSSRSSSSSSSSS', // 7  sidewalk buffer
