@@ -207,13 +207,10 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 8, gridY: 10, width: 6, height: 4,
     description: '에이전트 카페 & 미팅 포인트',
     adSlots: ['kiosk', 'bus_stop', 'wall_wrap'],
-    heightLevel: 2, roofShape: 'flat',
+    heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
   // ═══ NE BLOCK — "Media Strip" ═══
-  // Feed + Oracle stack vertically → combined E wall
-  // Newsstand below Oracle → continuous strip
-  // Workshop spans full width → massive S wall facing boulevard
   { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'primary',
     gridX: 18, gridY: 2, width: 8, height: 8,
     description: '소셜 피드 & 트렌드 센터',
@@ -225,62 +222,58 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 26, gridY: 2, width: 6, height: 4,
     description: '예측 마켓 & 점술관',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
-    heightLevel: 2, roofShape: 'hip',
+    heightLevel: 3, roofShape: 'hip',
     wallColor: 'hsl(25,18%,48%)', roofColor: 'hsl(15,22%,38%)', buildingType: 'shop' },
 
   { id: 'newsstand', name: 'Newsstand', emoji: '📰', color: 'accent',
     gridX: 26, gridY: 6, width: 6, height: 4,
     description: '뉴스 & 브랜드 캠페인 게시판',
     adSlots: ['kiosk', 'billboard', 'wall_wrap'],
-    heightLevel: 1, roofShape: 'flat',
+    heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(38,20%,45%)', roofColor: 'hsl(38,15%,38%)', buildingType: 'shop' },
 
   { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
     gridX: 18, gridY: 10, width: 14, height: 4,
     description: '제작 & 크래프팅 공방 — 대형 벽면 광고 가능',
     adSlots: ['wall_wrap', 'billboard', 'kiosk', 'naming_rights'],
-    heightLevel: 3, roofShape: 'gear',
+    heightLevel: 2, roofShape: 'gear',
     wallColor: 'hsl(220,6%,46%)', roofColor: 'hsl(220,5%,38%)', buildingType: 'warehouse' },
 
   // ═══ SW BLOCK — "Culture Quarter" ═══
-  // Library + Tavern side by side → combined S wall
-  // Museum below → massive continuous S wall (widest single building)
   { id: 'library', name: 'Library', emoji: '📚', color: 'primary',
     gridX: 2, gridY: 18, width: 6, height: 8,
     description: '지식 아카이브 & 학습 센터',
     adSlots: ['billboard', 'bus_stop', 'kiosk'],
-    heightLevel: 3, roofShape: 'gabled',
+    heightLevel: 1, roofShape: 'gabled',
     wallColor: 'hsl(20,20%,52%)', roofColor: 'hsl(10,25%,35%)', buildingType: 'campus' },
 
   { id: 'tavern', name: 'Tavern', emoji: '🍺', color: 'accent',
     gridX: 8, gridY: 18, width: 6, height: 8,
     description: '에이전트 사교장 & 루머 허브',
     adSlots: ['billboard', 'bus_stop', 'wall_wrap'],
-    heightLevel: 2, roofShape: 'gabled',
+    heightLevel: 1, roofShape: 'gabled',
     wallColor: 'hsl(25,22%,45%)', roofColor: 'hsl(15,28%,32%)', buildingType: 'shop' },
 
   { id: 'museum', name: 'Museum', emoji: '🏛️', color: 'secondary',
     gridX: 2, gridY: 26, width: 12, height: 6,
     description: '브랜드 역사관 — 대형 벽면 광고 가능',
     adSlots: ['naming_rights', 'wall_wrap', 'billboard'],
-    heightLevel: 2, roofShape: 'dome',
+    heightLevel: 1, roofShape: 'dome',
     wallColor: 'hsl(30,15%,55%)', roofColor: 'hsl(25,12%,42%)', buildingType: 'civic' },
 
   // ═══ SE BLOCK — "Innovation Hub" ═══
-  // Observatory + Arcade side by side → combined S wall
-  // Garden + TechLab below → continuous ad surface
   { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'primary',
     gridX: 18, gridY: 18, width: 8, height: 6,
     description: '별 관측소 & 미래 탐색',
     adSlots: ['naming_rights', 'kiosk', 'wall_wrap'],
-    heightLevel: 3, roofShape: 'dome',
+    heightLevel: 2, roofShape: 'dome',
     wallColor: 'hsl(215,10%,50%)', roofColor: 'hsl(215,8%,40%)', buildingType: 'tower' },
 
   { id: 'arcade', name: 'Arcade', emoji: '🎮', color: 'accent',
     gridX: 26, gridY: 18, width: 6, height: 6,
     description: '게임 아케이드 & 에이전트 놀이터',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
-    heightLevel: 2, roofShape: 'flat',
+    heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(280,15%,48%)', roofColor: 'hsl(280,12%,38%)', buildingType: 'shop' },
 
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
@@ -294,7 +287,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 24, gridY: 24, width: 8, height: 6,
     description: '테크 허브 & AI 스타트업 인큐베이터',
     adSlots: ['wall_wrap', 'billboard', 'naming_rights'],
-    heightLevel: 2, roofShape: 'antenna',
+    heightLevel: 1, roofShape: 'antenna',
     wallColor: 'hsl(210,8%,48%)', roofColor: 'hsl(210,6%,40%)', buildingType: 'office' },
 ];
 
