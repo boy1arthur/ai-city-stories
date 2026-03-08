@@ -39,6 +39,7 @@ const Index = () => {
   // Full city view state (PC only)
   const [isFullView, setIsFullView] = useState(!isMobile);
   const [focusedZoneId, setFocusedZoneId] = useState<string | null>(null);
+  const [autoFocusZoneId, setAutoFocusZoneId] = useState<string | null>(null);
 
   // Fetch slots only for the active zone (focused zone in full view, current zone otherwise)
   const activeSlotZone = isFullView ? (focusedZoneId || 'plaza') : currentZoneId;

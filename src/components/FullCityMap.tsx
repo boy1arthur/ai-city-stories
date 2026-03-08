@@ -197,6 +197,7 @@ export const FullCityMap: React.FC<Props> = ({
                   onAgentClick={onAgentClick}
                   onSlotClick={onSlotClick}
                   onAdSlotClick={onAdSlotClick}
+                  onZoneClick={zoomToZone}
                 />
               </g>
             );
