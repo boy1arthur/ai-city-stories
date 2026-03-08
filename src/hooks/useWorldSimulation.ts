@@ -432,6 +432,99 @@ export function useWorldSimulation() {
     };
   }, [isPaused, adSlots, addLog, addInteraction, addSpeechBubble, addAdReaction]);
 
+  // === AI-Powered Conversation Trigger ===
+  useEffect(() => {
+    if (isPaused || tick === 0) return;
+    if (!shouldTrigger(tick)) return;
+
+    // Pick a random pair of agents in the same building
+    const agentsByBuilding = new Map<string, Agent[]>();
+    agents.forEach(a => {
+      const key = `${a.currentZoneId}_${a.currentBuildingId}`;
+      const list = agentsByBuilding.get(key) || [];
+      list.push(a);
+      agentsByBuilding.set(key, list);
+    });
+
+    // Find groups with 2+ agents
+    const groups = Array.from(agentsByBuilding.entries())
+      .filter(([, group]) => group.length >= 2);
+    if (groups.length === 0) return;
+
+    const [locationKey, group] = pickRandom(groups);
+    const [zoneId, buildingId] = locationKey.split('_');
+    const a1 = pickRandom(group);
+    const a2 = pickRandom(group.filter(a => a.id !== a1.id));
+    if (!a2) return;
+
+    const nearbyBrands = getNearbyBrands(zoneId, buildingId, adSlots);
+    const zone = getZoneById(zoneId);
+    const building = zone?.buildings.find(b => b.id === buildingId);
+
+    // Determine conversation type
+    const type = nearbyBrands.length > 0 && Math.random() < 0.6
+      ? 'brand_reaction'
+      : worldEvents.length > 0 && Math.random() < 0.3
+        ? 'event_reaction'
+        : 'social';
+
+    const avgAffinity = a1.brandAffinities.reduce((s, ba) => s + ba.score, 0) / Math.max(a1.brandAffinities.length, 1);
+
+    generateConversation(type, [a1, a2], {
+      zone: zone?.name || zoneId,
+      building: building?.name || buildingId,
+      nearbyBrands,
+      brandAffinity: avgAffinity,
+      eventDescription: worldEvents[0]?.message,
+    }).then(conversation => {
+      if (!conversation?.lines?.length) return;
+
+      const now = Date.now();
+      setAiConversationLog(prev => [conversation, ...prev].slice(0, 50));
+
+      // Convert AI lines to speech bubbles and log entries
+      conversation.lines.forEach((line, i) => {
+        const agent = agents.find(a => a.name === line.agentName);
+        if (!agent) return;
+
+        addSpeechBubble({
+          id: `ai_${agent.id}_${now}_${i}`,
+          agentId: agent.id,
+          text: line.text,
+          emoji: line.emoji,
+          timestamp: now + i * 1800,
+          type: 'dialogue',
+        });
+
+        // Log brand mentions for ESV tracking
+        if (line.brandMention) {
+          addLog(`🤖✨ ${agent.avatar} ${agent.name}: "${line.text}" [${line.brandMention}]`);
+
+          // Boost ESV for mentioned brands
+          setAdSlots(prev => prev.map(s => {
+            if (s.brand === line.brandMention) {
+              return {
+                ...s,
+                impressions: s.impressions + (line.sentiment === 'positive' ? 3 : 1),
+              };
+            }
+            return s;
+          }));
+        } else {
+          addLog(`🤖 ${agent.avatar} ${agent.name}: "${line.text}"`);
+        }
+      });
+
+      // Process brand sentiment summary for enhanced metrics
+      conversation.brandSentimentSummary?.forEach(summary => {
+        const sentEmoji = summary.sentiment === 'positive' ? '💚' : summary.sentiment === 'negative' ? '💔' : '💭';
+        addLog(`${sentEmoji} AI 분석: ${summary.brand} — ${summary.reason}`);
+      });
+    }).catch(err => {
+      console.error('AI conversation error:', err);
+    });
+  }, [tick, isPaused, agents, adSlots, worldEvents, shouldTrigger, generateConversation, getNearbyBrands, addSpeechBubble, addLog]);
+
   const placeBrandAd = useCallback((slotId: string, brandName: string) => {
     setAdSlots(prev => prev.map(s => s.id === slotId ? { ...s, brand: brandName } : s));
     addLog(`📢 "${brandName}" 광고가 설치되었습니다`);
