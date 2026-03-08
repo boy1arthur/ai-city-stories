@@ -26,6 +26,7 @@ const COLOR_MAP: Record<string, string> = {
 };
 
 interface Props {
+  zone: Zone;
   buildings: Building[];
   agents: Agent[];
   adSlots: AdSlot[];
