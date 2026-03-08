@@ -44,8 +44,10 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
   const p1 = isEast ? iso(b.gridX + b.width, b.gridY) : iso(b.gridX, b.gridY + b.height);
   const p2 = isEast ? iso(b.gridX + b.width, b.gridY + b.height) : iso(b.gridX + b.width, b.gridY + b.height);
 
-  // Floating LED panel — thin strip at upper wall
-  const panelTop = 0.82, panelBot = 0.68, inset = 0.15;
+  // Floating LED panel — fits building width, thinner for basic
+  const panelTop = isPremium ? 0.85 : 0.80;
+  const panelBot = isPremium ? 0.62 : 0.66;
+  const inset = 0.05; // tight to building edges
   const lerp = (a: {x:number,y:number}, b2: {x:number,y:number}, t: number) => ({ x: a.x + (b2.x - a.x) * t, y: a.y + (b2.y - a.y) * t });
 
   const tl = { x: lerp(p1, p2, inset).x, y: lerp(p1, p2, inset).y - wallH * panelTop };
