@@ -1,5 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Zone } from '@/data/world';
+import type { User } from '@supabase/supabase-js';
 
 interface Props {
   tick: number;
@@ -13,9 +15,12 @@ interface Props {
   energyBar?: React.ReactNode;
   isFullView?: boolean;
   onToggleFullView?: () => void;
+  user?: User | null;
+  onSignOut?: () => void;
 }
 
-export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard, onHome, energyBar, isFullView, onToggleFullView }) => {
+export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard, onHome, energyBar, isFullView, onToggleFullView, user, onSignOut }) => {
+  const navigate = useNavigate();
   return (
     <header className="h-13 bg-card/80 backdrop-blur-xl border-b border-border/50 flex items-center justify-between px-4 z-30">
       <div className="flex items-center gap-3">
@@ -81,6 +86,27 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
         >
           ⚡ Sponsor
         </button>
+
+        {user ? (
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-muted-foreground hidden md:inline truncate max-w-[100px]">
+              {user.email}
+            </span>
+            <button
+              onClick={onSignOut}
+              className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+            >
+              로그아웃
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => navigate('/auth')}
+            className="text-xs px-3 py-1.5 rounded-lg border border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/25 transition-all font-medium"
+          >
+            로그인
+          </button>
+        )}
       </div>
     </header>
   );

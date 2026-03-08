@@ -12,6 +12,7 @@ import { WorldEventBanner } from '@/components/WorldEventBanner';
 import { AgentProfilePanel } from '@/components/agent/AgentProfilePanel';
 import { SlotInteractionModal } from '@/components/SlotInteractionModal';
 import { useWorldSimulation } from '@/hooks/useWorldSimulation';
+import { useAuth } from '@/hooks/useAuth';
 import { useCampaigns } from '@/hooks/useCampaigns';
 import { useSlots, filterPatronTiles } from '@/hooks/useSlots';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -34,6 +35,7 @@ const Index = () => {
   } = sim;
 
   const { campaigns, createCampaign, endCampaign, updateCampaignSlots } = useCampaigns();
+  const { user, signOut } = useAuth();
   const isMobile = useIsMobile();
 
   // Full city view state (PC only)
@@ -171,6 +173,8 @@ const Index = () => {
         energyBar={<EnergyBar energy={cityEnergy} />}
         isFullView={isFullView}
         onToggleFullView={() => setIsFullView(v => !v)}
+        user={user}
+        onSignOut={signOut}
       />
 
       <div className="flex-1 relative overflow-hidden">

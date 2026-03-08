@@ -61,6 +61,12 @@ const Landing = () => {
               Sponsor
             </button>
             <button
+              onClick={() => navigate('/auth')}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors hidden md:inline"
+            >
+              로그인
+            </button>
+            <button
               onClick={() => navigate('/world')}
               className="text-xs px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all font-semibold shadow-lg shadow-primary/20"
             >
