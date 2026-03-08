@@ -355,16 +355,30 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
         }
         // Small sidewalk tree (like reference street trees)
         if (seed % 8 === 0 && leftType === 'road') {
-          decorations.push(
-            <g key={`stree_${gx}_${gy}`}>
-              <rect x={pos.x - 2} y={pos.y - 1} width={4} height={1.5} rx={0.5}
-                fill="hsl(25,15%,35%)" opacity={0.4} />
-              <line x1={pos.x} y1={pos.y - 1} x2={pos.x} y2={pos.y - 8}
-                stroke="hsl(25,25%,30%)" strokeWidth={1.2} />
-              <circle cx={pos.x} cy={pos.y - 9} r={4} fill="hsl(130,28%,35%)" opacity={0.75} />
-              <circle cx={pos.x - 1.5} cy={pos.y - 10.5} r={2.8} fill="hsl(135,32%,40%)" opacity={0.65} />
-            </g>
-          );
+          if (isResidential) {
+            // Elegant minimal tree with gold planter
+            decorations.push(
+              <g key={`stree_${gx}_${gy}`}>
+                <rect x={pos.x - 2.5} y={pos.y - 1.5} width={5} height={2} rx={0.5}
+                  fill="hsl(43,50%,65%)" opacity={0.4} />
+                <line x1={pos.x} y1={pos.y - 1.5} x2={pos.x} y2={pos.y - 9}
+                  stroke="hsl(30,15%,55%)" strokeWidth={1} />
+                <circle cx={pos.x} cy={pos.y - 10} r={3.5} fill="hsl(135,18%,68%)" opacity={0.65} />
+                <circle cx={pos.x - 1} cy={pos.y - 11.5} r={2.5} fill="hsl(135,20%,72%)" opacity={0.55} />
+              </g>
+            );
+          } else {
+            decorations.push(
+              <g key={`stree_${gx}_${gy}`}>
+                <rect x={pos.x - 2} y={pos.y - 1} width={4} height={1.5} rx={0.5}
+                  fill="hsl(25,15%,35%)" opacity={0.4} />
+                <line x1={pos.x} y1={pos.y - 1} x2={pos.x} y2={pos.y - 8}
+                  stroke="hsl(25,25%,30%)" strokeWidth={1.2} />
+                <circle cx={pos.x} cy={pos.y - 9} r={4} fill="hsl(130,28%,35%)" opacity={0.75} />
+                <circle cx={pos.x - 1.5} cy={pos.y - 10.5} r={2.8} fill="hsl(135,32%,40%)" opacity={0.65} />
+              </g>
+            );
+          }
         }
       }
     }
