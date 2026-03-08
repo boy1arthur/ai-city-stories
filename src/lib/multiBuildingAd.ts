@@ -101,85 +101,36 @@ export function isAdOccluded(ad: MultiBuildingAd, allBuildings: Building[]): boo
   }
 }
 
-// ===== DEMO PLACEMENTS =====
+// ===== DEMO PLACEMENTS — one banner per building =====
 export const DEMO_MULTI_BUILDING_ADS: MultiBuildingAd[] = [
-  // ═══ 12시 (NW) — NovaTech on Lab+Café south wall only (Arena has naming_rights) ═══
-  {
-    id: 'mba_nw_south',
-    brandName: 'NovaTech',
-    brandColor: 'hsl(210,60%,55%)',
-    brandInitial: 'N',
-    tagline: 'Future, simplified.',
-    buildingIds: ['lab', 'cafe'],
-    face: 'south',
-  },
-
-  // ═══ 3시 (NE) — Media Strip ═══
-  {
-    id: 'mba_ne_south',
-    brandName: 'FinFlow',
-    brandColor: 'hsl(215,45%,50%)',
-    brandInitial: 'F',
-    tagline: 'Smart money moves.',
-    buildingIds: ['feed_tower', 'newsstand'],
-    face: 'south',
-  },
-  {
-    id: 'mba_ne_east',
-    brandName: 'FinFlow',
-    brandColor: 'hsl(215,45%,50%)',
-    brandInitial: 'F',
-    tagline: 'Smart money moves.',
-    buildingIds: ['oracle', 'newsstand'],
-    face: 'east',
-  },
-
-  // ═══ 9시 (SW) — Culture Quarter ═══
-  {
-    id: 'mba_sw_south',
-    brandName: 'BrewBean',
-    brandColor: 'hsl(25,55%,45%)',
-    brandInitial: 'B',
-    tagline: '매일의 커피, 매일의 영감',
-    buildingIds: ['library', 'tavern'],
-    face: 'south',
-  },
-  {
-    id: 'mba_sw_east',
-    brandName: 'EduSpark',
-    brandColor: 'hsl(145,40%,45%)',
-    brandInitial: 'E',
-    tagline: '배움에 불꽃을',
-    buildingIds: ['tavern', 'museum'],
-    face: 'east',
-  },
-
-  // ═══ 6시 (SE) — Innovation Hub ═══
-  {
-    id: 'mba_se_south',
-    brandName: 'Lumière',
-    brandColor: 'hsl(320,40%,55%)',
-    brandInitial: 'L',
-    tagline: 'Wear the light.',
-    buildingIds: ['observatory', 'arcade'],
-    face: 'south',
-  },
-  {
-    id: 'mba_se_east',
-    brandName: 'Lumière',
-    brandColor: 'hsl(320,40%,55%)',
-    brandInitial: 'L',
-    tagline: 'Wear the light.',
-    buildingIds: ['arcade', 'tech_lab'],
-    face: 'east',
-  },
-  {
-    id: 'mba_se_south2',
-    brandName: 'EduSpark',
-    brandColor: 'hsl(145,40%,45%)',
-    brandInitial: 'E',
-    tagline: '배움에 불꽃을',
-    buildingIds: ['garden', 'tech_lab'],
-    face: 'south',
-  },
+  // Arena — south wall
+  { id: 'b_arena_s', brandName: 'NovaTech', brandColor: 'hsl(210,60%,55%)', brandInitial: 'N', tagline: 'Future, simplified.', buildingIds: ['arena'], face: 'south' },
+  // Lab — south wall
+  { id: 'b_lab_s', brandName: 'NovaTech', brandColor: 'hsl(210,60%,55%)', brandInitial: 'N', tagline: 'Future, simplified.', buildingIds: ['lab'], face: 'south' },
+  // Café — south wall
+  { id: 'b_cafe_s', brandName: 'BrewBean', brandColor: 'hsl(25,55%,45%)', brandInitial: 'B', tagline: '매일의 커피', buildingIds: ['cafe'], face: 'south' },
+  // Feed Tower — south wall
+  { id: 'b_feed_s', brandName: 'FinFlow', brandColor: 'hsl(215,45%,50%)', brandInitial: 'F', tagline: 'Smart money.', buildingIds: ['feed_tower'], face: 'south' },
+  // Oracle — south wall
+  { id: 'b_oracle_s', brandName: 'FinFlow', brandColor: 'hsl(215,45%,50%)', brandInitial: 'F', tagline: 'Smart money.', buildingIds: ['oracle'], face: 'south' },
+  // Oracle — east wall
+  { id: 'b_oracle_e', brandName: 'FinFlow', brandColor: 'hsl(215,45%,50%)', brandInitial: 'F', tagline: 'Smart money.', buildingIds: ['oracle'], face: 'east' },
+  // Newsstand — south wall
+  { id: 'b_news_s', brandName: 'EduSpark', brandColor: 'hsl(145,40%,45%)', brandInitial: 'E', tagline: '배움에 불꽃을', buildingIds: ['newsstand'], face: 'south' },
+  // Workshop — south wall
+  { id: 'b_work_s', brandName: 'NovaTech', brandColor: 'hsl(210,60%,55%)', brandInitial: 'N', tagline: 'Build it.', buildingIds: ['workshop'], face: 'south' },
+  // Library — south wall
+  { id: 'b_lib_s', brandName: 'BrewBean', brandColor: 'hsl(25,55%,45%)', brandInitial: 'B', tagline: '매일의 영감', buildingIds: ['library'], face: 'south' },
+  // Tavern — south wall
+  { id: 'b_tav_s', brandName: 'BrewBean', brandColor: 'hsl(25,55%,45%)', brandInitial: 'B', tagline: '매일의 커피', buildingIds: ['tavern'], face: 'south' },
+  // Tavern — east wall
+  { id: 'b_tav_e', brandName: 'EduSpark', brandColor: 'hsl(145,40%,45%)', brandInitial: 'E', tagline: '배움에 불꽃을', buildingIds: ['tavern'], face: 'east' },
+  // Museum — south wall
+  { id: 'b_mus_s', brandName: 'Lumière', brandColor: 'hsl(320,40%,55%)', brandInitial: 'L', tagline: 'Wear the light.', buildingIds: ['museum'], face: 'south' },
+  // Observatory — south wall
+  { id: 'b_obs_s', brandName: 'Lumière', brandColor: 'hsl(320,40%,55%)', brandInitial: 'L', tagline: 'Wear the light.', buildingIds: ['observatory'], face: 'south' },
+  // Arcade — south wall
+  { id: 'b_arc_s', brandName: 'Lumière', brandColor: 'hsl(320,40%,55%)', brandInitial: 'L', tagline: 'Wear the light.', buildingIds: ['arcade'], face: 'south' },
+  // Arcade — east wall
+  { id: 'b_arc_e', brandName: 'EduSpark', brandColor: 'hsl(145,40%,45%)', brandInitial: 'E', tagline: '배움에 불꽃을', buildingIds: ['arcade'], face: 'east' },
 ];
