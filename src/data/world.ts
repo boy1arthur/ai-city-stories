@@ -322,7 +322,7 @@ export const ZONES: Zone[] = [
     name: 'Campus District',
     emoji: '🎓',
     description: '교육 & 연구 지구 — 학습 기반 브랜드 스폰서십',
-    gridSize: 18,
+    gridSize: 36,
     theme: 'campus',
     themeColor: 'hsl(145,35%,42%)',
     buildings: CAMPUS_BUILDINGS,
