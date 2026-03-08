@@ -163,6 +163,7 @@ const Index = () => {
           setSelectedAgent(null);
           if (isFullView) {
             setFocusedZoneId(id);
+            setAutoFocusZoneId(id);
           }
         }}
         onSponsorDashboard={() => setShowDashboard(true)}
