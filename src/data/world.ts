@@ -199,7 +199,7 @@ const PLAZA_BUILDINGS: Building[] = [
   { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary',
     gridX: 2, gridY: 10, width: 6, height: 4,
     description: '실험 & 프로토타입 연구소',
-    adSlots: ['wall_wrap', 'kiosk', 'billboard'],
+    adSlots: ['kiosk'],
     heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
 
