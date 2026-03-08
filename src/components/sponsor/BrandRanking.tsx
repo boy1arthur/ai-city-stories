@@ -3,6 +3,7 @@ import type { BrandStats } from '@/lib/esv';
 
 interface Props {
   brandStats: BrandStats[];
+  onBrandClick?: (brandId: string) => void;
 }
 
 export const BrandRanking: React.FC<Props> = ({ brandStats }) => {
