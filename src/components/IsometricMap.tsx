@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react'
 import type { Building, Agent, AdSlot, InteractionEvent, Zone } from '@/data/world';
 import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/useWorldSimulation';
 import type { CityEnergyStatus } from '@/lib/cityEnergy';
+import type { Slot } from '@/data/slots';
 import { GroundLayer } from './map/GroundLayer';
 import { BuildingRenderer } from './map/BuildingRenderer';
 import { AdSlotVisual } from './map/AdSlotVisual';
@@ -9,8 +10,10 @@ import { AgentRenderer } from './map/AgentRenderer';
 import { LockedZoneGhost } from './map/LockedZoneGhost';
 import { MultiBuildingAdRenderer } from './map/MultiBuildingAdRenderer';
 import { PatronTileRenderer } from './map/PatronTileRenderer';
+import { SlotVisualRenderer } from './map/SlotVisualRenderer';
+import { GuideNPC } from './map/GuideNPC';
 import { DEMO_MULTI_BUILDING_ADS } from '@/lib/multiBuildingAd';
-import { getPatronTiles } from '@/data/slots';
+import { getPatronTiles, getSlotsByZone } from '@/data/slots';
 import type { SlotZone } from '@/data/slots';
 
 interface Props {
@@ -25,12 +28,13 @@ interface Props {
   energyStatus?: CityEnergyStatus;
   onBuildingClick: (b: Building) => void;
   onAgentClick: (a: Agent) => void;
+  onSlotClick?: (slot: Slot) => void;
 }
 
 export const IsometricMap: React.FC<Props> = ({
   zone, buildings, agents, adSlots, interactions,
   speechBubbles, adReactions, agentVisuals, energyStatus,
-  onBuildingClick, onAgentClick,
+  onBuildingClick, onAgentClick, onSlotClick,
 }) => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0.85);
@@ -79,6 +83,14 @@ export const IsometricMap: React.FC<Props> = ({
     });
   }, [agents, buildings]);
 
+  // Get all non-patron slots for SlotVisualRenderer
+  const zoneSlots = useMemo(() => getSlotsByZone(zone.id as SlotZone), [zone.id]);
+  const patronSlots = useMemo(() => getPatronTiles(zone.id as SlotZone), [zone.id]);
+
+  const handleSlotClick = useCallback((slot: Slot) => {
+    onSlotClick?.(slot);
+  }, [onSlotClick]);
+
   return (
     <div className="w-full h-full overflow-hidden bg-background relative" style={{ cursor: dragging ? 'grabbing' : 'grab' }}>
 
@@ -96,7 +108,6 @@ export const IsometricMap: React.FC<Props> = ({
 
           {/* Layer 1: Ground tiles */}
           <GroundLayer zone={zone} />
-
 
           {/* Layer 2+3: Buildings with integrated ad visuals */}
           {sortedBuildings.map(b => {
@@ -119,8 +130,14 @@ export const IsometricMap: React.FC<Props> = ({
           {/* Layer 3.5: Multi-building ad canvases */}
           <MultiBuildingAdRenderer ads={DEMO_MULTI_BUILDING_ADS} buildings={buildings} />
 
-          {/* Layer 3.6: Patron tiles — rendered above buildings for visibility */}
-          <PatronTileRenderer slots={getPatronTiles(zone.id as SlotZone)} />
+          {/* Layer 3.6: Slot-based visuals (BRAND_BUILDING, BRAND_SCREEN, PRODUCT_PPL) */}
+          <SlotVisualRenderer slots={zoneSlots} buildings={buildings} onSlotClick={handleSlotClick} />
+
+          {/* Layer 3.7: Patron tiles */}
+          <PatronTileRenderer slots={patronSlots} onSlotClick={handleSlotClick} />
+
+          {/* Layer 3.8: Guide NPC */}
+          {zone.id === 'plaza' && <GuideNPC onGuideClick={handleSlotClick} />}
 
           {/* Layer 4: Agents */}
           {sortedAgents.map(({ agent, index }) => (
@@ -132,7 +149,6 @@ export const IsometricMap: React.FC<Props> = ({
               onClick={() => onAgentClick(agent)} />
           ))}
         </g>
-
 
         {/* Energy overlay */}
         {energyStatus && energyStatus !== 'stable' && (
@@ -159,6 +175,7 @@ export const IsometricMap: React.FC<Props> = ({
         <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded-sm" style={{ background: 'hsl(35,12%,48%)' }} /> <span className="text-muted-foreground">광장</span></div>
         <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded-sm" style={{ background: 'hsl(120,22%,32%)' }} /> <span className="text-muted-foreground">초지</span></div>
         <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full" style={{ background: 'hsl(38,75%,50%)' }} /> <span className="text-muted-foreground">광고</span></div>
+        <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full" style={{ background: 'hsl(210,50%,55%)' }} /> <span className="text-muted-foreground">가이드</span></div>
       </div>
     </div>
   );
