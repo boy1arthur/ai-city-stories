@@ -150,31 +150,30 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 };
 
 // ===== PLAZA DISTRICT (dense campus-commercial hybrid) =====
-// Legend:  R=road(ped spine)  S=sidewalk  P=plaza_stone  K=park  G=grass  D=dirt
-// Buildings occupy sidewalk tiles. Single-tile pedestrian spines: col 9 (vert), row 8 (horiz).
-// Core: rows 2-13, cols 1-16  |  Outskirts: row 0-1, 14-17 & col 0, 17
-// A=Arena E=Feed O=Oracle L=Lab C=Cafe B=Library N=News T=Tavern H=Workshop V=Obs
-// Grid: 18x18. Vert spine: col 8 = R always. Horiz boulevard: row 8 = all R.
+// Legend:  R=road  S=sidewalk  P=plaza_stone  K=park  G=grass
+// Building chars: A=Arena E=Feed O=Oracle L=Lab C=Cafe B=Library N=News T=Tavern H=Workshop V=Obs
+// Grid: 18x18. Vert road: col 8. Horiz boulevard: row 8.
+// All buildings have ≥1 tile buffer from roads (col 7/9 = sidewalk, row 7/9 = sidewalk).
 // Each row is exactly 18 chars.
 const PLAZA_TILE_MAP: string[] = [
-  'KKGSSSSSRSSSSGKKKK', // 0  outskirt north
-  'KGSSSSSSRSSSSSKKSS', // 1
-  'SSAAAASSREEESOOSSK', // 2  Arena(2-5,2-5) Feed(9-11,2-4) Oracle(13-14,2-4)
-  'SSAAAASSREEESOOSSK', // 3
-  'SSAAAASSREEESOOSSK', // 4
-  'SSAAAASSRLLLSPPPSK', // 5  Arena(2-5) Lab(9-11,5-7) PlazaStone(13-15)
-  'SSCCCSSSRLLLSPPPSK', // 6  Café(2-4,6-7) Lab(9-11)
-  'SSCCCSSSRLLLSPPPSK', // 7
+  'GSSSSSSSRSSSSSSSSG', // 0  outskirt
+  'GSSSSSSSRSSSSSSSSG', // 1
+  'SSAAAASSREEESOOSSG', // 2  Arena(2-5,2-5) Feed(9-11,2-4) Oracle(13-14,2-4)
+  'SSAAAASSREEESOOSSG', // 3
+  'SSAAAASSREEESOOSSG', // 4
+  'SSAAAASSRLLLSPPPSG', // 5  Arena row5, Lab(9-11,5-6) PlazaStone(13-15,5-6)
+  'SSCCCSSSRLLLSPPPSG', // 6  Café(2-4,6) Lab row6 CP row6
+  'SSSSSSSSRSSSSSSSSG', // 7  buffer row
   'RRRRRRRRRRRRRRRRRR', // 8  boulevard
-  'SSBBBBSSRNNNSPPSSS', // 9  Library(2-5,9-11) News(9-11,9-10)
-  'SSBBBBSSRNNNSPPSSS', // 10
-  'SSBBBBSSRSSSSPPSKS', // 11
-  'STTTSSKKREHHHSSSSK', // 12 Tavern(1-3,12-13) Workshop(10-12,12-14)
-  'STTTSSKKREHHHSSSSK', // 13
-  'SKKKKKKKREHHHSSSSK', // 14 Garden(1-7,14-16) Workshop row14
-  'SKKKKKKKREVVSKKKKK', // 15 Observatory(10-11,15-16)
-  'SKKKKKKKREVVSKKKKK', // 16
-  'GKKKKKKKRSSSSKKKKG', // 17
+  'SSBBBBSSRNNNSSSSSG', // 9  Library(2-5,9-11) News(9-11,9-10)
+  'SSBBBBSSRNNNSSSSSG', // 10
+  'SSBBBBSSRSSSSSSSSG', // 11
+  'STTTSSSSRSHHHSSSSG', // 12 Tavern(1-3,12-13) Workshop(10-12,12-14)
+  'STTTSSSSRSHHHSSSSG', // 13
+  'SSSSSSSSRSHHHSSSSG', // 14 Workshop row14
+  'SKKKKKKSRSVVSSSSSG', // 15 Garden(1-6,15-16) Observatory(10-11,15-16)
+  'SKKKKKKSRSVVSSSSSG', // 16
+  'GGGGGGGSRSGGGGGGGG', // 17 outskirt
 ];
 
 const PLAZA_BUILDINGS: Building[] = [
@@ -202,21 +201,21 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── CORE MIDDLE ───
   { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary',
-    gridX: 9, gridY: 5, width: 3, height: 3,
+    gridX: 9, gridY: 5, width: 3, height: 2,
     description: '실험 & 프로토타입 연구소',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
     heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
 
   { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
-    gridX: 2, gridY: 6, width: 3, height: 2,
+    gridX: 2, gridY: 6, width: 3, height: 1,
     description: '에이전트 카페 & 미팅 포인트',
     adSlots: ['kiosk', 'bus_stop'],
     heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
   { id: 'plaza', name: 'Central Plaza', emoji: '🏛️', color: 'accent',
-    gridX: 13, gridY: 5, width: 3, height: 3,
+    gridX: 13, gridY: 5, width: 3, height: 2,
     description: '중앙 광장 — 모든 에이전트의 교차점',
     adSlots: ['billboard', 'wall_wrap', 'bus_stop', 'kiosk', 'naming_rights'],
     heightLevel: 1, roofShape: 'flat',
@@ -254,7 +253,7 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── OUTSKIRTS ───
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
-    gridX: 1, gridY: 14, width: 7, height: 3,
+    gridX: 1, gridY: 15, width: 6, height: 2,
     description: '힐링 & 명상 정원',
     adSlots: ['kiosk', 'bus_stop'],
     heightLevel: 1, roofShape: 'garden',
