@@ -33,11 +33,11 @@ export const WorldEventBanner: React.FC<Props> = ({ events }) => {
   const bgColor = latest.type === 'league.lead_change' ? 'bg-accent/90' : 'bg-primary/90';
 
   return (
-    <div className={`absolute top-14 left-1/2 -translate-x-1/2 z-50 ${bgColor} backdrop-blur-sm text-primary-foreground px-4 py-2 rounded-lg shadow-lg flex items-center gap-3 animate-fade-in`}>
-      <span className="text-sm">🏆</span>
-      <span className="text-xs font-semibold">{latest.message}</span>
+    <div className={`absolute top-3 right-14 z-50 ${bgColor} backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-md shadow-md flex items-center gap-2 animate-fade-in max-w-[220px]`}>
+      <span className="text-xs">🏆</span>
+      <span className="text-[10px] font-medium leading-tight">{latest.message}</span>
       <button onClick={() => { setDismissed(prev => new Set(prev).add(latest.id)); setVisible(null); }}
-        className="text-xs opacity-70 hover:opacity-100 ml-2">✕</button>
+        className="text-[10px] opacity-60 hover:opacity-100 ml-1 shrink-0">✕</button>
     </div>
   );
 };
