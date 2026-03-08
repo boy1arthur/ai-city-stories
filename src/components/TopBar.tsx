@@ -17,26 +17,31 @@ interface Props {
 
 export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard, onHome, energyBar, isFullView, onToggleFullView }) => {
   return (
-    <header className="h-12 bg-card/90 backdrop-blur-md border-b border-border flex items-center justify-between px-4 z-30">
+    <header className="h-13 bg-card/80 backdrop-blur-xl border-b border-border/50 flex items-center justify-between px-4 z-30">
       <div className="flex items-center gap-3">
-        <button onClick={onHome} className="text-sm font-semibold text-foreground hover:opacity-80 transition-opacity">
-          <span className="text-primary">AI</span>
-          <span className="text-muted-foreground mx-1">Social</span>
-          <span className="text-secondary">World</span>
+        <button onClick={onHome} className="flex items-center gap-1.5 text-sm font-bold text-foreground hover:opacity-80 transition-opacity">
+          <div className="w-6 h-6 rounded-md bg-primary/12 flex items-center justify-center">
+            <span className="text-xs">🏙️</span>
+          </div>
+          <span className="hidden md:inline">
+            <span className="text-primary">AI</span>
+            <span className="text-muted-foreground/80"> Social</span>
+          </span>
         </button>
-        <div className="h-4 w-px bg-border" />
 
-        <div className="flex items-center gap-1">
+        <div className="h-4 w-px bg-border/50" />
+
+        <div className="flex items-center gap-0.5">
           {zones.map(zone => (
             <button
               key={zone.id}
               onClick={() => !zone.locked && onZoneChange(zone.id)}
-              className={`text-xs px-2 py-0.5 rounded transition-colors ${
+              className={`text-xs px-2 py-1 rounded-md transition-all ${
                 zone.id === currentZone.id
-                  ? 'bg-primary/15 text-primary border border-primary/30'
+                  ? 'bg-primary/12 text-primary border border-primary/25 shadow-sm shadow-primary/10'
                   : zone.locked
-                  ? 'text-muted-foreground/40 cursor-not-allowed'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  ? 'text-muted-foreground/30 cursor-not-allowed'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               }`}
               title={zone.locked ? `${zone.name} — Coming Soon` : zone.name}
             >
@@ -44,36 +49,37 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
             </button>
           ))}
         </div>
-
-        <div className="h-4 w-px bg-border" />
-        <span className="text-xs text-muted-foreground">{currentZone.emoji} {currentZone.name}</span>
-        <span className="text-xs text-muted-foreground/50 font-mono">T#{tick}</span>
       </div>
-      <div className="flex items-center gap-4">
+
+      <div className="flex items-center gap-2 md:gap-4">
         {energyBar}
-        <Stat label="Agents" value={agentCount} color="text-primary" />
-        <Stat label="Ads" value={activeAds} color="text-accent" />
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer"
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors hidden md:inline">
-          GitHub
-        </a>
+
+        <div className="hidden md:flex items-center gap-3 px-3 py-1 rounded-lg bg-muted/30">
+          <Stat label="Agents" value={agentCount} color="text-primary" />
+          <div className="w-px h-3 bg-border/50" />
+          <Stat label="Ads" value={activeAds} color="text-accent" />
+          <div className="w-px h-3 bg-border/50" />
+          <span className="text-[10px] font-mono text-muted-foreground/60">T#{tick}</span>
+        </div>
+
         {onToggleFullView && (
           <button
             onClick={onToggleFullView}
-            className={`text-xs px-2.5 py-1 rounded border transition-colors font-medium hidden md:inline-flex items-center gap-1 ${
+            className={`text-xs px-3 py-1.5 rounded-lg border transition-all font-medium hidden md:inline-flex items-center gap-1.5 ${
               isFullView
-                ? 'border-primary/40 text-primary bg-primary/10'
-                : 'border-border text-muted-foreground hover:text-foreground hover:border-primary/30'
+                ? 'border-primary/30 text-primary bg-primary/8 shadow-sm shadow-primary/10'
+                : 'border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/25 hover:bg-muted/30'
             }`}
           >
-            🗺️ {isFullView ? 'Zone View' : 'Full City'}
+            🗺️ {isFullView ? 'Zone' : 'City'}
           </button>
         )}
+
         <button
           onClick={onSponsorDashboard}
-          className="text-xs px-3 py-1 rounded border border-accent/40 text-accent hover:bg-accent/10 transition-colors font-medium"
+          className="text-xs px-3.5 py-1.5 rounded-lg bg-accent/10 border border-accent/25 text-accent hover:bg-accent/15 hover:border-accent/40 transition-all font-semibold shadow-sm shadow-accent/5"
         >
-          Sponsor Dashboard
+          ⚡ Sponsor
         </button>
       </div>
     </header>
@@ -83,8 +89,8 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
 function Stat({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <span className={`text-xs font-semibold font-mono ${color}`}>{value}</span>
+      <span className="text-[10px] text-muted-foreground/70 uppercase tracking-wider">{label}</span>
+      <span className={`text-xs font-bold font-mono ${color}`}>{value}</span>
     </div>
   );
 }

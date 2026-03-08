@@ -1,73 +1,92 @@
-# Welcome to your Lovable project
+# 🏙️ AI Social World
 
-## Project info
+> AI 에이전트들이 자율적으로 살아가는 아이소메트릭 가상 도시 시뮬레이션
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://aisocialworld.app)
+[![Built with Lovable](https://img.shields.io/badge/built%20with-Lovable-ff69b4)](https://lovable.dev)
 
-## How can I edit this code?
+## 📖 Overview
 
-There are several ways of editing your application.
+AI Social World는 8명의 AI 에이전트가 5개 구역으로 이루어진 가상 도시에서 자율적으로 이동하고, 대화하고, 브랜드 광고에 반응하는 실시간 시뮬레이션입니다. 스폰서는 광고 슬롯을 구매하여 도시 경제를 유지합니다.
 
-**Use Lovable**
+### ✨ Key Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- **🤖 AI 에이전트 시뮬레이션** — 고유한 성격, 감정, 브랜드 친밀도를 가진 8명의 에이전트
+- **🗺️ 5구역 아이소메트릭 도시** — Plaza, Campus, Residential, Harbor, Industrial
+- **📊 스폰서 대시보드** — 실시간 ESV, 브랜드 랭킹, 캠페인 관리
+- **⚡ 도시 에너지 시스템** — 광고 활동이 도시 에너지를 유지
+- **🏆 브랜드 리그** — 시즌 기반 브랜드 경쟁 랭킹
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🚀 Getting Started
 
-**Use your preferred IDE**
+### Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- [Node.js](https://nodejs.org/) 18+ 또는 [Bun](https://bun.sh/)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
+```bash
+# Clone
+git clone https://github.com/YOUR_USERNAME/ai-social-world.git
+cd ai-social-world
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Install dependencies
+bun install    # or: npm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Start dev server
+bun run dev    # or: npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open [http://localhost:5173](http://localhost:5173)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build
 
-**Use GitHub Codespaces**
+```bash
+bun run build
+bun run preview
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🏗️ Tech Stack
 
-## What technologies are used for this project?
+| Category | Technology |
+|----------|-----------|
+| Framework | React 18 + TypeScript |
+| Build | Vite 5 (SWC) |
+| Styling | Tailwind CSS + shadcn/ui |
+| Server State | TanStack React Query |
+| Routing | React Router DOM v6 |
+| Backend | Supabase (Lovable Cloud) |
+| Charts | Recharts |
+| Testing | Vitest + Testing Library |
 
-This project is built with:
+## 📁 Project Structure
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```
+src/
+├── pages/          # Route pages (Landing, Index, Admin)
+├── components/
+│   ├── map/        # Isometric map rendering layers
+│   ├── agent/      # Agent profile UI
+│   ├── sponsor/    # Sponsor dashboard components
+│   └── ui/         # shadcn/ui components
+├── hooks/          # Simulation engine, campaigns, slots
+├── lib/            # Business logic (pathfinding, ESV, energy)
+└── data/           # World definitions, seeds, pricing
+```
 
-## How can I deploy this project?
+## 📚 Documentation
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+- [Architecture Guide](docs/ARCHITECTURE.md) — 상세 아키텍처, 좌표계, LOD 시스템
+- [Changelog](docs/CHANGELOG.md) — 변경 이력
 
-## Can I connect a custom domain to my Lovable project?
+## 🤝 Contributing
 
-Yes, you can!
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 📄 License
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+MIT © AI Social World
