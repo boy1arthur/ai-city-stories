@@ -6,6 +6,7 @@ import { GroundLayer } from './map/GroundLayer';
 import { BuildingRenderer } from './map/BuildingRenderer';
 import { AdSlotVisual } from './map/AdSlotVisual';
 import { AgentRenderer } from './map/AgentRenderer';
+import { LockedZoneGhost } from './map/LockedZoneGhost';
 
 interface Props {
   zone: Zone;
@@ -76,7 +77,7 @@ export const IsometricMap: React.FC<Props> = ({
   return (
     <div className="w-full h-full overflow-hidden bg-background relative" style={{ cursor: dragging ? 'grabbing' : 'grab' }}>
 
-      <svg width="100%" height="100%" viewBox="0 0 1000 600"
+      <svg width="100%" height="100%" viewBox="-200 -100 1400 900"
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
         onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
         onWheel={onWheel}>
@@ -98,9 +99,12 @@ export const IsometricMap: React.FC<Props> = ({
         </defs>
 
         {/* Full background fill */}
-        <rect width="1000" height="600" fill="url(#groundFade)" />
+        <rect x="-200" y="-100" width="1400" height="900" fill="url(#groundFade)" />
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
+          {/* Layer 0: Locked zone ghost previews */}
+          <LockedZoneGhost activeZoneId={zone.id} />
+
           {/* Layer 1: Ground tiles */}
           <GroundLayer zone={zone} />
 
@@ -134,11 +138,11 @@ export const IsometricMap: React.FC<Props> = ({
         </g>
 
         {/* Vignette edge fade */}
-        <rect width="1000" height="600" fill="url(#vignette)" pointerEvents="none" />
+        <rect x="-200" y="-100" width="1400" height="900" fill="url(#vignette)" pointerEvents="none" />
 
         {/* Energy overlay */}
         {energyStatus && energyStatus !== 'stable' && (
-          <rect width="1000" height="600" pointerEvents="none"
+          <rect x="-200" y="-100" width="1400" height="900" pointerEvents="none"
             fill={energyStatus === 'critical' ? 'hsl(0,30%,8%)' : 'hsl(220,20%,8%)'}
             fillOpacity={energyStatus === 'critical' ? 0.35 : 0.18}>
             {energyStatus === 'critical' && (
