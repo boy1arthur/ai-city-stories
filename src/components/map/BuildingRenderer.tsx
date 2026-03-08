@@ -41,7 +41,7 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
 
       {/* ── South wall ── */}
       <polygon points={`${se.x},${se.y} ${sw.x},${sw.y} ${sw.x},${sw.y - wallHeight} ${se.x},${se.y - wallHeight}`}
-        fill={wColor} fillOpacity={0.95} stroke={wColorDark} strokeWidth={0.6} />
+        fill={wColor} stroke={wColorDark} strokeWidth={0.6} />
 
       {/* South wall floor lines */}
       {[...Array(b.heightLevel)].map((_, fi) => {
