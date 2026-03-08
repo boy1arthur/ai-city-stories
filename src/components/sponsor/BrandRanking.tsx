@@ -26,7 +26,8 @@ export const BrandRanking: React.FC<Props> = ({ brandStats, onBrandClick }) => {
           const negativePercent = Math.round(brand.negativeRatio * 100);
 
           return (
-            <div key={brand.brand} className="flex items-center gap-3 p-2 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+            <div key={brand.brand} className="flex items-center gap-3 p-2 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer"
+              onClick={() => onBrandClick?.(brand.brand)}>
               <span className="text-sm w-6 text-center">{medal}</span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
