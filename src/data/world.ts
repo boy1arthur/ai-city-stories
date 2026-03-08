@@ -346,7 +346,7 @@ export const ZONES: Zone[] = [
     name: 'Industrial District',
     emoji: '🏭',
     description: '산업 지구 — 제조/테크 브랜드 특화 구역',
-    gridSize: 18,
+    gridSize: 36,
     theme: 'industrial',
     themeColor: 'hsl(220,5%,45%)',
     buildings: [],
