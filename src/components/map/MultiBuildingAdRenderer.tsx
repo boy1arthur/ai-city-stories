@@ -39,78 +39,56 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
   const wallH = WALL_H_UNIT * b.heightLevel;
   const isPremium = ad.tier === 'premium';
 
-  if (ad.face === 'south') {
-    const sw = iso(b.gridX, b.gridY + b.height);
-    const se = iso(b.gridX + b.width, b.gridY + b.height);
-    const topR = 0.85, botR = 0.55;
-    const tl = { x: sw.x, y: sw.y - wallH * topR };
-    const tr = { x: se.x, y: se.y - wallH * topR };
-    const bl = { x: sw.x, y: sw.y - wallH * botR };
-    const br = { x: se.x, y: se.y - wallH * botR };
-    const cx = (tl.x + tr.x) / 2, cy = (tl.y + bl.y) / 2;
-    const angle = Math.atan2(se.y - sw.y, se.x - sw.x) * (180 / Math.PI);
-    const bH = wallH * 0.3;
-    const fs = Math.max(7, bH * 0.55);
-    const fsN = Math.max(5, bH * 0.3);
-    const fsT = Math.max(3.5, bH * 0.18);
+  // Compute wall endpoints based on face
+  const isEast = ad.face === 'east';
+  const p1 = isEast ? iso(b.gridX + b.width, b.gridY) : iso(b.gridX, b.gridY + b.height);
+  const p2 = isEast ? iso(b.gridX + b.width, b.gridY + b.height) : iso(b.gridX + b.width, b.gridY + b.height);
 
-    return (
-      <g>
-        <polygon points={`${tl.x},${tl.y} ${tr.x},${tr.y} ${br.x},${br.y} ${bl.x},${bl.y}`}
-          fill={ad.brandColor} stroke={isPremium ? 'hsl(0,0%,90%)' : ad.brandColor} strokeWidth={isPremium ? 1 : 0.5} />
-        {isPremium && (
-          <polygon points={`${tl.x},${tl.y} ${tr.x},${tr.y} ${br.x},${br.y} ${bl.x},${bl.y}`}
-            fill="hsl(0,0%,100%)" fillOpacity={0.08}>
-            <animate attributeName="fillOpacity" values="0.04;0.12;0.04" dur="2s" repeatCount="indefinite" />
-          </polygon>
-        )}
-        <g>
-          <text x={cx} y={cy - fsN * 1.2} textAnchor="middle" fontSize={fs}
-            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-          <text x={cx} y={cy + fsN * 0.2} textAnchor="middle" fontSize={fsN}
-            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="1">{ad.brandName}</text>
-          <text x={cx} y={cy + fsN * 0.2 + fsT * 2.2} textAnchor="middle" fontSize={fsT}
-            fill="hsl(0,0%,100%)" fillOpacity={0.7} fontFamily="Inter" fontWeight={500} fontStyle="italic">{ad.tagline}</text>
-        </g>
-      </g>
-    );
-  } else {
-    // East wall
-    const ne = iso(b.gridX + b.width, b.gridY);
-    const se = iso(b.gridX + b.width, b.gridY + b.height);
-    const topR = 0.85, botR = 0.55;
-    const tl = { x: ne.x, y: ne.y - wallH * topR };
-    const tr = { x: se.x, y: se.y - wallH * topR };
-    const bl = { x: ne.x, y: ne.y - wallH * botR };
-    const br = { x: se.x, y: se.y - wallH * botR };
-    const cx = (tl.x + tr.x) / 2, cy = (tl.y + bl.y) / 2;
-    const angle = Math.atan2(se.y - ne.y, se.x - ne.x) * (180 / Math.PI);
-    const bH = wallH * 0.3;
-    const fs = Math.max(7, bH * 0.55);
-    const fsN = Math.max(5, bH * 0.3);
-    const fsT = Math.max(3.5, bH * 0.18);
+  // Floating LED panel — thin strip at upper wall
+  const panelTop = 0.82, panelBot = 0.68, inset = 0.15;
+  const lerp = (a: {x:number,y:number}, b2: {x:number,y:number}, t: number) => ({ x: a.x + (b2.x - a.x) * t, y: a.y + (b2.y - a.y) * t });
 
-    return (
-      <g>
+  const tl = { x: lerp(p1, p2, inset).x, y: lerp(p1, p2, inset).y - wallH * panelTop };
+  const tr = { x: lerp(p1, p2, 1 - inset).x, y: lerp(p1, p2, 1 - inset).y - wallH * panelTop };
+  const bl = { x: lerp(p1, p2, inset).x, y: lerp(p1, p2, inset).y - wallH * panelBot };
+  const br = { x: lerp(p1, p2, 1 - inset).x, y: lerp(p1, p2, 1 - inset).y - wallH * panelBot };
+
+  const cx = (tl.x + tr.x + bl.x + br.x) / 4;
+  const cy = (tl.y + tr.y + bl.y + br.y) / 4;
+  const panelH = Math.abs(tl.y - bl.y);
+  const fs = Math.max(4, panelH * 0.45);
+  const fsN = Math.max(3, panelH * 0.3);
+
+  return (
+    <g>
+      {/* Dark LED panel backing */}
+      <polygon points={`${tl.x},${tl.y} ${tr.x},${tr.y} ${br.x},${br.y} ${bl.x},${bl.y}`}
+        fill="hsl(220,8%,12%)" stroke="hsl(220,5%,25%)" strokeWidth={0.6} />
+
+      {/* Brand color accent strip at top edge */}
+      {(() => {
+        const t = 0.12;
+        const stBl = { x: tl.x + (bl.x - tl.x) * t, y: tl.y + (bl.y - tl.y) * t };
+        const stBr = { x: tr.x + (br.x - tr.x) * t, y: tr.y + (br.y - tr.y) * t };
+        return <polygon points={`${tl.x},${tl.y} ${tr.x},${tr.y} ${stBr.x},${stBr.y} ${stBl.x},${stBl.y}`}
+          fill={ad.brandColor} fillOpacity={0.9} />;
+      })()}
+
+      {/* LED glow pulse for premium */}
+      {isPremium && (
         <polygon points={`${tl.x},${tl.y} ${tr.x},${tr.y} ${br.x},${br.y} ${bl.x},${bl.y}`}
-          fill={ad.brandColor} stroke={isPremium ? 'hsl(0,0%,90%)' : ad.brandColor} strokeWidth={isPremium ? 1 : 0.5} />
-        {isPremium && (
-          <polygon points={`${tl.x},${tl.y} ${tr.x},${tr.y} ${br.x},${br.y} ${bl.x},${bl.y}`}
-            fill="hsl(0,0%,100%)" fillOpacity={0.08}>
-            <animate attributeName="fillOpacity" values="0.04;0.12;0.04" dur="2s" repeatCount="indefinite" />
-          </polygon>
-        )}
-        <g>
-          <text x={cx} y={cy - fsN * 1.2} textAnchor="middle" fontSize={fs}
-            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-          <text x={cx} y={cy + fsN * 0.2} textAnchor="middle" fontSize={fsN}
-            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="0.8">{ad.brandName}</text>
-          <text x={cx} y={cy + fsN * 0.2 + fsT * 2.2} textAnchor="middle" fontSize={fsT}
-            fill="hsl(0,0%,100%)" fillOpacity={0.7} fontFamily="Inter" fontWeight={500} fontStyle="italic">{ad.tagline}</text>
-        </g>
-      </g>
-    );
-  }
+          fill={ad.brandColor} fillOpacity={0.06}>
+          <animate attributeName="fillOpacity" values="0.03;0.1;0.03" dur="2.5s" repeatCount="indefinite" />
+        </polygon>
+      )}
+
+      {/* Logo + brand name — single line only */}
+      <text x={cx - fsN * 1.5} y={cy + fs * 0.2} textAnchor="middle" fontSize={fs}
+        fill={ad.brandColor} fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
+      <text x={cx + fsN * 0.8} y={cy + fsN * 0.2} textAnchor="middle" fontSize={fsN}
+        fill="hsl(0,0%,88%)" fontFamily="Inter" fontWeight={700} letterSpacing="0.8">{ad.brandName}</text>
+    </g>
+  );
 };
 
 // ════════════════════════════════════════════════
