@@ -16,6 +16,7 @@ interface Props {
   speechBubbles: SpeechBubble[];
   adReactions: AdReaction[];
   agentVisuals: Map<string, AgentVisualState>;
+  energyStatus?: CityEnergyStatus;
   onBuildingClick: (b: Building) => void;
   onAgentClick: (a: Agent) => void;
 }
