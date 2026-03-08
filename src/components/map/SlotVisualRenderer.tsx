@@ -60,7 +60,7 @@ const BrandBuildingSlot: React.FC<{ slot: Slot; building: Building; onClick: () 
   if (face === 'roof') {
     // Floating banner above the roof
     const bx = center.x;
-    const by = center.y - wallH - 28;
+    const by = center.y - wallH - 38;
     const w = 52;
     const h = 14;
     const accentColor = isOwned ? 'hsl(38,80%,55%)' : 'hsl(215,20%,45%)';
