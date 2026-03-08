@@ -53,6 +53,7 @@ const Index = () => {
         adSlots={adSlots}
         allAdSlots={allAdSlots}
         agents={agents}
+        allAgents={allAgents}
         currentZone={currentZone}
         brandStats={brandStats}
         highlights={highlights}
@@ -62,6 +63,8 @@ const Index = () => {
         zones={zones}
         leagueSeason={leagueSeason}
         leagueScores={leagueScores}
+        worldLog={worldLog}
+        worldEvents={worldEvents}
         onCreateCampaign={createCampaign}
         onEndCampaign={endCampaign}
         onBack={() => setShowDashboard(false)}
