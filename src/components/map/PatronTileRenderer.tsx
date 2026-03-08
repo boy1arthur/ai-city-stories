@@ -4,10 +4,11 @@ import type { Slot } from '@/data/slots';
 
 interface Props {
   slots: Slot[];
+  onSlotClick?: (slot: Slot) => void;
 }
 
 /** Renders PATRON_TILE slots on the isometric map as benches with plaques or empty "available" markers */
-export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots }) => {
+export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots, onSlotClick }) => {
   return (
     <g>
       {slots.map(slot => {
@@ -18,7 +19,7 @@ export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots }) => {
 
         if (isOwned) {
           return (
-            <g key={slot.id}>
+            <g key={slot.id} style={{ cursor: 'pointer' }} onClick={() => onSlotClick?.(slot)}>
               {/* Ground highlight — subtle golden tile */}
               <polygon
                 points={`${pos.x},${pos.y - TILE_H / 2} ${pos.x + TILE_W / 2},${pos.y} ${pos.x},${pos.y + TILE_H / 2} ${pos.x - TILE_W / 2},${pos.y}`}
@@ -72,7 +73,7 @@ export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots }) => {
 
         // Empty slot — "Available for sponsorship" marker
         return (
-          <g key={slot.id} style={{ cursor: 'pointer' }}>
+          <g key={slot.id} style={{ cursor: 'pointer' }} onClick={() => onSlotClick?.(slot)}>
             {/* Dashed outline tile */}
             <polygon
               points={`${pos.x},${pos.y - TILE_H / 2} ${pos.x + TILE_W / 2},${pos.y} ${pos.x},${pos.y + TILE_H / 2} ${pos.x - TILE_W / 2},${pos.y}`}
