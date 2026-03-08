@@ -193,37 +193,34 @@ const RooftopBillboard: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }>
 const RoadsideBillboard: React.FC<{ ad: MultiBuildingAd }> = ({ ad }) => {
   if (ad.gridX === undefined || ad.gridY === undefined) return null;
   const pos = iso(ad.gridX, ad.gridY);
-  const postH = 28;
-  const boardW = 32;
-  const boardH = 14;
+  const postH = 30;
+  const boardW = 40;
+  const boardH = 18;
 
   return (
     <g>
       {/* Ground shadow */}
-      <ellipse cx={pos.x} cy={pos.y + 2} rx={6} ry={2} fill="hsl(0,0%,0%)" fillOpacity={0.25} />
+      <ellipse cx={pos.x} cy={pos.y + 2} rx={8} ry={2.5} fill="hsl(0,0%,0%)" fillOpacity={0.25} />
       {/* Post */}
       <line x1={pos.x} y1={pos.y} x2={pos.x} y2={pos.y - postH}
-        stroke="hsl(220,5%,42%)" strokeWidth={2} strokeLinecap="round" />
+        stroke="hsl(220,5%,42%)" strokeWidth={2.5} strokeLinecap="round" />
       {/* Cross arm */}
       <line x1={pos.x - boardW / 2} y1={pos.y - postH} x2={pos.x + boardW / 2} y2={pos.y - postH}
-        stroke="hsl(220,5%,42%)" strokeWidth={1.2} />
+        stroke="hsl(220,5%,42%)" strokeWidth={1.5} />
 
       {/* Back panel */}
-      <rect x={pos.x - boardW / 2 - 1} y={pos.y - postH - boardH - 1} width={boardW + 2} height={boardH + 2} rx={2}
-        fill="hsl(220,5%,25%)" stroke="hsl(220,5%,40%)" strokeWidth={0.6} />
+      <rect x={pos.x - boardW / 2 - 1.5} y={pos.y - postH - boardH - 1.5} width={boardW + 3} height={boardH + 3} rx={2}
+        fill="hsl(220,5%,25%)" stroke="hsl(220,5%,45%)" strokeWidth={0.8} />
       {/* Main board */}
       <rect x={pos.x - boardW / 2} y={pos.y - postH - boardH} width={boardW} height={boardH} rx={1.5}
         fill={ad.brandColor} />
 
       {/* Brand initial */}
-      <text x={pos.x - boardW / 4} y={pos.y - postH - boardH / 2 + 1.5} textAnchor="middle" fontSize={7}
+      <text x={pos.x - boardW / 4} y={pos.y - postH - boardH / 2 + 2} textAnchor="middle" fontSize={9}
         fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
       {/* Brand name */}
-      <text x={pos.x + 3} y={pos.y - postH - boardH / 2 - 0.5} textAnchor="middle" fontSize={4.5}
-        fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="0.5">{ad.brandName}</text>
-      {/* Tagline */}
-      <text x={pos.x + 3} y={pos.y - postH - boardH / 2 + 4} textAnchor="middle" fontSize={2.5}
-        fill="hsl(0,0%,100%)" fillOpacity={0.7} fontFamily="Inter" fontWeight={400} fontStyle="italic">{ad.tagline}</text>
+      <text x={pos.x + 4} y={pos.y - postH - boardH / 2 + 2} textAnchor="middle" fontSize={6}
+        fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="0.8">{ad.brandName}</text>
 
       {/* Spotlight */}
       <ellipse cx={pos.x} cy={pos.y - postH - boardH / 2} rx={boardW / 2 + 4} ry={boardH / 2 + 6}
