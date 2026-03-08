@@ -207,7 +207,7 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
                 {/* Brand name */}
                 <text x={mx + 4} y={my + panelH * 0.12}
                   textAnchor="middle" fontSize={panelH * 0.35}
-                  fill={bv.color} fillOpacity={0.8}
+                  fill={bv.color} fillOpacity={0.95}
                   fontFamily="Inter" fontWeight={800} letterSpacing="1">
                   {fitText(slot.brand!, 10)}
                 </text>

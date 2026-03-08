@@ -105,7 +105,7 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
 
       {/* ── East wall ── */}
       <polygon points={`${ne.x},${ne.y} ${se.x},${se.y} ${se.x},${se.y - wallHeight} ${ne.x},${ne.y - wallHeight}`}
-        fill={wColorDark} fillOpacity={0.78} stroke={wColorDark} strokeWidth={0.6} />
+        fill={wColorDark} fillOpacity={0.92} stroke={wColorDark} strokeWidth={0.6} />
 
       {/* East wall floor lines */}
       {[...Array(b.heightLevel)].map((_, fi) => {
