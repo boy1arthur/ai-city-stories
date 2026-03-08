@@ -168,8 +168,8 @@ const PLAZA_TILE_MAP: string[] = [
   'SAAAAAARSEEEEOOOSG', // 2
   'SAAAAAARSEEEENNNSG', // 3  Newsstand(13-15)
   'SAAAAAARSEEEENNNSG', // 4
-  'SKKKKKKSRSSSSSSSG', // 5  Park(1-6)
-  'SKKKKKKSRSSSSSSSG', // 6
+  'SSSSKKSRSSSSSSSSG', // 5  Entrance path + Park(3-4)
+  'SSSSKKSRSSSSSSSSG', // 6
   'SSSSSSSSRSSSSSSSSS', // 7  sidewalk buffer
   'RRRRRRRRRRRRRRRRRR', // 8  boulevard
   'SBBBTTTSRVVVVDDDSG', // 9  Library(1-3) Tavern(4-6) Obs(9-12) Arcade(13-15)
