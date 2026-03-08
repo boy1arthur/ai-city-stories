@@ -164,12 +164,12 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 // SW: Library(B)+Tavern(T)+Museum(M)  SE: Observatory(V)+Arcade(D)+Café(C)+TechLab(X)
 const PLAZA_TILE_MAP: string[] = [
   'GSSSSSSSRSSSSSSSSG', // 0  border
-  'SAAAAAARSEEEEOOOSG', // 1  Arena(1-6) Feed(9-12) Oracle(13-15)
-  'SAAAAAARSEEEEOOOSG', // 2
-  'SAAAAAARSEEEENNNSG', // 3  Newsstand(13-15)
-  'SAAAAAARSEEEENNNSG', // 4
-  'SSSKKSSSRSSSSSSSSG', // 5  Entrance path + small Park
-  'SSSKKSSSRSSSSSSSSG', // 6
+  'SAAAAASSRSEEEEOSG', // 1  Arena(1-6) Feed(10-13) Oracle(14-16)
+  'SAAAAASSRSEEEEOSG', // 2
+  'SAAAAASSRSEEEENSG', // 3  Newsstand(14-16)
+  'SAAAAASSRSEEEENSG', // 4
+  'SSSSSSSSRSSSSSSSSG', // 5  sidewalk
+  'SSSSSSSSRSSSSSSSSG', // 6
   'SSSSSSSSRSSSSSSSSS', // 7  sidewalk buffer
   'RRRRRRRRRRRRRRRRRR', // 8  boulevard
   'SBBBTTTSRVVVVDDDSG', // 9  Library(1-3) Tavern(4-6) Obs(9-12) Arcade(13-15)
