@@ -134,7 +134,7 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
       {/* Ground shadow */}
       <ellipse cx={pos.x} cy={pos.y + 1} rx={isMoving ? 5 : 4.5} ry={isMoving ? 2 : 2.2}
         fill="hsl(0,0%,0%)" fillOpacity={0.2}>
-        {isMoving && <animate attributeName="rx" values="4;5.5;4" dur="0.4s" repeatCount="indefinite" />}
+        {isMoving && <animate attributeName="rx" values="4.5;5;4.5" dur="1.2s" repeatCount="indefinite" />}
       </ellipse>
 
       {/* Character body group */}
