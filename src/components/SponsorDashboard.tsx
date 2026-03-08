@@ -24,6 +24,8 @@ interface Props {
   campaigns: AdCampaign[];
   currentTick: number;
   zones: Zone[];
+  leagueSeason: BrandLeagueSeason | null;
+  leagueScores: BrandLeagueScore[];
   onCreateCampaign: (input: { brandId: string; zoneId: string; slotIds: string[]; durationTicks: number; startTick: number }) => void;
   onEndCampaign: (id: string) => void;
   onBack: () => void;
