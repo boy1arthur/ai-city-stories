@@ -22,8 +22,7 @@ export const VIRTUAL_BRANDS: VirtualBrand[] = [
 export function applyDemoSeed(slots: AdSlot[]): AdSlot[] {
   // Map of slotId patterns to brand assignments
   const assignments: Array<{ buildingId: string; type: string; brand: string; impressions: number }> = [
-    // NovaTech — Arena naming rights only (premium roof banner)
-    { buildingId: 'arena', type: 'naming_rights', brand: 'NovaTech', impressions: 342 },
+    // NovaTech — Arena는 BRAND_BUILDING 슬롯이므로 naming_rights 제외
     // BrewBean — Tavern billboard + Garden kiosk
     { buildingId: 'tavern', type: 'billboard', brand: 'BrewBean', impressions: 156 },
     { buildingId: 'garden', type: 'kiosk', brand: 'BrewBean', impressions: 98 },
