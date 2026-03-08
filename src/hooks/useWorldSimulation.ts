@@ -10,7 +10,7 @@ import type { Highlight } from '@/components/sponsor/TodayHighlights';
 import type { WorldEvent } from '@/components/WorldEventBanner';
 
 const TICK_MS = 2500;
-const WALK_SPEED = 2.0; // grid units per second — slower natural walking pace
+const WALK_SPEED = 1.2; // grid units per second — leisurely walking pace
 
 function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -225,7 +225,7 @@ export function useWorldSimulation() {
         // Agent moves to a new building — only if NOT currently walking
         const currentVisual = agentVisualsRef.current.get(agent.id);
         const isCurrentlyMoving = currentVisual?.isMoving && (now - currentVisual.moveStartTime < currentVisual.moveDuration);
-        if (!isCurrentlyMoving && Math.random() < 0.3) {
+        if (!isCurrentlyMoving && Math.random() < 0.18) {
           const zoneBuildings = agentZone.buildings;
           const newBuilding = pickRandom(zoneBuildings);
           if (newBuilding.id !== agent.currentBuildingId) {
@@ -239,7 +239,7 @@ export function useWorldSimulation() {
               // Compute road-based path
               const waypointPath = findPath(oldBuilding, newBuilding);
               const totalDist = pathLength(waypointPath);
-              const duration = Math.max(2000, (totalDist / WALK_SPEED) * 1000); // ms
+              const duration = Math.max(4000, (totalDist / WALK_SPEED) * 1000); // ms, min 4s
 
               setAgentVisuals(prev => {
                 const next = new Map(prev);
