@@ -135,7 +135,7 @@ export interface Building {
   height: number;
   description: string;
   adSlots: AdSlotType[];
-  heightLevel: 1 | 2 | 3;
+  heightLevel: 1 | 2 | 3 | 4 | 5;
   roofShape: 'flat' | 'antenna' | 'dish' | 'garden' | 'dome' | 'spire' | 'gear' | 'chimney' | 'lantern' | 'telescope' | 'gabled' | 'hip';
   wallColor: string;
   roofColor: string;
