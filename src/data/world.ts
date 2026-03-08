@@ -156,6 +156,8 @@ export interface Building {
   wallColor: string;
   roofColor: string;
   buildingType: 'office' | 'shop' | 'campus' | 'house' | 'warehouse' | 'civic' | 'tower' | 'park_structure';
+  isLandmark?: boolean;
+  landmarkType?: 'clock_tower' | 'lighthouse' | 'neon_obelisk' | 'golden_pavilion';
 }
 
 export type AdSlotType = 'billboard' | 'wall_wrap' | 'bus_stop' | 'kiosk' | 'naming_rights';
