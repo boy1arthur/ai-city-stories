@@ -3,7 +3,10 @@ import { AGENTS, ZONES, INITIAL_AD_SLOTS, generateBrandDialogue, getZoneById, ty
 import { applyDemoSeed } from '@/data/demoSeed';
 import { aggregateBrandStats, type BrandStats, type SlotStats } from '@/lib/esv';
 import { initCityEnergy, tickCityEnergy, type CityEnergyState } from '@/lib/cityEnergy';
+import { calcLeagueScores, isSeasonActive, type BrandLeagueScore } from '@/lib/brandLeague';
+import { DEMO_SEASON } from '@/data/leagueSeason';
 import type { Highlight } from '@/components/sponsor/TodayHighlights';
+import type { WorldEvent } from '@/components/WorldEventBanner';
 
 const TICK_MS = 2500;
 
