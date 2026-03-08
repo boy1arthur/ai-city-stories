@@ -82,6 +82,11 @@ export const SponsorDashboard: React.FC<Props> = ({
           <TodayHighlights highlights={highlights} />
         </div>
 
+        {/* Brand League */}
+        <div className="mb-8">
+          <LeagueStandings season={leagueSeason} scores={leagueScores} currentTick={currentTick} />
+        </div>
+
         {/* Campaign Management */}
         <div className="space-y-4 mb-8">
           <CampaignForm zones={zones} allAdSlots={allAdSlots} currentTick={currentTick} onCreateCampaign={onCreateCampaign} />
