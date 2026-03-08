@@ -73,7 +73,7 @@ export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots, onSlotCl
 
         // Empty slot — "Available for sponsorship" marker
         return (
-          <g key={slot.id} style={{ cursor: 'pointer' }}>
+          <g key={slot.id} style={{ cursor: 'pointer' }} onClick={() => onSlotClick?.(slot)}>
             {/* Dashed outline tile */}
             <polygon
               points={`${pos.x},${pos.y - TILE_H / 2} ${pos.x + TILE_W / 2},${pos.y} ${pos.x},${pos.y + TILE_H / 2} ${pos.x - TILE_W / 2},${pos.y}`}
