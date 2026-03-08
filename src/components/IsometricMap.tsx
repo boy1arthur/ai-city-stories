@@ -475,21 +475,27 @@ const AgentRenderer: React.FC<{
       })}
 
       {/* Shadow */}
-      <ellipse cx={pos.x} cy={pos.y + 1} rx={4} ry={2} fill="hsl(0,0%,0%)" fillOpacity={0.2} />
+      <ellipse cx={pos.x} cy={pos.y + 2} rx={5} ry={2.5} fill="hsl(0,0%,0%)" fillOpacity={0.25} />
 
-      {/* Body - simple person silhouette */}
-      <circle cx={pos.x} cy={pos.y - 8} r={3} fill={moodColor} fillOpacity={0.7} />
-      <ellipse cx={pos.x} cy={pos.y - 3} rx={3.5} ry={5} fill={moodColor} fillOpacity={0.5} />
+      {/* White outline for visibility */}
+      <circle cx={pos.x} cy={pos.y - 8} r={5} fill="hsl(0,0%,95%)" fillOpacity={0.9} stroke={moodColor} strokeWidth={1.5} />
 
-      {/* Mood halo - very subtle */}
+      {/* Avatar emoji */}
+      <text x={pos.x} y={pos.y - 5.5} textAnchor="middle" fontSize={7}>{agent.avatar}</text>
+
+      {/* Mood dot */}
+      <circle cx={pos.x + 4} cy={pos.y - 11} r={2} fill={moodColor} stroke="hsl(0,0%,95%)" strokeWidth={0.8} />
+
+      {/* Mood halo */}
       {avgAffinity > 30 && (
-        <circle cx={pos.x} cy={pos.y - 6} r={7} fill="none" stroke="hsl(38,60%,55%)" strokeWidth={0.5} strokeOpacity={0.2}>
-          <animate attributeName="r" values="6;8;6" dur="4s" repeatCount="indefinite" />
+        <circle cx={pos.x} cy={pos.y - 8} r={8} fill="none" stroke="hsl(38,60%,55%)" strokeWidth={0.8} strokeOpacity={0.35}>
+          <animate attributeName="r" values="7;9;7" dur="4s" repeatCount="indefinite" />
         </circle>
       )}
 
-      {/* Name */}
-      <text x={pos.x} y={pos.y + 8} textAnchor="middle" fontSize={4.5} fill="hsl(210,15%,70%)" fontFamily="Inter, sans-serif" fontWeight={500} opacity={0.7}>
+      {/* Name label with background */}
+      <rect x={pos.x - 14} y={pos.y + 3} width={28} height={9} rx={2} fill="hsl(220,18%,8%)" fillOpacity={0.75} />
+      <text x={pos.x} y={pos.y + 10} textAnchor="middle" fontSize={5} fill="hsl(0,0%,90%)" fontFamily="Inter, sans-serif" fontWeight={600}>
         {agent.name}
       </text>
     </g>
