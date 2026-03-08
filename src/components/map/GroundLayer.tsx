@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Zone } from '@/data/world';
 import { getTileTypeFromMap, isRoadCenterInZone, getZonePalette } from '@/data/world';
-import { iso, diamond } from './constants';
+import { iso, diamond, TILE_W, TILE_H } from './constants';
 
 export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
   const tiles: React.ReactNode[] = [];
