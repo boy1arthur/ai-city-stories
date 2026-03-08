@@ -41,7 +41,7 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
 
       {/* ── South wall ── */}
       <polygon points={`${se.x},${se.y} ${sw.x},${sw.y} ${sw.x},${sw.y - wallHeight} ${se.x},${se.y - wallHeight}`}
-        fill={wColor} fillOpacity={0.95} stroke={wColorDark} strokeWidth={0.6} />
+        fill={wColor} stroke={wColorDark} strokeWidth={0.6} />
 
       {/* South wall floor lines */}
       {[...Array(b.heightLevel)].map((_, fi) => {
@@ -105,7 +105,7 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
 
       {/* ── East wall ── */}
       <polygon points={`${ne.x},${ne.y} ${se.x},${se.y} ${se.x},${se.y - wallHeight} ${ne.x},${ne.y - wallHeight}`}
-        fill={wColorDark} fillOpacity={0.92} stroke={wColorDark} strokeWidth={0.6} />
+        fill={wColorDark} stroke={wColorDark} strokeWidth={0.6} />
 
       {/* East wall floor lines */}
       {[...Array(b.heightLevel)].map((_, fi) => {
@@ -153,7 +153,7 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
 
       {/* ── Roof ── */}
       <polygon points={`${nw.x},${nw.y - wallHeight} ${ne.x},${ne.y - wallHeight} ${se.x},${se.y - wallHeight} ${sw.x},${sw.y - wallHeight}`}
-        fill={rColor} fillOpacity={0.95} stroke={wColorDark} strokeWidth={0.8} strokeOpacity={0.5} />
+        fill={rColor} stroke={wColorDark} strokeWidth={0.8} />
 
       {/* Roof edge highlight (top-left) */}
       <line x1={nw.x} y1={nw.y - wallHeight} x2={ne.x} y2={ne.y - wallHeight}
