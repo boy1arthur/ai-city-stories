@@ -5,10 +5,12 @@ import { aggregateBrandStats, type BrandStats, type SlotStats } from '@/lib/esv'
 import { initCityEnergy, tickCityEnergy, type CityEnergyState } from '@/lib/cityEnergy';
 import { calcLeagueScores, isSeasonActive, type BrandLeagueScore } from '@/lib/brandLeague';
 import { DEMO_SEASON } from '@/data/leagueSeason';
+import { findPath, pathLength, type Waypoint } from '@/lib/pathfinding';
 import type { Highlight } from '@/components/sponsor/TodayHighlights';
 import type { WorldEvent } from '@/components/WorldEventBanner';
 
 const TICK_MS = 2500;
+const WALK_SPEED = 3.0; // grid units per second — natural walking pace
 
 function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -24,15 +26,18 @@ export interface SpeechBubble {
   type: 'dialogue' | 'reaction' | 'thought';
 }
 
-// Agent animated position for smooth movement
+// Agent animated position for smooth movement along road paths
 export interface AgentVisualState {
   agentId: string;
+  path: Waypoint[];           // full waypoint path
+  moveStartTime: number;
+  moveDuration: number;       // total ms for this journey
+  isMoving: boolean;
+  // Legacy compat for direction
   fromX: number;
   fromY: number;
   toX: number;
   toY: number;
-  moveStartTime: number;
-  isMoving: boolean;
 }
 
 // Ad reaction particle
@@ -181,6 +186,8 @@ export function useWorldSimulation() {
         const pos = getAgentPositionAroundBuilding(building, i);
         map.set(agent.id, {
           agentId: agent.id,
+          path: [pos],
+          moveDuration: 0,
           fromX: pos.x, fromY: pos.y,
           toX: pos.x, toY: pos.y,
           moveStartTime: 0, isMoving: false,
@@ -223,10 +230,17 @@ export function useWorldSimulation() {
             if (oldBuilding) {
               const fromPos = getAgentPositionAroundBuilding(oldBuilding, agentIndex);
               const toPos = getAgentPositionAroundBuilding(newBuilding, agentIndex);
+              // Compute road-based path
+              const waypointPath = findPath(oldBuilding, newBuilding);
+              const totalDist = pathLength(waypointPath);
+              const duration = Math.max(2000, (totalDist / WALK_SPEED) * 1000); // ms
+
               setAgentVisuals(prev => {
                 const next = new Map(prev);
                 next.set(agent.id, {
                   agentId: agent.id,
+                  path: waypointPath,
+                  moveDuration: duration,
                   fromX: fromPos.x, fromY: fromPos.y,
                   toX: toPos.x, toY: toPos.y,
                   moveStartTime: now,
@@ -235,17 +249,17 @@ export function useWorldSimulation() {
                 return next;
               });
 
-              // End movement after transition
+              // End movement after path duration
               setTimeout(() => {
                 setAgentVisuals(prev => {
                   const next = new Map(prev);
                   const vs = next.get(agent.id);
                   if (vs) {
-                    next.set(agent.id, { ...vs, fromX: vs.toX, fromY: vs.toY, isMoving: false });
+                    next.set(agent.id, { ...vs, fromX: vs.toX, fromY: vs.toY, isMoving: false, path: [toPos] });
                   }
                   return next;
                 });
-              }, 1200);
+              }, duration);
             }
 
             // Ad interactions at destination

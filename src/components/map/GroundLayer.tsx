@@ -3,10 +3,10 @@ import type { Zone } from '@/data/world';
 import { getTileTypeFromMap, isRoadCenterInZone, getZonePalette } from '@/data/world';
 import { iso, diamond, TILE_W, TILE_H } from './constants';
 
-// Narrower diamond for road rendering (60% width)
-function narrowDiamond(cx: number, cy: number): string {
-  const w = TILE_W * 0.3;  // half of 60%
-  const h = TILE_H * 0.3;
+// Road diamond: slightly inset for lane feel but still continuous
+function roadDiamond(cx: number, cy: number): string {
+  const w = TILE_W * 0.48;
+  const h = TILE_H * 0.48;
   return `${cx},${cy - h} ${cx + w},${cy} ${cx},${cy + h} ${cx - w},${cy}`;
 }
 
@@ -144,17 +144,17 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
       const pos = iso(gx, gy);
       const seed = gx * 17 + gy * 31;
 
-      // Base tile — roads render as sidewalk base + narrow road strip
+      // Base tile — roads render as continuous asphalt with curb edges
       if (type === 'road') {
-        // Sidewalk base (full diamond)
+        // Full sidewalk/curb base
         tiles.push(
           <polygon key={`t_${gx}_${gy}`} points={diamond(pos.x, pos.y)}
-            fill={palette.sidewalk.fill} stroke={palette.sidewalk.stroke} strokeWidth={0.5} strokeOpacity={0.4} />
+            fill={palette.sidewalk.fill} stroke={palette.sidewalk.stroke} strokeWidth={0.3} strokeOpacity={0.3} />
         );
-        // Narrow road strip on top
+        // Road surface (nearly full-width for continuous feel)
         tiles.push(
-          <polygon key={`rd_${gx}_${gy}`} points={narrowDiamond(pos.x, pos.y)}
-            fill={colors.fill} stroke={colors.stroke} strokeWidth={0.3} strokeOpacity={0.5} />
+          <polygon key={`rd_${gx}_${gy}`} points={roadDiamond(pos.x, pos.y)}
+            fill={colors.fill} stroke="none" />
         );
       } else {
         tiles.push(

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import type { Building, Agent, InteractionEvent } from '@/data/world';
 import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/useWorldSimulation';
-import { iso, lerp, easeInOutQuad, MOVE_DURATION } from './constants';
+import { iso, MOVE_DURATION } from './constants';
+import { interpolatePath, getPathDirection } from '@/lib/pathfinding';
 
 interface Props {
   agent: Agent;
@@ -60,10 +61,10 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
     return () => cancelAnimationFrame(raf);
   }, [isMoving]);
 
-  // Position interpolation
+  // Position interpolation along road path
   useEffect(() => {
     if (!building) return;
-    if (!visualState || !visualState.isMoving) {
+    if (!visualState || !visualState.isMoving || !visualState.path || visualState.path.length < 2) {
       const side = index % 4;
       const jitter = ((index * 7 + 3) % 5) * 0.3;
       let gx: number, gy: number;
@@ -79,11 +80,13 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
     let raf: number;
     const animate = () => {
       const elapsed = Date.now() - visualState.moveStartTime;
-      const t = easeInOutQuad(Math.min(1, elapsed / MOVE_DURATION));
-      const gx = lerp(visualState.fromX, visualState.toX, t);
-      const gy = lerp(visualState.fromY, visualState.toY, t);
-      setAnimPos(iso(gx, gy));
-      if (t < 1) raf = requestAnimationFrame(animate);
+      const duration = visualState.moveDuration || 3000;
+      // Ease in-out for natural walking
+      const rawT = Math.min(1, elapsed / duration);
+      const t = rawT < 0.5 ? 2 * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 2) / 2;
+      const pos = interpolatePath(visualState.path, t);
+      setAnimPos(iso(pos.x, pos.y));
+      if (rawT < 1) raf = requestAnimationFrame(animate);
     };
     raf = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(raf);
@@ -95,8 +98,10 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
   // Walk cycle: swing legs and arms
   const walkT = isMoving ? Math.sin((walkPhase / 120) * Math.PI * 2) : 0;
   const breathe = isMoving ? 0 : Math.sin(Date.now() / 1200) * 0.4;
-  // Direction: determine facing based on movement delta
-  const facingRight = visualState ? visualState.toX >= visualState.fromX : true;
+  // Direction: determine facing based on path direction
+  const facingRight = visualState?.isMoving && visualState.path?.length >= 2
+    ? (() => { const elapsed = Date.now() - visualState.moveStartTime; const t = Math.min(1, elapsed / (visualState.moveDuration || 3000)); const dir = getPathDirection(visualState.path, t); return dir.dx >= 0; })()
+    : true;
 
   const avgAffinity = agent.brandAffinities.reduce((s, a) => s + a.score, 0) / Math.max(1, agent.brandAffinities.length);
   const agentBubbles = speechBubbles.filter(b => b.agentId === agent.id);
