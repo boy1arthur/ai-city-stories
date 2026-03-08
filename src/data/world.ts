@@ -166,17 +166,17 @@ const PLAZA_TILE_MAP: string[] = [
   'SSAAAASSREEESOOSSG', // 4
   'SSAAAASSRLLLSOOSSG', // 5  Lab(9-11,5-6)
   'SSCCCSSSRLLLSSSSSG', // 6  Café(2-4,6)
-  'SSSSSSSPPPPSSSSSSS', // 7  ── central plaza zone ──
-  'RRRRRRRPPPPRRRRRRR', // 8  boulevard + central plaza
-  'SSSSSSSPPPPSSSSSSS', // 9  ── central plaza zone ──
+  'SSSSSSSSRSSSSSSSSS', // 7  buffer (road continues straight)
+  'RRRRRRRRRRRRRRRRRR', // 8  boulevard — plain crossroads
+  'SSSSSSSSRSSSSSSSSS', // 9  buffer
   'SSBBBBSSRNNNSSSSSG', // 10 Library(2-5,10-12) News(9-11,10-11)
   'SSBBBBSSRNNNSSSSSG', // 11
-  'SSBBBBSSRSSSSSSSSG', // 12
-  'STTTSSSSRSHHHSSSSG', // 13 Tavern(1-3,13-14) Workshop(10-12,13-15)
-  'STTTSSSSRSHHHSSSSG', // 14
-  'SSSSSSSSRSHHHSSSSG', // 15 Workshop row15
-  'SKKKKKKSRSVVSSSSSG', // 16 Garden(1-6,16-17) Observatory(10-11,16-17)
-  'SKKKKKKSRSVVSSSSSG', // 17 outskirt
+  'SSBBBBSSRSSSMMMSSG', // 12 Museum(12-14,12-14)
+  'STTTSSSSRSHHHMMMSG', // 13 Tavern(1-3,13-14) Workshop(10-12,13-15) Museum
+  'STTTSSSSRSHHHMMMSG', // 14
+  'SFFFSSSSRSHHHSSSSG', // 15 FoodMarket(1-3,15-16) Workshop row15
+  'SFFFKKKSRSVVSSAASG', // 16 FoodMarket, Park(4-6,16-17) Obs(10-11,16-17) Arcade(14-15,16-17)
+  'SSSSKKKSRSVVSSAASG', // 17 outskirt
 ];
 
 const PLAZA_BUILDINGS: Building[] = [
