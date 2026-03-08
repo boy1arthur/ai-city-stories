@@ -131,7 +131,7 @@ export const IsometricMap: React.FC<Props> = ({
           {sortedBuildings.map(b => {
             const buildingAds = adSlots.filter(s => s.buildingId === b.id);
             if (buildingAds.length === 0) return null;
-            return <AdSlotVisual key={`ad-${b.id}`} building={b} adSlots={buildingAds} />;
+            return <AdSlotVisual key={`ad-${b.id}`} building={b} adSlots={buildingAds} onAdSlotClick={onAdSlotClick} />;
           })}
 
           {/* Layer 3.5: Multi-building ad canvases */}
