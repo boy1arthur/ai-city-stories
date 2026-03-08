@@ -8,11 +8,7 @@ interface Props {
   buildings: Building[];
 }
 
-// Isometric angles
-const SOUTH_ANGLE = Math.atan2(TILE_H, TILE_W) * (180 / Math.PI); // ≈ 26.57°
-const EAST_ANGLE = Math.atan2(TILE_H, TILE_W) * (180 / Math.PI) * -1; // ≈ -26.57° rotation, but we flip text
-
-/** Render brand canvases painted on building walls */
+/** Render brand banners painted on building walls as isometric parallelograms */
 export const MultiBuildingAdRenderer: React.FC<Props> = React.memo(({ ads, buildings }) => {
   return (
     <g>
@@ -22,92 +18,118 @@ export const MultiBuildingAdRenderer: React.FC<Props> = React.memo(({ ads, build
           .filter(Boolean) as Building[];
         if (blds.length < 1) return null;
 
-        return <WallPaintedAd key={ad.id} ad={ad} buildings={blds} />;
+        return <WallBanner key={ad.id} ad={ad} buildings={blds} />;
       })}
     </g>
   );
 });
 MultiBuildingAdRenderer.displayName = 'MultiBuildingAdRenderer';
 
-// ===== WALL-PAINTED AD (text follows wall angle) =====
-const WallPaintedAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ ad, buildings }) => {
+// Minimum font size for readability
+const MIN_FONT = 5;
+const MIN_BANNER_H = 10;
+
+const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ ad, buildings }) => {
+  const b = buildings[0]; // single building per banner now
+  const wallH = WALL_H_UNIT * b.heightLevel;
   const isSouth = ad.face === 'south';
 
-  if (isSouth) {
-    // South wall: find leftmost and rightmost points
-    const sorted = [...buildings].sort((a, b) => a.gridX - b.gridX);
-    const leftBld = sorted[0];
-    const rightBld = sorted[sorted.length - 1];
-    const sw = iso(leftBld.gridX, leftBld.gridY + leftBld.height);
-    const se = iso(rightBld.gridX + rightBld.width, rightBld.gridY + rightBld.height);
-    const minH = Math.min(...sorted.map(b => b.heightLevel));
-    const wallH = WALL_H_UNIT * minH;
+  // Banner occupies top 30% of wall
+  const bannerTopRatio = 0.85; // from top of wall
+  const bannerBotRatio = 0.55; // to this ratio
 
-    const mx = (sw.x + se.x) / 2;
-    const my = (sw.y + se.y) / 2 - wallH * 0.75;
-    const panelW = Math.hypot(se.x - sw.x, se.y - sw.y) * 0.7;
-    const panelH = wallH * 0.3;
+  if (isSouth) {
+    // South wall: SW corner to SE corner
+    const sw = iso(b.gridX, b.gridY + b.height);
+    const se = iso(b.gridX + b.width, b.gridY + b.height);
+
+    // Banner parallelogram corners (on the south wall face)
+    const topL = { x: sw.x, y: sw.y - wallH * bannerTopRatio };
+    const topR = { x: se.x, y: se.y - wallH * bannerTopRatio };
+    const botL = { x: sw.x, y: sw.y - wallH * bannerBotRatio };
+    const botR = { x: se.x, y: se.y - wallH * bannerBotRatio };
+
+    const bannerH = wallH * (bannerTopRatio - bannerBotRatio);
+    const effectiveH = Math.max(bannerH, MIN_BANNER_H);
+
+    // Center point for text
+    const cx = (topL.x + topR.x + botL.x + botR.x) / 4;
+    const cy = (topL.y + topR.y + botL.y + botR.y) / 4;
+
+    // Text angle follows wall baseline (SW→SE direction)
+    const angle = Math.atan2(se.y - sw.y, se.x - sw.x) * (180 / Math.PI);
+
+    const fontSize = Math.max(MIN_FONT, effectiveH * 0.5);
+    const fontSizeName = Math.max(MIN_FONT * 0.7, effectiveH * 0.3);
+
+    // For very short buildings, use a rooftop sign instead
+    if (b.heightLevel <= 1) {
+      return <RooftopSign ad={ad} building={b} face="south" />;
+    }
 
     return (
-      <g transform={`rotate(${SOUTH_ANGLE}, ${mx}, ${my})`}>
-        {/* Wall panel tint */}
-        <rect x={mx - panelW / 2} y={my - panelH / 2}
-          width={panelW} height={panelH} rx={2}
-          fill={ad.brandColor}
-          stroke={ad.brandColor} strokeWidth={0.7} />
+      <g>
+        {/* Parallelogram banner background */}
+        <polygon
+          points={`${topL.x},${topL.y} ${topR.x},${topR.y} ${botR.x},${botR.y} ${botL.x},${botL.y}`}
+          fill={ad.brandColor} stroke={ad.brandColor} strokeWidth={0.5} />
 
-        {/* Brand initial */}
-        <text x={mx - panelW / 2 + panelH * 0.6} y={my + panelH * 0.15}
-          textAnchor="middle" fontSize={panelH * 0.55}
-          fill="hsl(0,0%,100%)"
-          fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-
-        {/* Brand name */}
-        <text x={mx + 4} y={my + panelH * 0.12}
-          textAnchor="middle" fontSize={panelH * 0.32}
-          fill="hsl(0,0%,100%)"
-          fontFamily="Inter" fontWeight={800} letterSpacing="1">
-          {ad.brandName}
-        </text>
+        {/* Brand initial + name, rotated to follow wall */}
+        <g transform={`rotate(${angle}, ${cx}, ${cy})`}>
+          <text x={cx - fontSize * 1.2} y={cy + fontSize * 0.15}
+            textAnchor="middle" fontSize={fontSize}
+            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>
+            {ad.brandInitial}
+          </text>
+          <text x={cx + fontSizeName * 0.5} y={cy + fontSizeName * 0.15}
+            textAnchor="middle" fontSize={fontSizeName}
+            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="1">
+            {ad.brandName}
+          </text>
+        </g>
       </g>
     );
   } else {
-    // East wall
-    const sorted = [...buildings].sort((a, b) => a.gridY - b.gridY);
-    const topBld = sorted[0];
-    const botBld = sorted[sorted.length - 1];
-    const ne = iso(topBld.gridX + topBld.width, topBld.gridY);
-    const se = iso(botBld.gridX + botBld.width, botBld.gridY + botBld.height);
-    const minH = Math.min(...sorted.map(b => b.heightLevel));
-    const wallH = WALL_H_UNIT * minH;
+    // East wall: NE corner to SE corner
+    const ne = iso(b.gridX + b.width, b.gridY);
+    const se = iso(b.gridX + b.width, b.gridY + b.height);
 
-    const mx = (ne.x + se.x) / 2;
-    const my = (ne.y + se.y) / 2 - wallH * 0.75;
-    const panelW = Math.hypot(se.x - ne.x, se.y - ne.y) * 0.65;
-    const panelH = wallH * 0.3;
+    const topL = { x: ne.x, y: ne.y - wallH * bannerTopRatio };
+    const topR = { x: se.x, y: se.y - wallH * bannerTopRatio };
+    const botL = { x: ne.x, y: ne.y - wallH * bannerBotRatio };
+    const botR = { x: se.x, y: se.y - wallH * bannerBotRatio };
+
+    const bannerH = wallH * (bannerTopRatio - bannerBotRatio);
+    const effectiveH = Math.max(bannerH, MIN_BANNER_H);
+
+    const cx = (topL.x + topR.x + botL.x + botR.x) / 4;
+    const cy = (topL.y + topR.y + botL.y + botR.y) / 4;
+
+    // Text angle follows wall baseline (NE→SE direction)
+    const angle = Math.atan2(se.y - ne.y, se.x - ne.x) * (180 / Math.PI);
+
+    const fontSize = Math.max(MIN_FONT, effectiveH * 0.5);
+    const fontSizeName = Math.max(MIN_FONT * 0.7, effectiveH * 0.3);
+
+    if (b.heightLevel <= 1) {
+      return <RooftopSign ad={ad} building={b} face="east" />;
+    }
 
     return (
-      <g transform={`rotate(${EAST_ANGLE}, ${mx}, ${my})`}>
-        {/* Wall panel tint */}
-        <rect x={mx - panelW / 2} y={my - panelH / 2}
-          width={panelW} height={panelH} rx={2}
-          fill={ad.brandColor}
-          stroke={ad.brandColor} strokeWidth={0.7} />
+      <g>
+        <polygon
+          points={`${topL.x},${topL.y} ${topR.x},${topR.y} ${botR.x},${botR.y} ${botL.x},${botL.y}`}
+          fill={ad.brandColor} stroke={ad.brandColor} strokeWidth={0.5} />
 
-        {/* Brand initial — flip text so it reads correctly */}
-        <g transform={`translate(${mx - panelW / 2 + panelH * 0.6}, ${my + panelH * 0.15}) scale(-1,1)`}>
-          <text x={0} y={0}
-            textAnchor="middle" fontSize={panelH * 0.5}
-            fill="hsl(0,0%,100%)"
-            fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-        </g>
-
-        {/* Brand name — flip text */}
-        <g transform={`translate(${mx + 4}, ${my + panelH * 0.12}) scale(-1,1)`}>
-          <text x={0} y={0}
-            textAnchor="middle" fontSize={panelH * 0.3}
-            fill="hsl(0,0%,100%)"
-            fontFamily="Inter" fontWeight={800} letterSpacing="0.8">
+        <g transform={`rotate(${angle}, ${cx}, ${cy})`}>
+          <text x={cx - fontSize * 1.2} y={cy + fontSize * 0.15}
+            textAnchor="middle" fontSize={fontSize}
+            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>
+            {ad.brandInitial}
+          </text>
+          <text x={cx + fontSizeName * 0.5} y={cy + fontSizeName * 0.15}
+            textAnchor="middle" fontSize={fontSizeName}
+            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="0.8">
             {ad.brandName}
           </text>
         </g>
@@ -116,3 +138,70 @@ const WallPaintedAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = 
   }
 };
 
+/** Rooftop sign for short buildings (heightLevel 1) — sign above roofline */
+const RooftopSign: React.FC<{ ad: MultiBuildingAd; building: Building; face: 'south' | 'east' }> = ({ ad, building: b, face }) => {
+  const wallH = WALL_H_UNIT * b.heightLevel;
+  const signH = 12;
+  const signW = 28;
+
+  if (face === 'south') {
+    const sw = iso(b.gridX, b.gridY + b.height);
+    const se = iso(b.gridX + b.width, b.gridY + b.height);
+    const cx = (sw.x + se.x) / 2;
+    const cy = (sw.y + se.y) / 2 - wallH - signH / 2 - 2;
+
+    // Angle follows south wall
+    const angle = Math.atan2(se.y - sw.y, se.x - sw.x) * (180 / Math.PI);
+
+    return (
+      <g>
+        {/* Sign post */}
+        <line x1={cx} y1={cy + signH / 2} x2={cx} y2={cy + signH / 2 + 4}
+          stroke="hsl(220,5%,40%)" strokeWidth={1} />
+        {/* Sign board */}
+        <g transform={`rotate(${angle}, ${cx}, ${cy})`}>
+          <rect x={cx - signW / 2} y={cy - signH / 2} width={signW} height={signH} rx={2}
+            fill={ad.brandColor} stroke={ad.brandColor} strokeWidth={0.5} />
+          <text x={cx - signW / 4} y={cy + 2}
+            textAnchor="middle" fontSize={6}
+            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>
+            {ad.brandInitial}
+          </text>
+          <text x={cx + signW / 8} y={cy + 2}
+            textAnchor="middle" fontSize={4.5}
+            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="0.5">
+            {ad.brandName}
+          </text>
+        </g>
+      </g>
+    );
+  } else {
+    const ne = iso(b.gridX + b.width, b.gridY);
+    const se = iso(b.gridX + b.width, b.gridY + b.height);
+    const cx = (ne.x + se.x) / 2;
+    const cy = (ne.y + se.y) / 2 - wallH - signH / 2 - 2;
+
+    const angle = Math.atan2(se.y - ne.y, se.x - ne.x) * (180 / Math.PI);
+
+    return (
+      <g>
+        <line x1={cx} y1={cy + signH / 2} x2={cx} y2={cy + signH / 2 + 4}
+          stroke="hsl(220,5%,40%)" strokeWidth={1} />
+        <g transform={`rotate(${angle}, ${cx}, ${cy})`}>
+          <rect x={cx - signW / 2} y={cy - signH / 2} width={signW} height={signH} rx={2}
+            fill={ad.brandColor} stroke={ad.brandColor} strokeWidth={0.5} />
+          <text x={cx - signW / 4} y={cy + 2}
+            textAnchor="middle" fontSize={6}
+            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>
+            {ad.brandInitial}
+          </text>
+          <text x={cx + signW / 8} y={cy + 2}
+            textAnchor="middle" fontSize={4.5}
+            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="0.5">
+            {ad.brandName}
+          </text>
+        </g>
+      </g>
+    );
+  }
+};
