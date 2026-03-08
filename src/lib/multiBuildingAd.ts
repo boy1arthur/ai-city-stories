@@ -79,9 +79,9 @@ export const DEMO_MULTI_BUILDING_ADS: MultiBuildingAd[] = [
   // NovaTech — lab 옥상 빌보드 (1/1, arena는 BRAND_BUILDING 슬롯이므로 배너 없음)
   { id: 'b_lab_s', brandName: 'NovaTech', brandColor: 'hsl(210,60%,55%)', brandInitial: 'N', tagline: 'Build the future.', buildingIds: ['lab'], face: 'south', tier: 'standard', placement: 'rooftop' },
 
-  // FinFlow — feed_tower 정면 LED 패널 (메인)
-  { id: 'b_feed_s', brandName: 'FinFlow', brandColor: 'hsl(220,50%,35%)', brandInitial: 'F', tagline: 'Smart money moves.', buildingIds: ['feed_tower'], face: 'south', tier: 'premium', placement: 'wall' },
-  // FinFlow — oracle 동쪽 벽 (패턴/색상만, basic tier)
+  // FinFlow — feed_tower 정면 LED 패널 (standard 티어 — premium은 중앙스크린/옥상만)
+  { id: 'b_feed_s', brandName: 'FinFlow', brandColor: 'hsl(220,50%,35%)', brandInitial: 'F', tagline: 'Smart money moves.', buildingIds: ['feed_tower'], face: 'south', tier: 'standard', placement: 'wall' },
+  // FinFlow — oracle 동쪽 벽 (basic: 패턴/색상만)
   { id: 'b_oracle_e', brandName: 'FinFlow', brandColor: 'hsl(220,50%,35%)', brandInitial: 'F', tagline: '', buildingIds: ['oracle'], face: 'east', tier: 'basic', placement: 'wall' },
 
   // BrewBean — cafe 정면 배너 (1/1)
