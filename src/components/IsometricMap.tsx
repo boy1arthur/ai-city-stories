@@ -102,6 +102,9 @@ export const IsometricMap: React.FC<Props> = ({
         <rect x="-200" y="-100" width="1400" height="900" fill="url(#groundFade)" />
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
+          {/* Layer 0: Locked zone ghost previews */}
+          <LockedZoneGhost activeZoneId={zone.id} />
+
           {/* Layer 1: Ground tiles */}
           <GroundLayer zone={zone} />
 
