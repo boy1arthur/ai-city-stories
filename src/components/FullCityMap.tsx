@@ -52,7 +52,8 @@ interface Props {
   onZoneFocus: (zoneId: string) => void;
 }
 
-const LOD_THRESHOLD = 0.45; // Below this zoom, use simplified rendering
+const LOD_SIMPLIFIED_THRESHOLD = 0.55; // Below this zoom, focused zone gets simplified
+const LOD_FULL_THRESHOLD = 0.45; // Above this zoom, focused zone gets full detail
 
 export const FullCityMap: React.FC<Props> = ({
   zones, zoneDataMap, energyStatus,
