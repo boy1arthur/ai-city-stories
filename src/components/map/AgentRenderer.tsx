@@ -141,17 +141,17 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
       <g transform={`translate(${pos.x}, ${pos.y - 4 + breathe})`}>
         {/* Legs */}
         <g>
-          {/* Left leg */}
-          <line x1={-1.8 * s} y1={3 * s} x2={-1.8 * s + walkT * 2} y2={7 * s}
+          {/* Left leg — gentle stride */}
+          <line x1={-1.8 * s} y1={3 * s} x2={-1.8 * s + walkT * 1.2} y2={7 * s}
             stroke={palette.pants} strokeWidth={2.2} strokeLinecap="round" />
           {/* Left foot */}
-          <ellipse cx={-1.8 * s + walkT * 2} cy={7.2 * s} rx={1.5} ry={0.8}
+          <ellipse cx={-1.8 * s + walkT * 1.2} cy={7.2 * s} rx={1.5} ry={0.8}
             fill="hsl(30,10%,25%)" />
-          {/* Right leg */}
-          <line x1={1.8 * s} y1={3 * s} x2={1.8 * s - walkT * 2} y2={7 * s}
+          {/* Right leg — opposite phase */}
+          <line x1={1.8 * s} y1={3 * s} x2={1.8 * s - walkT * 1.2} y2={7 * s}
             stroke={palette.pants} strokeWidth={2.2} strokeLinecap="round" />
           {/* Right foot */}
-          <ellipse cx={1.8 * s - walkT * 2} cy={7.2 * s} rx={1.5} ry={0.8}
+          <ellipse cx={1.8 * s - walkT * 1.2} cy={7.2 * s} rx={1.5} ry={0.8}
             fill="hsl(30,10%,25%)" />
         </g>
 
