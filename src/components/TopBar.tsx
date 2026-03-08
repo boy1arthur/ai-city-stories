@@ -86,6 +86,27 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
         >
           ⚡ Sponsor
         </button>
+
+        {user ? (
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-muted-foreground hidden md:inline truncate max-w-[100px]">
+              {user.email}
+            </span>
+            <button
+              onClick={onSignOut}
+              className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+            >
+              로그아웃
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => navigate('/auth')}
+            className="text-xs px-3 py-1.5 rounded-lg border border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/25 transition-all font-medium"
+          >
+            로그인
+          </button>
+        )}
       </div>
     </header>
   );
