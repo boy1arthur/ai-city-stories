@@ -12,6 +12,7 @@ import { WorldEventBanner } from '@/components/WorldEventBanner';
 import { AgentProfilePanel } from '@/components/agent/AgentProfilePanel';
 import { SlotInteractionModal } from '@/components/SlotInteractionModal';
 import { useWorldSimulation } from '@/hooks/useWorldSimulation';
+import { useAuth } from '@/hooks/useAuth';
 import { useCampaigns } from '@/hooks/useCampaigns';
 import { useSlots, filterPatronTiles } from '@/hooks/useSlots';
 import { useIsMobile } from '@/hooks/use-mobile';
