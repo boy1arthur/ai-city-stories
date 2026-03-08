@@ -10,7 +10,7 @@ import type { Highlight } from '@/components/sponsor/TodayHighlights';
 import type { WorldEvent } from '@/components/WorldEventBanner';
 
 const TICK_MS = 2500;
-const WALK_SPEED = 3.0; // grid units per second — natural walking pace
+const WALK_SPEED = 2.0; // grid units per second — slower natural walking pace
 
 function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -145,6 +145,7 @@ export function useWorldSimulation() {
   const [worldEvents, setWorldEvents] = useState<WorldEvent[]>([]);
   const prevLeaderRef = useRef<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const agentVisualsRef = useRef<Map<string, AgentVisualState>>(new Map());
 
   const currentZone = getZoneById(currentZoneId)!;
 
@@ -174,6 +175,9 @@ export function useWorldSimulation() {
     }, 500);
     return () => clearInterval(cleanup);
   }, []);
+
+  // Keep ref in sync for use in interval closures
+  useEffect(() => { agentVisualsRef.current = agentVisuals; }, [agentVisuals]);
 
   // Initialize agent visual positions
   useEffect(() => {
@@ -218,8 +222,10 @@ export function useWorldSimulation() {
         const agentZone = getZoneById(agent.currentZoneId);
         if (!agentZone || agentZone.locked) return agent;
 
-        // Agent moves to a new building
-        if (Math.random() < 0.3) {
+        // Agent moves to a new building — only if NOT currently walking
+        const currentVisual = agentVisualsRef.current.get(agent.id);
+        const isCurrentlyMoving = currentVisual?.isMoving && (now - currentVisual.moveStartTime < currentVisual.moveDuration);
+        if (!isCurrentlyMoving && Math.random() < 0.3) {
           const zoneBuildings = agentZone.buildings;
           const newBuilding = pickRandom(zoneBuildings);
           if (newBuilding.id !== agent.currentBuildingId) {
