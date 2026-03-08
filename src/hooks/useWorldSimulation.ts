@@ -665,5 +665,6 @@ export function useWorldSimulation() {
     leagueScores,
     worldEvents,
     getZoneData,
+    aiConversationLog,
   };
 }
