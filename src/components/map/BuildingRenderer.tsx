@@ -207,27 +207,63 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
           <line x1={ne.x} y1={ne.y + 1} x2={se.x} y2={se.y + 1}
             stroke={skinColor} strokeWidth={1.5} strokeOpacity={0.2} />
 
-          {/* Branded entrance — glass storefront on south wall */}
+          {/* Branded entrance — flagship storefront on south wall */}
           {(() => {
             const midX = (sw.x + se.x) / 2;
             const midY = (sw.y + se.y) / 2;
-            const doorW = Math.min(16, b.width * 1.8);
-            const doorH = Math.min(wallHeight * 0.5, 14);
+            const doorW = Math.min(22, b.width * 2.5);
+            const doorH = Math.min(wallHeight * 0.55, 16);
             return (
               <g>
+                {/* Entrance canopy — horizontal overhang */}
+                <polygon
+                  points={`${midX - doorW / 2 - 4},${midY - doorH - 2} ${midX + doorW / 2 + 4},${midY - doorH - 2} ${midX + doorW / 2 + 6},${midY - doorH + 3} ${midX - doorW / 2 - 2},${midY - doorH + 3}`}
+                  fill="hsl(0,0%,8%)" fillOpacity={0.85}
+                  stroke={skinColor} strokeWidth={0.6} />
+                {/* Canopy neon edge */}
+                <line x1={midX - doorW / 2 - 4} y1={midY - doorH - 2} x2={midX + doorW / 2 + 4} y2={midY - doorH - 2}
+                  stroke={skinColor} strokeWidth={1.2} strokeOpacity={0.8}>
+                  <animate attributeName="strokeOpacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite" />
+                </line>
+
                 {/* Glass entrance panel */}
                 <rect x={midX - doorW / 2} y={midY - doorH} width={doorW} height={doorH} rx={1}
-                  fill={skinColor} fillOpacity={0.12}
+                  fill={skinColor} fillOpacity={0.1}
                   stroke={skinColor} strokeWidth={0.8} strokeOpacity={0.6} />
+                {/* Glass divider — double door effect */}
+                <line x1={midX} y1={midY - doorH + 1} x2={midX} y2={midY - 1}
+                  stroke={skinColor} strokeWidth={0.5} strokeOpacity={0.4} />
                 {/* Glass reflection */}
-                <rect x={midX - doorW / 2 + 1} y={midY - doorH + 1} width={doorW * 0.3} height={doorH - 2} rx={0.5}
-                  fill="hsl(0,0%,100%)" fillOpacity={0.06} />
-                {/* Small brand nameplate at entrance */}
-                <rect x={midX - 12} y={midY - doorH - 5} width={24} height={5} rx={1.5}
-                  fill="hsl(0,0%,5%)" fillOpacity={0.9}
-                  stroke={skinColor} strokeWidth={0.6} />
-                <text x={midX} y={midY - doorH - 1.5} textAnchor="middle" fontSize={3.5}
-                  fill={skinLight} fontFamily="Inter" fontWeight={700} letterSpacing="1.5">
+                <rect x={midX - doorW / 2 + 1} y={midY - doorH + 1} width={doorW * 0.25} height={doorH - 2} rx={0.5}
+                  fill="hsl(0,0%,100%)" fillOpacity={0.07} />
+
+                {/* Entrance carpet / red carpet glow */}
+                <ellipse cx={midX} cy={midY + 5} rx={doorW * 0.6} ry={3}
+                  fill={skinColor} fillOpacity={0.12} />
+                <rect x={midX - doorW * 0.35} y={midY} width={doorW * 0.7} height={6} rx={0.5}
+                  fill={skinColor} fillOpacity={0.08} />
+
+                {/* Flanking brand pillars */}
+                <rect x={midX - doorW / 2 - 3} y={midY - doorH} width={2} height={doorH} rx={0.5}
+                  fill="hsl(0,0%,10%)" stroke={skinColor} strokeWidth={0.5} strokeOpacity={0.6} />
+                <rect x={midX + doorW / 2 + 1} y={midY - doorH} width={2} height={doorH} rx={0.5}
+                  fill="hsl(0,0%,10%)" stroke={skinColor} strokeWidth={0.5} strokeOpacity={0.6} />
+                {/* Pillar neon strips */}
+                <line x1={midX - doorW / 2 - 2} y1={midY - doorH} x2={midX - doorW / 2 - 2} y2={midY}
+                  stroke={skinColor} strokeWidth={0.8} strokeOpacity={0.5}>
+                  <animate attributeName="strokeOpacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite" />
+                </line>
+                <line x1={midX + doorW / 2 + 2} y1={midY - doorH} x2={midX + doorW / 2 + 2} y2={midY}
+                  stroke={skinColor} strokeWidth={0.8} strokeOpacity={0.5}>
+                  <animate attributeName="strokeOpacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite" />
+                </line>
+
+                {/* Brand nameplate — elegant sign above canopy */}
+                <rect x={midX - 14} y={midY - doorH - 8} width={28} height={5.5} rx={1.5}
+                  fill="hsl(0,0%,5%)" fillOpacity={0.92}
+                  stroke={skinColor} strokeWidth={0.7} />
+                <text x={midX} y={midY - doorH - 4} textAnchor="middle" fontSize={3.8}
+                  fill={skinLight} fontFamily="Inter" fontWeight={700} letterSpacing="2">
                   {brandSkin!.name.toUpperCase()}
                 </text>
               </g>

@@ -55,39 +55,63 @@ const BrandBuildingSlot: React.FC<{ slot: Slot; building: Building; onClick: () 
   const label = slot.ownerName || slot.label;
   const center = iso(building.gridX + building.width / 2, building.gridY + building.height / 2);
 
-  // Small crown badge floating above roof
   const bx = center.x;
-  const by = center.y - wallH - 16;
+  const by = center.y - wallH - 20;
   const accentColor = isOwned ? 'hsl(38,80%,55%)' : 'hsl(215,20%,45%)';
+
+  // Large banner dimensions — dominant & impossible to miss
+  const bannerW = Math.max(56, building.width * 5);
+  const bannerH = 18;
 
   return (
     <g style={{ cursor: 'pointer' }} onClick={onClick}>
       {isOwned ? (
         <g>
-          {/* Crown + name pill */}
-          <rect x={bx - 18} y={by - 4} width={36} height={9} rx={4.5}
-            fill="hsl(0,0%,5%)" fillOpacity={0.85}
-            stroke={accentColor} strokeWidth={0.8} />
-          <text x={bx - 8} y={by + 2.5} textAnchor="middle" fontSize={6}>👑</text>
-          <text x={bx + 6} y={by + 2} textAnchor="middle" fontSize={4.5}
-            fill="hsl(38,70%,80%)" fontFamily="Inter" fontWeight={800}>
-            {fit(label, 8)}
-          </text>
-          {/* Subtle pulse */}
-          <rect x={bx - 19} y={by - 5} width={38} height={11} rx={5.5}
-            fill="none" stroke={accentColor} strokeWidth={0.5} strokeOpacity={0.15}>
-            <animate attributeName="strokeOpacity" values="0.05;0.25;0.05" dur="3s" repeatCount="indefinite" />
+          {/* Outer glow halo */}
+          <rect x={bx - bannerW / 2 - 3} y={by - bannerH / 2 - 3} width={bannerW + 6} height={bannerH + 6} rx={bannerH / 2 + 3}
+            fill="none" stroke={accentColor} strokeWidth={1} strokeOpacity={0.1}>
+            <animate attributeName="strokeOpacity" values="0.05;0.2;0.05" dur="3s" repeatCount="indefinite" />
           </rect>
+
+          {/* Drop shadow */}
+          <rect x={bx - bannerW / 2 + 2} y={by - bannerH / 2 + 2} width={bannerW} height={bannerH} rx={bannerH / 2}
+            fill="hsl(0,0%,0%)" fillOpacity={0.4} />
+
+          {/* Main banner pill — dark premium */}
+          <rect x={bx - bannerW / 2} y={by - bannerH / 2} width={bannerW} height={bannerH} rx={bannerH / 2}
+            fill="hsl(0,0%,5%)" fillOpacity={0.92}
+            stroke={accentColor} strokeWidth={1.2} />
+
+          {/* Gold accent bar at top edge */}
+          <rect x={bx - bannerW / 2 + 4} y={by - bannerH / 2} width={bannerW - 8} height={2} rx={1}
+            fill={accentColor} fillOpacity={0.7} />
+
+          {/* Crown icon */}
+          <text x={bx - bannerW / 4} y={by + 3} textAnchor="middle" fontSize={10}>👑</text>
+
+          {/* Brand name — large & bold */}
+          <text x={bx + 2} y={by + 2.5} textAnchor="middle" fontSize={8}
+            fill="hsl(38,70%,85%)" fontFamily="Inter" fontWeight={900} letterSpacing="1.5">
+            {fit(label, 10)}
+          </text>
+
+          {/* FLAGSHIP sub-label */}
+          <text x={bx + 2} y={by + bannerH / 2 - 3} textAnchor="middle" fontSize={3}
+            fill="hsl(38,50%,60%)" fontFamily="Inter" fontWeight={500} letterSpacing="2.5">
+            FLAGSHIP STORE
+          </text>
         </g>
       ) : (
         <g>
-          {/* Empty slot indicator */}
-          <rect x={bx - 16} y={by - 3} width={32} height={8} rx={4}
-            fill="hsl(215,10%,12%)" fillOpacity={0.8}
-            stroke="hsl(215,15%,35%)" strokeWidth={0.5} />
-          <text x={bx} y={by + 2} textAnchor="middle" fontSize={3.5}
-            fill="hsl(215,15%,50%)" fontFamily="Inter" fontWeight={500}>
-            🏢 BRAND SLOT
+          {/* Empty slot — still large to show importance */}
+          <rect x={bx - bannerW / 2 + 2} y={by - bannerH / 2 + 2} width={bannerW} height={bannerH} rx={bannerH / 2}
+            fill="hsl(0,0%,0%)" fillOpacity={0.2} />
+          <rect x={bx - bannerW / 2} y={by - bannerH / 2} width={bannerW} height={bannerH} rx={bannerH / 2}
+            fill="hsl(215,10%,12%)" fillOpacity={0.85}
+            stroke="hsl(215,15%,35%)" strokeWidth={0.6} strokeDasharray="4 3" />
+          <text x={bx} y={by + 2} textAnchor="middle" fontSize={5}
+            fill="hsl(215,15%,50%)" fontFamily="Inter" fontWeight={600} letterSpacing="1">
+            🏢 PREMIUM BRAND SLOT
           </text>
         </g>
       )}
