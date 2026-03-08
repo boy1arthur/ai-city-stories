@@ -233,10 +233,10 @@ const PLAZA_BUILDINGS: Building[] = [
     wallColor: 'hsl(38,20%,45%)', roofColor: 'hsl(38,15%,38%)', buildingType: 'shop' },
 
   { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
-    gridX: 18, gridY: 10, width: 14, height: 4,
+    gridX: 18, gridY: 10, width: 8, height: 4,
     description: '제작 & 크래프팅 공방 — 대형 벽면 광고 가능',
     adSlots: ['wall_wrap', 'billboard', 'kiosk', 'naming_rights'],
-    heightLevel: 4, roofShape: 'gear',
+    heightLevel: 3, roofShape: 'gear',
     wallColor: 'hsl(220,6%,46%)', roofColor: 'hsl(220,5%,38%)', buildingType: 'warehouse' },
 
   // ═══ SW BLOCK — "Culture Quarter" ═══
