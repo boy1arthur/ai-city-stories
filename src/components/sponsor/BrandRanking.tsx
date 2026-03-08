@@ -6,7 +6,7 @@ interface Props {
   onBrandClick?: (brandId: string) => void;
 }
 
-export const BrandRanking: React.FC<Props> = ({ brandStats }) => {
+export const BrandRanking: React.FC<Props> = ({ brandStats, onBrandClick }) => {
   if (brandStats.length === 0) {
     return (
       <div className="bg-card border border-border rounded-lg p-4">
