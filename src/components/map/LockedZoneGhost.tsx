@@ -259,6 +259,8 @@ const ZONE_LANDMARKS: Record<string, Landmark[]> = {
   ],
 };
 
+function pts(a: {x:number;y:number}, b: {x:number;y:number}) { return {x1:a.x,y1:a.y,x2:b.x,y2:b.y}; }
+
 // Road connection points: from plaza edge toward each locked zone
 // Plaza grid is 0-36, road spine at grid 16-17 (tile col/row 8, doubled)
 function renderConnectingRoad(zoneId: string, offset: { dx: number; dy: number }, color: string): React.ReactNode {
