@@ -36,70 +36,44 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         const signPos = iso(b.gridX + b.width + 0.6, b.gridY + i * 1.5);
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
-        const boardW = 26;
-        const boardH = 14;
+        const boardW = 24;
+        const boardH = 10;
+        const postH = 16;
 
         return (
           <g key={slot.id}>
-            {/* Support structure */}
-            <line x1={signPos.x} y1={signPos.y} x2={signPos.x} y2={signPos.y - 18}
-              stroke="hsl(215,6%,38%)" strokeWidth={2} strokeLinecap="round" />
-            <line x1={signPos.x - 1} y1={signPos.y} x2={signPos.x + 1} y2={signPos.y}
-              stroke="hsl(215,6%,35%)" strokeWidth={3} strokeLinecap="round" />
+            {/* Post */}
+            <line x1={signPos.x} y1={signPos.y} x2={signPos.x} y2={signPos.y - postH}
+              stroke="hsl(215,6%,38%)" strokeWidth={1.5} strokeLinecap="round" />
 
-            {/* Board frame */}
-            <rect x={signPos.x - boardW / 2} y={signPos.y - 18 - boardH}
-              width={boardW} height={boardH} rx={1.5}
+            {/* Board — pill shape */}
+            <rect x={signPos.x - boardW / 2} y={signPos.y - postH - boardH}
+              width={boardW} height={boardH} rx={boardH / 2}
               fill={has ? bv!.bgColor : 'hsl(215,5%,30%)'} fillOpacity={has ? 0.95 : 0.5}
-              stroke={has ? bv!.color : 'hsl(215,5%,40%)'} strokeWidth={has ? 1.2 : 0.6} />
+              stroke={has ? bv!.color : 'hsl(215,5%,40%)'} strokeWidth={has ? 0.8 : 0.5} />
 
             {has && bv ? (
               <>
-                {/* Brand logo circle */}
-                <circle cx={signPos.x - boardW / 2 + 5} cy={signPos.y - 18 - boardH / 2}
-                  r={3.5} fill={bv.color} />
-                <text x={signPos.x - boardW / 2 + 5} y={signPos.y - 18 - boardH / 2 + 1.5}
-                  textAnchor="middle" fontSize={4} fill="hsl(0,0%,100%)"
+                {/* Logo */}
+                <circle cx={signPos.x - boardW / 2 + boardH / 2 + 0.5} cy={signPos.y - postH - boardH / 2}
+                  r={3} fill={bv.color} />
+                <text x={signPos.x - boardW / 2 + boardH / 2 + 0.5} y={signPos.y - postH - boardH / 2 + 1.3}
+                  textAnchor="middle" fontSize={3.5} fill="hsl(0,0%,100%)"
                   fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
 
-                {/* Brand name */}
-                <text x={signPos.x + 1} y={signPos.y - 18 - boardH / 2 - 1}
-                  textAnchor="middle" fontSize={4.5}
+                {/* Brand name only */}
+                <text x={signPos.x + 2} y={signPos.y - postH - boardH / 2 + 1.8}
+                  textAnchor="middle" fontSize={4}
                   fill="hsl(220,18%,15%)" fontFamily="Inter" fontWeight={700}>
                   {fitText(slot.brand!, 6)}
                 </text>
-                {/* Tagline */}
-                <text x={signPos.x + 1} y={signPos.y - 18 - boardH / 2 + 4}
-                  textAnchor="middle" fontSize={2.5}
-                  fill="hsl(220,12%,40%)" fontFamily="Inter" fontWeight={400}>
-                  {(() => { const vb = VIRTUAL_BRANDS.find(v => v.name === slot.brand); return vb ? fitText(vb.tagline, 12) : ''; })()}
-                </text>
-
-                {/* Glow frame */}
-                <rect x={signPos.x - boardW / 2 - 1} y={signPos.y - 18 - boardH - 1}
-                  width={boardW + 2} height={boardH + 2} rx={2.5}
-                  fill="none" stroke={bv.color} strokeWidth={0.5} strokeOpacity={0.25}>
-                  <animate attributeName="strokeOpacity" values="0.1;0.35;0.1" dur="3s" repeatCount="indefinite" />
-                </rect>
-
-                {/* Top light strip */}
-                <rect x={signPos.x - boardW / 2 + 2} y={signPos.y - 18 - boardH}
-                  width={boardW - 4} height={1} rx={0.5}
-                  fill={bv.color} fillOpacity={0.4} />
               </>
             ) : (
-              <>
-                <text x={signPos.x} y={signPos.y - 18 - boardH / 2 + 1}
-                  textAnchor="middle" fontSize={3.5}
-                  fill="hsl(215,8%,50%)" fontFamily="Inter" fontWeight={400}>
-                  AD SPACE
-                </text>
-                <text x={signPos.x} y={signPos.y - 18 - boardH / 2 + 5}
-                  textAnchor="middle" fontSize={2}
-                  fill="hsl(215,8%,42%)" fontFamily="Inter">
-                  Available
-                </text>
-              </>
+              <text x={signPos.x} y={signPos.y - postH - boardH / 2 + 1.5}
+                textAnchor="middle" fontSize={3}
+                fill="hsl(215,8%,50%)" fontFamily="Inter" fontWeight={500}>
+                AD SPACE
+              </text>
             )}
           </g>
         );

@@ -56,86 +56,48 @@ const FloatingBannerAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }>
   }
   const anchorY = anchorIso.y - maxWallH * 0.5;
 
-  const bannerW = 48;
-  const bannerH = 16;
+  const bannerW = 40;
+  const bannerH = 12;
   const bgColor = bgFromBrand(ad.brandColor, 38);
 
   return (
     <g>
-      {/* Connecting dashed line from banner to wall */}
+      {/* Thin connector line */}
       <line
-        x1={centerIso.x} y1={floatY + bannerH / 2}
+        x1={centerIso.x} y1={floatY + bannerH}
         x2={anchorIso.x} y2={anchorY}
-        stroke={ad.brandColor} strokeWidth={0.6} strokeOpacity={0.35}
-        strokeDasharray="3 2"
-      />
-      {/* Wall indicator dot */}
-      <circle cx={anchorIso.x} cy={anchorY} r={2}
-        fill={ad.brandColor} fillOpacity={0.5} />
-
-      {/* Banner shadow */}
-      <ellipse cx={centerIso.x} cy={floatY + bannerH + 2} rx={bannerW / 2 - 4} ry={2}
-        fill="hsl(0,0%,0%)" fillOpacity={0.08} />
-
-      {/* Banner background */}
-      <rect
-        x={centerIso.x - bannerW / 2} y={floatY}
-        width={bannerW} height={bannerH} rx={3}
-        fill={bgColor} fillOpacity={0.92}
-        stroke={ad.brandColor} strokeWidth={1} strokeOpacity={0.6}
+        stroke={ad.brandColor} strokeWidth={0.5} strokeOpacity={0.25}
+        strokeDasharray="2 2"
       />
 
-      {/* Top accent strip */}
+      {/* Banner pill */}
       <rect
         x={centerIso.x - bannerW / 2} y={floatY}
-        width={bannerW} height={2} rx={3}
-        fill={ad.brandColor} fillOpacity={0.65}
+        width={bannerW} height={bannerH} rx={bannerH / 2}
+        fill={bgColor} fillOpacity={0.93}
+        stroke={ad.brandColor} strokeWidth={0.8} strokeOpacity={0.5}
       />
 
       {/* Logo circle */}
-      <circle cx={centerIso.x - bannerW / 2 + 9} cy={floatY + bannerH / 2 + 1} r={4.5}
+      <circle cx={centerIso.x - bannerW / 2 + bannerH / 2 + 1} cy={floatY + bannerH / 2} r={4}
         fill={ad.brandColor} fillOpacity={0.9} />
-      <text x={centerIso.x - bannerW / 2 + 9} y={floatY + bannerH / 2 + 3}
-        textAnchor="middle" fontSize={5.5}
+      <text x={centerIso.x - bannerW / 2 + bannerH / 2 + 1} y={floatY + bannerH / 2 + 2}
+        textAnchor="middle" fontSize={5}
         fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800}>{ad.brandInitial}</text>
 
-      {/* Brand name */}
-      <text x={centerIso.x + 4} y={floatY + bannerH / 2}
-        textAnchor="middle" fontSize={7}
-        fill="hsl(220,18%,12%)" fontFamily="Inter" fontWeight={800}>
+      {/* Brand name only */}
+      <text x={centerIso.x + 4} y={floatY + bannerH / 2 + 2.5}
+        textAnchor="middle" fontSize={6}
+        fill="hsl(220,18%,12%)" fontFamily="Inter" fontWeight={700}>
         {ad.brandName}
       </text>
 
-      {/* Tagline */}
-      <text x={centerIso.x + 4} y={floatY + bannerH / 2 + 6}
-        textAnchor="middle" fontSize={3}
-        fill="hsl(220,12%,40%)" fontFamily="Inter" fontWeight={500}>
-        {ad.tagline}
-      </text>
-
-      {/* Face indicator badge */}
-      {(() => {
-        const label = ad.face === 'south' ? '▼ SOUTH WALL' : '▶ EAST WALL';
-        return (
-          <>
-            <rect x={centerIso.x + bannerW / 2 - 22} y={floatY + bannerH - 5}
-              width={20} height={4.5} rx={2}
-              fill={ad.brandColor} fillOpacity={0.12} stroke={ad.brandColor} strokeWidth={0.3} />
-            <text x={centerIso.x + bannerW / 2 - 12} y={floatY + bannerH - 2}
-              textAnchor="middle" fontSize={2.2}
-              fill={ad.brandColor} fontFamily="Inter" fontWeight={700} letterSpacing="0.3">
-              {label}
-            </text>
-          </>
-        );
-      })()}
-
-      {/* Glow pulse */}
+      {/* Subtle glow */}
       <rect
-        x={centerIso.x - bannerW / 2 - 1.5} y={floatY - 1.5}
-        width={bannerW + 3} height={bannerH + 3} rx={4}
-        fill="none" stroke={ad.brandColor} strokeWidth={0.5} strokeOpacity={0.15}>
-        <animate attributeName="strokeOpacity" values="0.08;0.28;0.08" dur="3s" repeatCount="indefinite" />
+        x={centerIso.x - bannerW / 2 - 1} y={floatY - 1}
+        width={bannerW + 2} height={bannerH + 2} rx={bannerH / 2 + 1}
+        fill="none" stroke={ad.brandColor} strokeWidth={0.4} strokeOpacity={0.12}>
+        <animate attributeName="strokeOpacity" values="0.06;0.2;0.06" dur="3.5s" repeatCount="indefinite" />
       </rect>
     </g>
   );
