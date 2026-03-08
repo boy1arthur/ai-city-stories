@@ -4,10 +4,11 @@ import type { Slot } from '@/data/slots';
 
 interface Props {
   slots: Slot[];
+  onSlotClick?: (slot: Slot) => void;
 }
 
 /** Renders PATRON_TILE slots on the isometric map as benches with plaques or empty "available" markers */
-export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots }) => {
+export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots, onSlotClick }) => {
   return (
     <g>
       {slots.map(slot => {

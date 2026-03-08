@@ -9,10 +9,13 @@ import { SponsorDashboard } from '@/components/SponsorDashboard';
 import { TrendingOpinions } from '@/components/TrendingOpinions';
 import { WorldEventBanner } from '@/components/WorldEventBanner';
 import { AgentProfilePanel } from '@/components/agent/AgentProfilePanel';
+import { SlotInteractionModal } from '@/components/SlotInteractionModal';
 import { useWorldSimulation } from '@/hooks/useWorldSimulation';
 import { useCampaigns } from '@/hooks/useCampaigns';
 import { isCampaignActive } from '@/lib/adCampaign';
+import { handleSlotInteraction } from '@/lib/slotInteraction';
 import type { Building, Agent } from '@/data/world';
+import type { Slot } from '@/data/slots';
 
 const Index = () => {
   const sim = useWorldSimulation();
@@ -31,6 +34,7 @@ const Index = () => {
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [showDashboard, setShowDashboard] = useState(searchParams.get('tab') === 'sponsor');
+  const [slotModalData, setSlotModalData] = useState<{ title: string; message: string; emoji: string; slot: Slot } | null>(null);
   const navigate = useNavigate();
 
   // Sync campaigns → AdSlots brand assignment
@@ -47,6 +51,10 @@ const Index = () => {
   }, [tick, campaigns]); // eslint-disable-line
 
   const activeAds = adSlots.filter(s => s.brand).length;
+
+  const onSlotClick = (slot: Slot) => {
+    handleSlotInteraction(slot, setSlotModalData);
+  };
 
   if (showDashboard) {
     return (
@@ -105,6 +113,7 @@ const Index = () => {
           energyStatus={cityEnergy.status}
           onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
           onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
+          onSlotClick={onSlotClick}
         />
         <TrendingOpinions highlights={highlights} />
         <WorldPanel
@@ -123,10 +132,13 @@ const Index = () => {
           agent={selectedAgent}
           worldLog={worldLog}
           allAdSlots={adSlots}
-          onBrandClick={(brandId) => { setSelectedAgent(null); /* could open brand panel */ }}
+          onBrandClick={(brandId) => { setSelectedAgent(null); }}
           onClose={() => setSelectedAgent(null)}
         />
       )}
+
+      {/* Slot interaction modal */}
+      <SlotInteractionModal data={slotModalData} onClose={() => setSlotModalData(null)} />
     </div>
   );
 };
