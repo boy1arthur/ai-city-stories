@@ -344,7 +344,7 @@ export const ZONES: Zone[] = [
     themeColor: 'hsl(205,50%,45%)',
     buildings: [],
     tileMap: [],
-    locked: true,
+    locked: false,
   },
   {
     id: 'industrial',
