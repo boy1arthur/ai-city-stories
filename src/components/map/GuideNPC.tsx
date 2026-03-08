@@ -11,7 +11,7 @@ export const GUIDE_SLOT: Slot = {
   id: 'system_guide_plaza',
   zone: 'plaza',
   type: 'PATRON_TILE' as any, // Will be treated as SYSTEM_GUIDE in getSlotMessage
-  location: { tile: { x: 17, y: 17 } }, // Center of the crossroad
+  location: { tile: { x: 4, y: 4 } }, // NW corner near entrance
   label: 'Plaza Guide AI',
   ownerType: 'empty' as any,
   triggerType: 'click',
