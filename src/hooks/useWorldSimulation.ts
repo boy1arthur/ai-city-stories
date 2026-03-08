@@ -407,7 +407,7 @@ export function useWorldSimulation() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isPaused, adSlots, addLog, addInteraction, addSpeechBubble, addAdReaction, agentVisuals]);
+  }, [isPaused, adSlots, addLog, addInteraction, addSpeechBubble, addAdReaction]);
 
   const placeBrandAd = useCallback((slotId: string, brandName: string) => {
     setAdSlots(prev => prev.map(s => s.id === slotId ? { ...s, brand: brandName } : s));
