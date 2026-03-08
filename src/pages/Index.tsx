@@ -12,6 +12,7 @@ const Index = () => {
     agents, allAgents, adSlots, allAdSlots, worldLog, tick,
     isPaused, setIsPaused, placeBrandAd, buildings, interactions,
     currentZoneId, setCurrentZoneId, currentZone, zones,
+    speechBubbles, adReactions, agentVisuals,
   } = useWorldSimulation();
 
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
@@ -55,6 +56,9 @@ const Index = () => {
           agents={agents}
           adSlots={adSlots}
           interactions={interactions}
+          speechBubbles={speechBubbles}
+          adReactions={adReactions}
+          agentVisuals={agentVisuals}
           onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
           onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
         />
