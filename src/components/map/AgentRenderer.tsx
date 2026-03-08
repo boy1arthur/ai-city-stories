@@ -164,17 +164,17 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
 
         {/* Arms */}
         <g>
-          {/* Left arm */}
-          <line x1={-3.5 * s} y1={-2 * s} x2={-5.5 * s + (isMoving ? -walkT * 1.5 : 0)} y2={2.5 * s + (isMoving ? walkT * 1 : Math.sin(Date.now() / 2000) * 0.5)}
+          {/* Left arm — gentle opposite swing to legs */}
+          <line x1={-3.5 * s} y1={-2 * s} x2={-5.5 * s + (isMoving ? -walkT * 0.8 : 0)} y2={2.5 * s + (isMoving ? walkT * 0.6 : Math.sin(Date.now() / 3000) * 0.3)}
             stroke={palette.shirt} strokeWidth={2} strokeLinecap="round" />
           {/* Left hand */}
-          <circle cx={-5.5 * s + (isMoving ? -walkT * 1.5 : 0)} cy={2.8 * s + (isMoving ? walkT * 1 : Math.sin(Date.now() / 2000) * 0.5)} r={1.2}
+          <circle cx={-5.5 * s + (isMoving ? -walkT * 0.8 : 0)} cy={2.8 * s + (isMoving ? walkT * 0.6 : Math.sin(Date.now() / 3000) * 0.3)} r={1.2}
             fill={palette.body} />
           {/* Right arm */}
-          <line x1={3.5 * s} y1={-2 * s} x2={5.5 * s + (isMoving ? walkT * 1.5 : 0)} y2={2.5 * s + (isMoving ? -walkT * 1 : Math.sin(Date.now() / 2000 + 1) * 0.5)}
+          <line x1={3.5 * s} y1={-2 * s} x2={5.5 * s + (isMoving ? walkT * 0.8 : 0)} y2={2.5 * s + (isMoving ? -walkT * 0.6 : Math.sin(Date.now() / 3000 + 1) * 0.3)}
             stroke={palette.shirt} strokeWidth={2} strokeLinecap="round" />
           {/* Right hand */}
-          <circle cx={5.5 * s + (isMoving ? walkT * 1.5 : 0)} cy={2.8 * s + (isMoving ? -walkT * 1 : Math.sin(Date.now() / 2000 + 1) * 0.5)} r={1.2}
+          <circle cx={5.5 * s + (isMoving ? walkT * 0.8 : 0)} cy={2.8 * s + (isMoving ? -walkT * 0.6 : Math.sin(Date.now() / 3000 + 1) * 0.3)} r={1.2}
             fill={palette.body} />
         </g>
 
