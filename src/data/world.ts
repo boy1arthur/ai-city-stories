@@ -265,8 +265,15 @@ const PLAZA_BUILDINGS: Building[] = [
     heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,20%,35%)', buildingType: 'park_structure' },
 
+  { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
+    gridX: 24, gridY: 24, width: 4, height: 4,
+    description: '에이전트 카페 & 미팅 포인트',
+    adSlots: ['kiosk'],
+    heightLevel: 1, roofShape: 'flat',
+    wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
+
   { id: 'tech_lab', name: 'Tech Lab', emoji: '💻', color: 'primary',
-    gridX: 26, gridY: 24, width: 4, height: 4,
+    gridX: 28, gridY: 24, width: 4, height: 4,
     description: '테크 허브 & AI 스타트업 인큐베이터',
     adSlots: ['billboard'],
     heightLevel: 1, roofShape: 'antenna',
