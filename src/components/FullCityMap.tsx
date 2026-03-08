@@ -110,12 +110,15 @@ export const FullCityMap: React.FC<Props> = ({
     onZoneFocus('');
   }, [onZoneFocus]);
 
-  // Determine LOD per zone
-  const getLod = useCallback((zoneId: string): 'full' | 'simplified' => {
-    if (zoom >= LOD_THRESHOLD) return 'full';
-    // In simplified mode, only focused zone gets full detail
-    if (focusedZoneId === zoneId) return 'full';
-    return 'simplified';
+  // Determine LOD per zone: only focused zone loads detail, others are silhouettes
+  const getLod = useCallback((zoneId: string): 'full' | 'simplified' | 'silhouette' => {
+    const isFocused = focusedZoneId === zoneId;
+    if (isFocused) {
+      // Focused zone: full detail when zoomed in, simplified when zoomed out
+      return zoom >= LOD_FULL_THRESHOLD ? 'full' : 'simplified';
+    }
+    // Non-focused zones: always silhouette (minimal rendering)
+    return 'silhouette';
   }, [zoom, focusedZoneId]);
 
   // Compute total bounds for minimap
