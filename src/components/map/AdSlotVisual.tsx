@@ -1,7 +1,12 @@
 import React from 'react';
 import type { Building, AdSlot } from '@/data/world';
-import { iso, WALL_H_UNIT } from './constants';
+import { iso, TILE_W, TILE_H, WALL_H_UNIT } from './constants';
 import { VIRTUAL_BRANDS } from '@/data/demoSeed';
+
+// Isometric angle for south wall baseline (radians)
+const SOUTH_ANGLE_DEG = Math.atan2(TILE_H, TILE_W) * (180 / Math.PI); // ≈ 26.57°
+// Isometric angle for east wall baseline
+const EAST_ANGLE_DEG = Math.atan2(TILE_H, -TILE_W) * (180 / Math.PI); // ≈ -26.57°
 
 interface Props {
   building: Building;
@@ -168,46 +173,54 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         );
       })}
 
-      {/* ===== NAMING RIGHTS — pill floating above roof ===== */}
+      {/* ===== NAMING RIGHTS — painted on south wall face ===== */}
       {adSlots.filter(s => s.type === 'naming_rights').map(slot => {
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
-        const pw = 48;
-        const ph = 14;
-        const bannerY = center.y - wallHeight - 22;
+
+        // South wall endpoints
+        const sw = iso(b.gridX, b.gridY + b.height);
+        const se = iso(b.gridX + b.width, b.gridY + b.height);
+        const mx = (sw.x + se.x) / 2;
+        const my = (sw.y + se.y) / 2 - wallHeight * 0.5;
+
+        // Panel dimensions on wall (isometric-aware)
+        const panelW = Math.hypot(se.x - sw.x, se.y - sw.y) * 0.75;
+        const panelH = wallHeight * 0.55;
 
         return (
           <g key={slot.id}>
             {has && bv ? (
-              <>
-                <rect x={center.x - pw / 2} y={bannerY} width={pw} height={ph} rx={ph / 2}
-                  fill={bv.bgColor} fillOpacity={0.93}
-                  stroke={bv.color} strokeWidth={0.8} />
-                <circle cx={center.x - pw / 2 + ph / 2 + 1} cy={bannerY + ph / 2}
-                  r={4.5} fill={bv.color} />
-                <text x={center.x - pw / 2 + ph / 2 + 1} y={bannerY + ph / 2 + 2}
-                  textAnchor="middle" fontSize={5.5} fill="hsl(0,0%,100%)"
-                  fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
-                <text x={center.x + 5} y={bannerY + ph / 2 + 2.5}
-                  textAnchor="middle" fontSize={6.5}
-                  fill="hsl(220,18%,12%)" fontFamily="Inter" fontWeight={700}>
-                  {fitText(slot.brand!, 8)}
+              <g transform={`rotate(${SOUTH_ANGLE_DEG}, ${mx}, ${my})`}>
+                {/* Wall panel background */}
+                <rect x={mx - panelW / 2} y={my - panelH / 2}
+                  width={panelW} height={panelH} rx={2}
+                  fill={bv.color} fillOpacity={0.15}
+                  stroke={bv.color} strokeWidth={0.6} strokeOpacity={0.3} />
+
+                {/* Brand initial — large */}
+                <text x={mx - panelW / 2 + panelH * 0.55} y={my + panelH * 0.15}
+                  textAnchor="middle" fontSize={panelH * 0.6}
+                  fill={bv.color} fillOpacity={0.7}
+                  fontFamily="Inter" fontWeight={900}>{bv.initial}</text>
+
+                {/* Brand name */}
+                <text x={mx + 4} y={my + panelH * 0.12}
+                  textAnchor="middle" fontSize={panelH * 0.35}
+                  fill={bv.color} fillOpacity={0.8}
+                  fontFamily="Inter" fontWeight={800} letterSpacing="1">
+                  {fitText(slot.brand!, 10)}
                 </text>
-                {/* Glow */}
-                <rect x={center.x - pw / 2 - 1} y={bannerY - 1}
-                  width={pw + 2} height={ph + 2} rx={ph / 2 + 1}
-                  fill="none" stroke={bv.color} strokeWidth={0.4} strokeOpacity={0.12}>
-                  <animate attributeName="strokeOpacity" values="0.06;0.2;0.06" dur="4s" repeatCount="indefinite" />
-                </rect>
-              </>
+              </g>
             ) : (
-              <>
-                <rect x={center.x - pw / 2} y={bannerY} width={pw} height={ph} rx={ph / 2}
-                  fill="hsl(215,5%,25%)" fillOpacity={0.35}
-                  stroke="hsl(215,5%,38%)" strokeWidth={0.4} strokeDasharray="3 2" />
-                <circle cx={center.x} cy={bannerY + ph / 2} r={2}
-                  fill="hsl(215,8%,45%)" fillOpacity={0.3} />
-              </>
+              /* Empty slot — subtle dashed outline on wall */
+              <g transform={`rotate(${SOUTH_ANGLE_DEG}, ${mx}, ${my})`}>
+                <rect x={mx - panelW / 2} y={my - panelH / 2}
+                  width={panelW} height={panelH} rx={2}
+                  fill="none"
+                  stroke="hsl(215,5%,38%)" strokeWidth={0.4} strokeOpacity={0.3}
+                  strokeDasharray="4 3" />
+              </g>
             )}
           </g>
         );
