@@ -160,7 +160,7 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 // Each row is exactly 18 chars.
 // ===== PLAZA TILE MAP =====
 // 18x18 tile map (each cell = 2x2 grid). Road: col 8 (vertical), row 8 (horizontal).
-// NW: Arena(A)  NE: Feed(E)+Oracle(O)+Newsstand(N)+Workshop(H)
+// NW: Arena(A)  NE: Feed(E)+Oracle(O)+Newsstand(N)
 // SW: Library(B)+Tavern(T)+Museum(M)  SE: Observatory(V)+Arcade(D)+Café(C)+TechLab(X)
 const PLAZA_TILE_MAP: string[] = [
   'GSSSSSSSRSSSSSSSSG', // 0  border
