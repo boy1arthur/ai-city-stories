@@ -3,13 +3,15 @@ export interface Building {
   id: string;
   name: string;
   emoji: string;
-  color: string; // tailwind token
+  color: string;
   gridX: number;
   gridY: number;
   width: number;
   height: number;
   description: string;
   adSlots: AdSlotType[];
+  heightLevel: 1 | 2 | 3;
+  roofShape: 'flat' | 'antenna' | 'dish' | 'garden' | 'dome' | 'spire' | 'gear' | 'chimney' | 'lantern' | 'telescope';
 }
 
 export type AdSlotType = 'billboard' | 'wall_wrap' | 'bus_stop' | 'kiosk' | 'naming_rights';
@@ -23,16 +25,51 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 };
 
 export const BUILDINGS: Building[] = [
-  { id: 'arena', name: 'Arena', emoji: '⚔️', color: 'primary', gridX: 3, gridY: 2, width: 3, height: 3, description: 'AI 에이전트 배틀 & 토너먼트', adSlots: ['billboard', 'naming_rights', 'wall_wrap'] },
-  { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'secondary', gridX: 8, gridY: 1, width: 2, height: 3, description: '소셜 피드 & 트렌드 센터', adSlots: ['billboard', 'kiosk'] },
-  { id: 'oracle', name: 'Oracle', emoji: '🔮', color: 'secondary', gridX: 13, gridY: 2, width: 2, height: 2, description: '예측 마켓 & 점술관', adSlots: ['wall_wrap', 'kiosk'] },
-  { id: 'library', name: 'Library', emoji: '📚', color: 'primary', gridX: 1, gridY: 7, width: 3, height: 2, description: '지식 아카이브 & 학습 센터', adSlots: ['billboard', 'bus_stop'] },
-  { id: 'plaza', name: 'Plaza', emoji: '🏛️', color: 'accent', gridX: 7, gridY: 6, width: 4, height: 4, description: '중앙 광장 — 모든 에이전트의 교차점', adSlots: ['billboard', 'wall_wrap', 'bus_stop', 'kiosk', 'naming_rights'] },
-  { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary', gridX: 14, gridY: 6, width: 3, height: 2, description: '실험 & 프로토타입 연구소', adSlots: ['wall_wrap', 'kiosk'] },
-  { id: 'tavern', name: 'Tavern', emoji: '🍺', color: 'accent', gridX: 2, gridY: 12, width: 2, height: 2, description: '에이전트 사교장 & 루머 허브', adSlots: ['billboard', 'bus_stop'] },
-  { id: 'garden', name: 'Garden', emoji: '🌿', color: 'primary', gridX: 6, gridY: 13, width: 3, height: 3, description: '힐링 & 명상 정원', adSlots: ['kiosk', 'bus_stop'] },
-  { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'secondary', gridX: 12, gridY: 12, width: 3, height: 2, description: '제작 & 크래프팅 공방', adSlots: ['wall_wrap', 'billboard'] },
-  { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'secondary', gridX: 15, gridY: 14, width: 2, height: 3, description: '별 관측소 & 미래 탐색', adSlots: ['naming_rights', 'kiosk'] },
+  { id: 'arena', name: 'Arena', emoji: '⚔️', color: 'primary', gridX: 3, gridY: 2, width: 3, height: 3, description: 'AI 에이전트 배틀 & 토너먼트', adSlots: ['billboard', 'naming_rights', 'wall_wrap'], heightLevel: 3, roofShape: 'dome' },
+  { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'secondary', gridX: 8, gridY: 1, width: 2, height: 3, description: '소셜 피드 & 트렌드 센터', adSlots: ['billboard', 'kiosk'], heightLevel: 3, roofShape: 'antenna' },
+  { id: 'oracle', name: 'Oracle', emoji: '🔮', color: 'secondary', gridX: 13, gridY: 2, width: 2, height: 2, description: '예측 마켓 & 점술관', adSlots: ['wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'dish' },
+  { id: 'library', name: 'Library', emoji: '📚', color: 'primary', gridX: 1, gridY: 7, width: 3, height: 2, description: '지식 아카이브 & 학습 센터', adSlots: ['billboard', 'bus_stop'], heightLevel: 2, roofShape: 'spire' },
+  { id: 'plaza', name: 'Plaza', emoji: '🏛️', color: 'accent', gridX: 7, gridY: 6, width: 4, height: 4, description: '중앙 광장 — 모든 에이전트의 교차점', adSlots: ['billboard', 'wall_wrap', 'bus_stop', 'kiosk', 'naming_rights'], heightLevel: 1, roofShape: 'flat' },
+  { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary', gridX: 14, gridY: 6, width: 3, height: 2, description: '실험 & 프로토타입 연구소', adSlots: ['wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'antenna' },
+  { id: 'tavern', name: 'Tavern', emoji: '🍺', color: 'accent', gridX: 2, gridY: 12, width: 2, height: 2, description: '에이전트 사교장 & 루머 허브', adSlots: ['billboard', 'bus_stop'], heightLevel: 1, roofShape: 'lantern' },
+  { id: 'garden', name: 'Garden', emoji: '🌿', color: 'primary', gridX: 6, gridY: 13, width: 3, height: 3, description: '힐링 & 명상 정원', adSlots: ['kiosk', 'bus_stop'], heightLevel: 1, roofShape: 'garden' },
+  { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'secondary', gridX: 12, gridY: 12, width: 3, height: 2, description: '제작 & 크래프팅 공방', adSlots: ['wall_wrap', 'billboard'], heightLevel: 2, roofShape: 'gear' },
+  { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'secondary', gridX: 15, gridY: 14, width: 2, height: 3, description: '별 관측소 & 미래 탐색', adSlots: ['naming_rights', 'kiosk'], heightLevel: 3, roofShape: 'telescope' },
+];
+
+// Road segments connecting buildings (pairs of grid coordinates)
+export interface RoadSegment {
+  from: { x: number; y: number };
+  to: { x: number; y: number };
+}
+
+export const ROAD_SEGMENTS: RoadSegment[] = [
+  // Arena -> Feed Tower
+  { from: { x: 6, y: 3 }, to: { x: 8, y: 3 } },
+  // Feed Tower -> Oracle
+  { from: { x: 10, y: 2 }, to: { x: 13, y: 2 } },
+  // Arena -> Library (vertical)
+  { from: { x: 3, y: 5 }, to: { x: 3, y: 7 } },
+  // Library -> Plaza
+  { from: { x: 4, y: 8 }, to: { x: 7, y: 8 } },
+  // Plaza -> Lab
+  { from: { x: 11, y: 7 }, to: { x: 14, y: 7 } },
+  // Oracle -> Lab
+  { from: { x: 14, y: 4 }, to: { x: 14, y: 6 } },
+  // Plaza -> Garden (vertical)
+  { from: { x: 8, y: 10 }, to: { x: 8, y: 13 } },
+  // Library -> Tavern (vertical)
+  { from: { x: 2, y: 9 }, to: { x: 2, y: 12 } },
+  // Garden -> Workshop
+  { from: { x: 9, y: 14 }, to: { x: 12, y: 14 } },
+  // Workshop -> Observatory
+  { from: { x: 15, y: 13 }, to: { x: 15, y: 14 } },
+  // Lab -> Workshop (vertical)
+  { from: { x: 15, y: 8 }, to: { x: 15, y: 12 } },
+  // Feed Tower -> Plaza
+  { from: { x: 9, y: 4 }, to: { x: 9, y: 6 } },
+  // Tavern -> Garden
+  { from: { x: 4, y: 13 }, to: { x: 6, y: 13 } },
 ];
 
 // ===== AGENTS =====
@@ -73,7 +110,7 @@ export interface AdSlot {
   type: AdSlotType;
   brand: string | null;
   impressions: number;
-  esv: number; // Estimated Slot Value
+  esv: number;
 }
 
 export const INITIAL_AD_SLOTS: AdSlot[] = BUILDINGS.flatMap(b =>
@@ -95,8 +132,17 @@ export const SPONSOR_TIERS: Record<SponsorTier, { label: string; emoji: string; 
   tree: { label: 'Tree', emoji: '🌳', minBudget: 2000, color: 'accent' },
 };
 
-// ===== BRAND CATEGORIES =====
 export const BRAND_CATEGORIES = ['tech', 'fashion', 'food', 'entertainment', 'finance', 'education', 'health'] as const;
+
+// ===== INTERACTION EVENT (for synapse lines) =====
+export interface InteractionEvent {
+  id: string;
+  agentId: string;
+  buildingId: string;
+  brand: string;
+  affinity: number;
+  timestamp: number;
+}
 
 // ===== DIALOGUE TEMPLATES =====
 export function generateBrandDialogue(agentName: string, brand: string, affinity: number): string {
