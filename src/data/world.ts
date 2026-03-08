@@ -251,7 +251,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 8, gridY: 18, width: 6, height: 8,
     description: '에이전트 사교장 & 루머 허브',
     adSlots: ['billboard', 'bus_stop', 'wall_wrap'],
-    heightLevel: 1, roofShape: 'gabled',
+    heightLevel: 2, roofShape: 'gabled',
     wallColor: 'hsl(25,22%,45%)', roofColor: 'hsl(15,28%,32%)', buildingType: 'shop' },
 
   { id: 'museum', name: 'Museum', emoji: '🏛️', color: 'secondary',
