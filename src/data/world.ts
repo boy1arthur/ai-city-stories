@@ -215,7 +215,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 18, gridY: 2, width: 8, height: 8,
     description: '소셜 피드 & 트렌드 센터',
     adSlots: ['billboard', 'kiosk', 'wall_wrap'],
-    heightLevel: 3, roofShape: 'antenna',
+    heightLevel: 5, roofShape: 'antenna',
     wallColor: 'hsl(210,10%,48%)', roofColor: 'hsl(210,8%,40%)', buildingType: 'tower' },
 
   { id: 'oracle', name: 'Oracle', emoji: '🔮', color: 'secondary',
