@@ -705,7 +705,7 @@ export const ZONES: Zone[] = [
     description: '브랜드 마을 — 각 건물이 하나의 브랜드를 대표하는 프리미엄 구역',
     gridSize: 36,
     theme: 'residential',
-    themeColor: 'hsl(280,30%,45%)',
+    themeColor: 'hsl(30,20%,40%)',
     buildings: RESIDENTIAL_BUILDINGS,
     tileMap: RESIDENTIAL_TILE_MAP,
     locked: false,
