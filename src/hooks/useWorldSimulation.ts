@@ -176,6 +176,9 @@ export function useWorldSimulation() {
     return () => clearInterval(cleanup);
   }, []);
 
+  // Keep ref in sync for use in interval closures
+  useEffect(() => { agentVisualsRef.current = agentVisuals; }, [agentVisuals]);
+
   // Initialize agent visual positions
   useEffect(() => {
     const zone = getZoneById(currentZoneId);
