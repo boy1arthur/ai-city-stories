@@ -44,8 +44,10 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
   const p1 = isEast ? iso(b.gridX + b.width, b.gridY) : iso(b.gridX, b.gridY + b.height);
   const p2 = isEast ? iso(b.gridX + b.width, b.gridY + b.height) : iso(b.gridX + b.width, b.gridY + b.height);
 
-  // Floating LED panel — thin strip at upper wall
-  const panelTop = 0.82, panelBot = 0.68, inset = 0.15;
+  // Floating LED panel — fits building width, thinner for basic
+  const panelTop = isPremium ? 0.85 : 0.80;
+  const panelBot = isPremium ? 0.62 : 0.66;
+  const inset = 0.05; // tight to building edges
   const lerp = (a: {x:number,y:number}, b2: {x:number,y:number}, t: number) => ({ x: a.x + (b2.x - a.x) * t, y: a.y + (b2.y - a.y) * t });
 
   const tl = { x: lerp(p1, p2, inset).x, y: lerp(p1, p2, inset).y - wallH * panelTop };
@@ -82,11 +84,26 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
         </polygon>
       )}
 
-      {/* Logo + brand name — single line only */}
-      <text x={cx - fsN * 1.5} y={cy + fs * 0.2} textAnchor="middle" fontSize={fs}
-        fill={ad.brandColor} fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-      <text x={cx + fsN * 0.8} y={cy + fsN * 0.2} textAnchor="middle" fontSize={fsN}
-        fill="hsl(0,0%,88%)" fontFamily="Inter" fontWeight={700} letterSpacing="0.8">{ad.brandName}</text>
+      {/* Content: premium/standard → logo+name, basic → color strip only */}
+      {ad.tier !== 'basic' ? (
+        <>
+          <text x={cx - fsN * 1.5} y={cy + fs * 0.2} textAnchor="middle" fontSize={fs}
+            fill={ad.brandColor} fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
+          <text x={cx + fsN * 0.8} y={cy + fsN * 0.2} textAnchor="middle" fontSize={fsN}
+            fill="hsl(0,0%,88%)" fontFamily="Inter" fontWeight={700} letterSpacing="0.8">{ad.brandName}</text>
+        </>
+      ) : (
+        /* Basic: just a wider brand color bar across center */
+        (() => {
+          const t1 = 0.3, t2 = 0.7;
+          const sT = { x: tl.x + (bl.x - tl.x) * t1, y: tl.y + (bl.y - tl.y) * t1 };
+          const sTr = { x: tr.x + (br.x - tr.x) * t1, y: tr.y + (br.y - tr.y) * t1 };
+          const sB = { x: tl.x + (bl.x - tl.x) * t2, y: tl.y + (bl.y - tl.y) * t2 };
+          const sBr = { x: tr.x + (br.x - tr.x) * t2, y: tr.y + (br.y - tr.y) * t2 };
+          return <polygon points={`${sT.x},${sT.y} ${sTr.x},${sTr.y} ${sBr.x},${sBr.y} ${sB.x},${sB.y}`}
+            fill={ad.brandColor} fillOpacity={0.5} />;
+        })()
+      )}
     </g>
   );
 };
