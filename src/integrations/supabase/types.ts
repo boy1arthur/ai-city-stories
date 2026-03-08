@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      campaigns: {
+        Row: {
+          brand_id: string
+          created_at: string
+          end_tick: number
+          id: string
+          slot_ids: string[]
+          start_tick: number
+          status: string
+          updated_at: string
+          user_id: string
+          zone_id: string
+        }
+        Insert: {
+          brand_id: string
+          created_at?: string
+          end_tick?: number
+          id: string
+          slot_ids?: string[]
+          start_tick?: number
+          status?: string
+          updated_at?: string
+          user_id: string
+          zone_id?: string
+        }
+        Update: {
+          brand_id?: string
+          created_at?: string
+          end_tick?: number
+          id?: string
+          slot_ids?: string[]
+          start_tick?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+          zone_id?: string
+        }
+        Relationships: []
+      }
       slots: {
         Row: {
           ai_hook_id: string | null
