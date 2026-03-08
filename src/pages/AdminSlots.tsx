@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSlots, useUpdateSlot } from '@/hooks/useSlots';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
