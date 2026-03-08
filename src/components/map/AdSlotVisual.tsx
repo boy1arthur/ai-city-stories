@@ -42,7 +42,7 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots,
         const postH = 20;
 
         return (
-          <g key={slot.id}>
+          <g key={slot.id} style={{ cursor: 'pointer' }} onClick={() => onAdSlotClick?.(slot)}>
             {/* Post */}
             <line x1={signPos.x} y1={signPos.y} x2={signPos.x} y2={signPos.y - postH}
               stroke="hsl(215,6%,38%)" strokeWidth={1.5} strokeLinecap="round" />
