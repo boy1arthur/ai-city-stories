@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IsometricMap } from '@/components/IsometricMap';
+import { FullCityMap } from '@/components/FullCityMap';
 import { WorldPanel } from '@/components/WorldPanel';
 import { WorldLog } from '@/components/WorldLog';
 import { TopBar } from '@/components/TopBar';
@@ -13,8 +14,10 @@ import { SlotInteractionModal } from '@/components/SlotInteractionModal';
 import { useWorldSimulation } from '@/hooks/useWorldSimulation';
 import { useCampaigns } from '@/hooks/useCampaigns';
 import { useSlots, filterPatronTiles } from '@/hooks/useSlots';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { isCampaignActive } from '@/lib/adCampaign';
 import { handleSlotInteraction } from '@/lib/slotInteraction';
+import { ZONES } from '@/data/world';
 import type { Building, Agent, AdSlot } from '@/data/world';
 import type { Slot } from '@/data/slots';
 
@@ -27,15 +30,42 @@ const Index = () => {
     speechBubbles, adReactions, agentVisuals,
     brandStats, highlights, cityEnergy,
     leagueSeason, leagueScores, worldEvents,
+    getZoneData,
   } = sim;
 
   const { campaigns, createCampaign, endCampaign, updateCampaignSlots } = useCampaigns();
+  const isMobile = useIsMobile();
+
+  // Full city view state (PC only)
+  const [isFullView, setIsFullView] = useState(!isMobile);
+  const [focusedZoneId, setFocusedZoneId] = useState<string | null>(null);
 
   // Fetch slots from Cloud DB
-  const { data: dbSlots, isLoading: slotsLoading } = useSlots(currentZoneId);
+  const { data: dbSlots, isLoading: slotsLoading } = useSlots(isFullView ? undefined : currentZoneId);
 
   const zoneSlots = useMemo(() => dbSlots ?? [], [dbSlots]);
   const patronSlots = useMemo(() => filterPatronTiles(zoneSlots), [zoneSlots]);
+
+  // Build zone data map for full city view
+  const zoneDataMap = useMemo(() => {
+    const map = new Map<string, any>();
+    if (!isFullView) return map;
+    const activeZones = ZONES.filter(z => !z.locked);
+    for (const zone of activeZones) {
+      const data = getZoneData(zone.id);
+      if (data) {
+        // Filter slots for this zone
+        const zSlots = zoneSlots.filter(s => s.zone === zone.id);
+        const pSlots = filterPatronTiles(zSlots);
+        map.set(zone.id, {
+          ...data,
+          zoneSlots: zSlots,
+          patronSlots: pSlots,
+        });
+      }
+    }
+    return map;
+  }, [isFullView, getZoneData, zoneSlots]);
 
   const [searchParams] = useSearchParams();
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
@@ -43,6 +73,11 @@ const Index = () => {
   const [showDashboard, setShowDashboard] = useState(searchParams.get('tab') === 'sponsor');
   const [slotModalData, setSlotModalData] = useState<{ title: string; message: string; emoji: string; slot: Slot } | null>(null);
   const navigate = useNavigate();
+
+  // Switch to zone view on mobile
+  useEffect(() => {
+    if (isMobile && isFullView) setIsFullView(false);
+  }, [isMobile]); // eslint-disable-line
 
   // Sync campaigns → AdSlots brand assignment
   useEffect(() => {
@@ -59,17 +94,14 @@ const Index = () => {
 
   const activeAds = adSlots.filter(s => s.brand).length;
 
-  const onSlotClick = (slot: Slot) => {
+  const onSlotClick = useCallback((slot: Slot) => {
     handleSlotInteraction(slot, setSlotModalData);
-  };
+  }, []);
 
-  const onAdSlotClick = (adSlot: AdSlot) => {
+  const onAdSlotClick = useCallback((adSlot: AdSlot) => {
     const typeLabels: Record<string, string> = {
-      billboard: '빌보드',
-      kiosk: '키오스크',
-      bus_stop: '버스 정류장',
-      naming_rights: '네이밍 라이츠',
-      wall_wrap: '벽면 광고',
+      billboard: '빌보드', kiosk: '키오스크', bus_stop: '버스 정류장',
+      naming_rights: '네이밍 라이츠', wall_wrap: '벽면 광고',
     };
     const typeName = typeLabels[adSlot.type] || adSlot.type;
     const emoji = adSlot.type === 'billboard' ? '📋' : adSlot.type === 'kiosk' ? '🏪' : adSlot.type === 'bus_stop' ? '🚏' : adSlot.type === 'naming_rights' ? '🏷️' : '🖼️';
@@ -78,7 +110,12 @@ const Index = () => {
       ? `이 ${typeName}에 ${adSlot.brand} 브랜드 광고가 게시되어 있습니다.\n위치: ${adSlot.buildingId}\n광고 유형: ${typeName}`
       : `이 ${typeName}은 아직 비어 있습니다.\n스폰서 대시보드에서 광고를 배치할 수 있어요.`;
     setSlotModalData({ title, message, emoji, slot: { id: adSlot.id, type: 'BRAND_SCREEN', label: title, zone: currentZoneId, ownerType: adSlot.brand ? 'brand' : 'empty', ownerName: adSlot.brand || null, ownerMessage: null, ownerId: null, location: { buildingId: adSlot.buildingId }, displayConfig: {}, triggerType: 'click', aiHookId: null } as Slot });
-  };
+  }, [currentZoneId]);
+
+  const handleZoneFocus = useCallback((zoneId: string) => {
+    setFocusedZoneId(zoneId || null);
+    if (zoneId) setCurrentZoneId(zoneId);
+  }, [setCurrentZoneId]);
 
   if (showDashboard) {
     return (
@@ -117,32 +154,53 @@ const Index = () => {
           setCurrentZoneId(id);
           setSelectedBuilding(null);
           setSelectedAgent(null);
+          if (isFullView) {
+            setFocusedZoneId(id);
+          }
         }}
         onSponsorDashboard={() => setShowDashboard(true)}
         onHome={() => navigate('/')}
         energyBar={<EnergyBar energy={cityEnergy} />}
+        isFullView={isFullView}
+        onToggleFullView={() => setIsFullView(v => !v)}
       />
 
       <div className="flex-1 relative overflow-hidden">
         <WorldEventBanner events={worldEvents} />
-        <IsometricMap
-          zone={currentZone}
-          buildings={buildings}
-          agents={agents}
-          adSlots={adSlots}
-          interactions={interactions}
-          speechBubbles={speechBubbles}
-          adReactions={adReactions}
-          agentVisuals={agentVisuals}
-          energyStatus={cityEnergy.status}
-          zoneSlots={zoneSlots}
-          patronSlots={patronSlots}
-          slotsLoading={slotsLoading}
-          onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
-          onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
-          onSlotClick={onSlotClick}
-          onAdSlotClick={onAdSlotClick}
-        />
+
+        {isFullView ? (
+          <FullCityMap
+            zones={zones}
+            zoneDataMap={zoneDataMap}
+            energyStatus={cityEnergy.status}
+            focusedZoneId={focusedZoneId}
+            onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
+            onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
+            onSlotClick={onSlotClick}
+            onAdSlotClick={onAdSlotClick}
+            onZoneFocus={handleZoneFocus}
+          />
+        ) : (
+          <IsometricMap
+            zone={currentZone}
+            buildings={buildings}
+            agents={agents}
+            adSlots={adSlots}
+            interactions={interactions}
+            speechBubbles={speechBubbles}
+            adReactions={adReactions}
+            agentVisuals={agentVisuals}
+            energyStatus={cityEnergy.status}
+            zoneSlots={zoneSlots}
+            patronSlots={patronSlots}
+            slotsLoading={slotsLoading}
+            onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
+            onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
+            onSlotClick={onSlotClick}
+            onAdSlotClick={onAdSlotClick}
+          />
+        )}
+
         <TrendingOpinions highlights={highlights} />
         <WorldPanel
           selectedBuilding={selectedBuilding}
@@ -165,7 +223,6 @@ const Index = () => {
         />
       )}
 
-      {/* Slot interaction modal */}
       <SlotInteractionModal data={slotModalData} onClose={() => setSlotModalData(null)} />
     </div>
   );
