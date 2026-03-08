@@ -6,6 +6,7 @@ import { VIRTUAL_BRANDS } from '@/data/demoSeed';
 interface Props {
   building: Building;
   adSlots: AdSlot[];
+  onAdSlotClick?: (adSlot: AdSlot) => void;
 }
 
 // Get brand visual info
