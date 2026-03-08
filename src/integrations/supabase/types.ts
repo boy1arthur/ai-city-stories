@@ -53,6 +53,57 @@ export type Database = {
         }
         Relationships: []
       }
+      dialogue_templates: {
+        Row: {
+          categories: string[]
+          context: string
+          created_at: string
+          emoji1: string
+          emoji2: string
+          has_brand_mention: boolean
+          id: string
+          line1: string
+          line2: string
+          moods: string[]
+          personalities: string[]
+          sentiment: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          categories?: string[]
+          context: string
+          created_at?: string
+          emoji1?: string
+          emoji2?: string
+          has_brand_mention?: boolean
+          id: string
+          line1: string
+          line2: string
+          moods?: string[]
+          personalities?: string[]
+          sentiment?: string
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          categories?: string[]
+          context?: string
+          created_at?: string
+          emoji1?: string
+          emoji2?: string
+          has_brand_mention?: boolean
+          id?: string
+          line1?: string
+          line2?: string
+          moods?: string[]
+          personalities?: string[]
+          sentiment?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: []
+      }
       slots: {
         Row: {
           ai_hook_id: string | null
