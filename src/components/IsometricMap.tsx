@@ -553,7 +553,7 @@ export const IsometricMap: React.FC<Props> = ({ buildings, agents, adSlots, inte
         </defs>
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
-          <GroundLayer />
+          <GroundLayer zone={zone} />
 
           {/* Interleave buildings and agents by Y-sort */}
           {sortedBuildings.map(b => (
