@@ -217,6 +217,7 @@ export const SponsorDashboard: React.FC<Props> = ({
       <AgentProfilePanel
         agent={selectedAgent}
         worldLog={worldLog}
+        allAdSlots={allAdSlots}
         onBrandClick={(id) => { setSelectedAgentId(null); setSelectedBrand(id); }}
         onClose={() => setSelectedAgentId(null)}
       />
