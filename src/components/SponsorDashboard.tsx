@@ -33,7 +33,7 @@ interface Props {
 
 export const SponsorDashboard: React.FC<Props> = ({
   adSlots, allAdSlots, agents, currentZone, brandStats, highlights,
-  cityEnergy, campaigns, currentTick, zones,
+  cityEnergy, campaigns, currentTick, zones, leagueSeason, leagueScores,
   onCreateCampaign, onEndCampaign, onBack,
 }) => {
   const activeAds = allAdSlots.filter(s => s.brand);
