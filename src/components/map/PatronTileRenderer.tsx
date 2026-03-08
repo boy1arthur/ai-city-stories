@@ -8,7 +8,7 @@ interface Props {
 }
 
 /** Renders PATRON_TILE slots on the isometric map as benches with plaques or empty "available" markers */
-export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots, onSlotClick }) => {
+export const PatronTileRenderer = React.memo(React.forwardRef<SVGGElement, Props>(({ slots, onSlotClick }, _ref) => {
   return (
     <g>
       {slots.map(slot => {
@@ -105,5 +105,5 @@ export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots, onSlotCl
       })}
     </g>
   );
-});
+}));
 PatronTileRenderer.displayName = 'PatronTileRenderer';
