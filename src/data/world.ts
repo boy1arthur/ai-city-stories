@@ -195,8 +195,8 @@ const PLAZA_BUILDINGS: Building[] = [
   // ═══ NE BLOCK — "Media Strip" ═══
   { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'primary',
     gridX: 18, gridY: 2, width: 8, height: 8,
-    description: '소셜 피드 & 트렌드 센터',
-    adSlots: ['kiosk'],
+    description: '소셜 피드 & 트렌드 센터 — 도시에서 가장 높은 랜드마크',
+    adSlots: ['kiosk', 'billboard'],
     heightLevel: 5, roofShape: 'antenna',
     wallColor: 'hsl(210,10%,48%)', roofColor: 'hsl(210,8%,40%)', buildingType: 'tower' },
 
@@ -213,13 +213,6 @@ const PLAZA_BUILDINGS: Building[] = [
     adSlots: ['kiosk'],
     heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(38,20%,45%)', roofColor: 'hsl(38,15%,38%)', buildingType: 'shop' },
-
-  { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
-    gridX: 18, gridY: 10, width: 8, height: 4,
-    description: '제작 & 크래프팅 공방 — 대형 벽면 광고 가능',
-    adSlots: ['billboard', 'kiosk'],
-    heightLevel: 3, roofShape: 'gear',
-    wallColor: 'hsl(30,25%,50%)', roofColor: 'hsl(30,20%,40%)', buildingType: 'warehouse' },
 
   // ═══ SW BLOCK — "Culture Quarter" ═══
   { id: 'library', name: 'Library', emoji: '📚', color: 'primary',
