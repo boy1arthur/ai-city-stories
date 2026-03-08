@@ -182,11 +182,11 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         const sw = iso(b.gridX, b.gridY + b.height);
         const se = iso(b.gridX + b.width, b.gridY + b.height);
         const mx = (sw.x + se.x) / 2;
-        const my = (sw.y + se.y) / 2 - wallHeight * 0.4;
+        const my = (sw.y + se.y) / 2 - wallHeight * 0.75;
 
         // Panel dimensions on wall (isometric-aware)
         const panelW = Math.hypot(se.x - sw.x, se.y - sw.y) * 0.7;
-        const panelH = wallHeight * 0.4;
+        const panelH = wallHeight * 0.3;
 
         return (
           <g key={slot.id}>
