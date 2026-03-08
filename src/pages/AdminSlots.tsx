@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSlots, useUpdateSlot } from '@/hooks/useSlots';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -25,11 +26,15 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 const AdminSlots = () => {
+  const { isAdmin, loading: authLoading } = useAdminAuth();
   const { data: slots, isLoading, error } = useSlots();
   const updateSlot = useUpdateSlot();
   const navigate = useNavigate();
   const [editingSlot, setEditingSlot] = useState<Slot | null>(null);
   const [form, setForm] = useState({ label: '', ownerType: '', ownerId: '', ownerName: '', ownerMessage: '' });
+
+  if (authLoading) return <div className="flex items-center justify-center min-h-screen text-muted-foreground">인증 확인 중...</div>;
+  if (!isAdmin) return <Navigate to="/admin/login" replace />;
 
   const openEdit = (slot: Slot) => {
     setEditingSlot(slot);
