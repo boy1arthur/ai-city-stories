@@ -80,12 +80,6 @@ export const IsometricMap: React.FC<Props> = ({
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
         onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
         onWheel={onWheel}>
-        <defs>
-          <radialGradient id="vignette" cx="50%" cy="45%" r="55%">
-            <stop offset="0%" stopColor="transparent" />
-            <stop offset="75%" stopColor="transparent" />
-            <stop offset="100%" stopColor="hsl(220,18%,8%)" stopOpacity="0.6" />
-          </radialGradient>
         </defs>
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
