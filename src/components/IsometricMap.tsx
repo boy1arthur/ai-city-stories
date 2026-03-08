@@ -30,13 +30,14 @@ interface Props {
   onBuildingClick: (b: Building) => void;
   onAgentClick: (a: Agent) => void;
   onSlotClick?: (slot: Slot) => void;
+  onAdSlotClick?: (adSlot: AdSlot) => void;
 }
 
 export const IsometricMap: React.FC<Props> = ({
   zone, buildings, agents, adSlots, interactions,
   speechBubbles, adReactions, agentVisuals, energyStatus,
   zoneSlots, patronSlots, slotsLoading,
-  onBuildingClick, onAgentClick, onSlotClick,
+  onBuildingClick, onAgentClick, onSlotClick, onAdSlotClick,
 }) => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0.85);
@@ -130,7 +131,7 @@ export const IsometricMap: React.FC<Props> = ({
           {sortedBuildings.map(b => {
             const buildingAds = adSlots.filter(s => s.buildingId === b.id);
             if (buildingAds.length === 0) return null;
-            return <AdSlotVisual key={`ad-${b.id}`} building={b} adSlots={buildingAds} />;
+            return <AdSlotVisual key={`ad-${b.id}`} building={b} adSlots={buildingAds} onAdSlotClick={onAdSlotClick} />;
           })}
 
           {/* Layer 3.5: Multi-building ad canvases */}

@@ -6,6 +6,7 @@ import { VIRTUAL_BRANDS } from '@/data/demoSeed';
 interface Props {
   building: Building;
   adSlots: AdSlot[];
+  onAdSlotClick?: (adSlot: AdSlot) => void;
 }
 
 // Get brand visual info
@@ -25,7 +26,7 @@ function fitText(text: string, maxChars: number): string {
   return text.slice(0, maxChars - 1) + '…';
 }
 
-export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots }) => {
+export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots, onAdSlotClick }) => {
   const wallHeight = WALL_H_UNIT * b.heightLevel;
   const center = iso(b.gridX + b.width / 2, b.gridY + b.height / 2);
 
@@ -41,7 +42,7 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         const postH = 20;
 
         return (
-          <g key={slot.id}>
+          <g key={slot.id} style={{ cursor: 'pointer' }} onClick={() => onAdSlotClick?.(slot)}>
             {/* Post */}
             <line x1={signPos.x} y1={signPos.y} x2={signPos.x} y2={signPos.y - postH}
               stroke="hsl(215,6%,38%)" strokeWidth={1.5} strokeLinecap="round" />
@@ -89,7 +90,7 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         const postH = 14;
 
         return (
-          <g key={slot.id}>
+          <g key={slot.id} style={{ cursor: 'pointer' }} onClick={() => onAdSlotClick?.(slot)}>
             {/* Post */}
             <line x1={kPos.x} y1={kPos.y} x2={kPos.x} y2={kPos.y - postH}
               stroke="hsl(215,6%,38%)" strokeWidth={1.2} strokeLinecap="round" />
@@ -131,7 +132,7 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         const shelterH = 18;
 
         return (
-          <g key={slot.id}>
+          <g key={slot.id} style={{ cursor: 'pointer' }} onClick={() => onAdSlotClick?.(slot)}>
             {/* Posts */}
             <line x1={bsPos.x - 7} y1={bsPos.y} x2={bsPos.x - 7} y2={bsPos.y - shelterH}
               stroke="hsl(215,5%,40%)" strokeWidth={0.8} strokeLinecap="round" />
