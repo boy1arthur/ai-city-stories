@@ -74,35 +74,25 @@ export function isAdOccluded(ad: MultiBuildingAd, allBuildings: Building[]): boo
 
 // ===== DEMO PLACEMENTS =====
 export const DEMO_MULTI_BUILDING_ADS: MultiBuildingAd[] = [
-  // ══ PREMIUM (LED Screen) — tall landmark buildings ══
+  // ══ S-TIER: 핵심 브랜드 배너 (브랜드당 최대 2회) ══
+
+  // NovaTech — arena 정면 대형 배너 (1/2)
   { id: 'b_arena_s', brandName: 'NovaTech', brandColor: 'hsl(210,60%,55%)', brandInitial: 'N', tagline: 'Future, simplified.', buildingIds: ['arena'], face: 'south', tier: 'premium', placement: 'wall' },
-  { id: 'b_feed_s', brandName: 'FinFlow', brandColor: 'hsl(215,45%,50%)', brandInitial: 'F', tagline: 'Smart money moves.', buildingIds: ['feed_tower'], face: 'south', tier: 'premium', placement: 'wall' },
-  { id: 'b_oracle_s', brandName: 'FinFlow', brandColor: 'hsl(215,45%,50%)', brandInitial: 'F', tagline: 'Smart money moves.', buildingIds: ['oracle'], face: 'south', tier: 'premium', placement: 'wall' },
-
-  // ══ STANDARD (Rooftop Billboard) — medium buildings ══
+  // NovaTech — lab 옥상 빌보드 (2/2)
   { id: 'b_lab_s', brandName: 'NovaTech', brandColor: 'hsl(210,60%,55%)', brandInitial: 'N', tagline: 'Build the future.', buildingIds: ['lab'], face: 'south', tier: 'standard', placement: 'rooftop' },
-  { id: 'b_work_s', brandName: 'NovaTech', brandColor: 'hsl(210,60%,55%)', brandInitial: 'N', tagline: 'Build it.', buildingIds: ['workshop'], face: 'south', tier: 'standard', placement: 'rooftop' },
-  { id: 'b_news_s', brandName: 'EduSpark', brandColor: 'hsl(145,40%,45%)', brandInitial: 'E', tagline: '배움에 불꽃을', buildingIds: ['newsstand'], face: 'south', tier: 'standard', placement: 'rooftop' },
-  { id: 'b_obs_s', brandName: 'Lumière', brandColor: 'hsl(320,40%,55%)', brandInitial: 'L', tagline: 'Wear the light.', buildingIds: ['observatory'], face: 'south', tier: 'standard', placement: 'rooftop' },
-  { id: 'b_arc_s', brandName: 'Lumière', brandColor: 'hsl(320,40%,55%)', brandInitial: 'L', tagline: 'Wear the light.', buildingIds: ['arcade'], face: 'south', tier: 'standard', placement: 'rooftop' },
 
-  // ══ BASIC (Wall Painting) — smaller buildings ══
-  { id: 'b_cafe_s', brandName: 'BrewBean', brandColor: 'hsl(25,55%,45%)', brandInitial: 'B', tagline: '매일의 커피', buildingIds: ['cafe'], face: 'south', tier: 'basic', placement: 'wall' },
-  { id: 'b_lib_s', brandName: 'BrewBean', brandColor: 'hsl(25,55%,45%)', brandInitial: 'B', tagline: '매일의 영감', buildingIds: ['library'], face: 'south', tier: 'basic', placement: 'wall' },
-  { id: 'b_tav_s', brandName: 'BrewBean', brandColor: 'hsl(25,55%,45%)', brandInitial: 'B', tagline: '매일의 커피', buildingIds: ['tavern'], face: 'south', tier: 'basic', placement: 'wall' },
-  { id: 'b_mus_s', brandName: 'Lumière', brandColor: 'hsl(320,40%,55%)', brandInitial: 'L', tagline: 'Wear the light.', buildingIds: ['museum'], face: 'south', tier: 'basic', placement: 'wall' },
-
-  // ══ EAST WALL — mixed tiers ══
+  // FinFlow — feed_tower 정면 대형 배너 (1/2)
+  { id: 'b_feed_s', brandName: 'FinFlow', brandColor: 'hsl(215,45%,50%)', brandInitial: 'F', tagline: 'Smart money moves.', buildingIds: ['feed_tower'], face: 'south', tier: 'premium', placement: 'wall' },
+  // FinFlow — oracle 동쪽 벽 (2/2)
   { id: 'b_oracle_e', brandName: 'FinFlow', brandColor: 'hsl(215,45%,50%)', brandInitial: 'F', tagline: 'Smart money.', buildingIds: ['oracle'], face: 'east', tier: 'premium', placement: 'wall' },
-  { id: 'b_tav_e', brandName: 'EduSpark', brandColor: 'hsl(145,40%,45%)', brandInitial: 'E', tagline: '배움에 불꽃을', buildingIds: ['tavern'], face: 'east', tier: 'basic', placement: 'wall' },
-  { id: 'b_arc_e', brandName: 'EduSpark', brandColor: 'hsl(145,40%,45%)', brandInitial: 'E', tagline: '배움에 불꽃을', buildingIds: ['arcade'], face: 'east', tier: 'standard', placement: 'wall' },
 
-  // ══ ROADSIDE STANDALONE ══
-  { id: 'r_road1', brandName: 'NovaTech', brandColor: 'hsl(210,60%,55%)', brandInitial: 'N', tagline: 'Future, simplified.', buildingIds: [], face: 'south', tier: 'standard', placement: 'roadside', gridX: 16, gridY: 5 },
+  // BrewBean — cafe 정면 배너 (1/1)
+  { id: 'b_cafe_s', brandName: 'BrewBean', brandColor: 'hsl(25,55%,45%)', brandInitial: 'B', tagline: '매일의 커피', buildingIds: ['cafe'], face: 'south', tier: 'basic', placement: 'wall' },
+
+  // Lumière — observatory 옥상 (1/1)
+  { id: 'b_obs_s', brandName: 'Lumière', brandColor: 'hsl(320,40%,55%)', brandInitial: 'L', tagline: 'Wear the light.', buildingIds: ['observatory'], face: 'south', tier: 'standard', placement: 'rooftop' },
+
+  // ══ 도로변 (브랜드 분산, 2개만) ══
   { id: 'r_road2', brandName: 'BrewBean', brandColor: 'hsl(25,55%,45%)', brandInitial: 'B', tagline: '매일의 커피', buildingIds: [], face: 'south', tier: 'standard', placement: 'roadside', gridX: 16, gridY: 22 },
-  { id: 'r_road3', brandName: 'Lumière', brandColor: 'hsl(320,40%,55%)', brandInitial: 'L', tagline: 'Wear the light.', buildingIds: [], face: 'south', tier: 'standard', placement: 'roadside', gridX: 5, gridY: 16 },
   { id: 'r_road4', brandName: 'EduSpark', brandColor: 'hsl(145,40%,45%)', brandInitial: 'E', tagline: '배움에 불꽃을', buildingIds: [], face: 'south', tier: 'standard', placement: 'roadside', gridX: 28, gridY: 16 },
-
-  // ══ PLAZA CENTER SCREEN ══
-  { id: 'p_center', brandName: 'NovaTech', brandColor: 'hsl(210,60%,55%)', brandInitial: 'N', tagline: 'Future, simplified.', buildingIds: [], face: 'south', tier: 'premium', placement: 'plaza_screen', gridX: 17, gridY: 17 },
 ];
