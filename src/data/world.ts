@@ -154,26 +154,26 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 // Buildings occupy sidewalk tiles. Single-tile pedestrian spines: col 9 (vert), row 8 (horiz).
 // Core: rows 2-13, cols 1-16  |  Outskirts: row 0-1, 14-17 & col 0, 17
 const PLAZA_TILE_MAP = [
-  // col: 000000000011111111
-  //      012345678901234567
-  'KKGSSSSSSRSSSSSGKK', // 0  (19 → need 18)
-  'KGSSSSSSRSSSSSSKKK', // 1
-  'SSAAAASSRPFFFSSOSS', // 2  Arena(2-5,2-5) Feed(10-12,2-4) Oracle(15-16,2-4)
-  'SSAAAASSRPFFFSSOSS', // 3
-  'SSAAAASSRPFFFSSOSS', // 4
-  'SSAAAASSRPLLLSSPPS', // 5  Lab(10-12,5-7)
-  'SSCCCSSRRPLLLSSPPS', // 6  Cafe(2-4,6-7)
-  'SSCCCSSRRPLLLSSPPS', // 7
+  // A=Arena E=FeedTower O=Oracle L=Lab C=Cafe B=Library N=News T=Tavern H=Workshop V=Observatory
+  // col: 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
+  'KKGSSSSSRSSSSGKKK', // 0
+  'KGSSSSSSRSSSSSKKK', // 1
+  'SSAAAASSREEESOOSSS', // 2  Arena(2-5,2-5) Feed(9-11,2-4) Oracle(13-14,2-4)
+  'SSAAAASSREEESOOSSS', // 3
+  'SSAAAASSREEESOOSSS', // 4
+  'SSAAAASSRLLLSSPPS', // 5  Lab(9-11,5-7)
+  'SSCCCSSRRLLLSSPPS', // 6  Cafe(2-4,6-7)
+  'SSCCCSSRRLLLSSPPS', // 7
   'RRRRRRRRRRRRRRRRRR', // 8  ── boulevard ──
-  'SSBBBBSRRSNNNSSPPS', // 9  Library(2-5,9-11) News(10-12,9-10)
-  'SSBBBBSRRSNNNSSPPS', // 10
-  'SSBBBBSRRSSSSSSPPS', // 11
-  'STTTSSKKSSWWWWSPSS', // 12 Tavern(1-3,12-13) Workshop(10-13,12-14)
-  'STTTSSKKSSWWWWSSSS', // 13
-  'SKKKKKKKSSWWWWSSSS', // 14 Garden(1-7,14-16) Workshop cont.
-  'SKKKKKKKSSOOOSSKKK', // 15 Observatory(10-12,15-16)
-  'SKKKKKKKSSOOOSSKKK', // 16
-  'GKKKKKKKSSSSSSKKKG', // 17 park edge
+  'SSBBBBSRRNNNSPPSS', // 9  Library(2-5,9-11) News(9-11,9-10)
+  'SSBBBBSRRNNNSPPSS', // 10
+  'SSBBBBSRRSSSSSPSS', // 11
+  'STTTSSKKSHHHHSPSS', // 12 Tavern(1-3,12-13) Workshop(9-12,12-14)
+  'STTTSSKKSHHHHSSSS', // 13
+  'SKKKKKKKSHHHHSSSS', // 14 Garden(1-7,14-16)
+  'SKKKKKKKSVVVSSKKK', // 15 Observatory(9-11,15-16)
+  'SKKKKKKKSVVVSSKKK', // 16
+  'GKKKKKKKSSSSSSKKK', // 17
 ];
 
 const PLAZA_BUILDINGS: Building[] = [
