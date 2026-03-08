@@ -98,9 +98,9 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
   if (!building || !animPos) return null;
   const pos = animPos;
 
-  // Walk cycle: swing legs and arms
-  const walkT = isMoving ? Math.sin((walkPhase / 120) * Math.PI * 2) : 0;
-  const breathe = isMoving ? 0 : Math.sin(Date.now() / 1200) * 0.4;
+  // Walk cycle: gentle swing for legs and arms (~1 step per 600ms)
+  const walkT = isMoving ? Math.sin((walkPhase / 600) * Math.PI * 2) : 0;
+  const breathe = isMoving ? 0 : Math.sin(Date.now() / 2000) * 0.3;
   // Direction: determine facing based on path direction
   const facingRight = visualState?.isMoving && visualState.path?.length >= 2
     ? (() => { const elapsed = Date.now() - visualState.moveStartTime; const t = Math.min(1, elapsed / (visualState.moveDuration || 3000)); const dir = getPathDirection(visualState.path, t); return dir.dx >= 0; })()
