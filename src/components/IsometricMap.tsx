@@ -111,6 +111,16 @@ export const IsometricMap: React.FC<Props> = ({
 
           {/* Layer 2: Buildings only (no inline ads — prevents occlusion) */}
           {sortedBuildings.map(b => {
+            // Landmarks get their own special renderer
+            if (b.isLandmark && b.landmarkType) {
+              return (
+                <LandmarkRenderer
+                  key={b.id}
+                  b={b}
+                  onClick={() => onBuildingClick(b)}
+                />
+              );
+            }
             const buildingAds = adSlots.filter(s => s.buildingId === b.id);
             const wallWrapAd = buildingAds.find(s => s.type === 'wall_wrap' && s.brand);
             const namingAd = buildingAds.find(s => s.type === 'naming_rights' && s.brand);
