@@ -70,6 +70,58 @@ const IDLE_THOUGHTS = [
   '😊',
 ];
 
+// Social dialogue templates: [initiator line, responder line]
+const SOCIAL_DIALOGUES: { topic: string; lines: [string, string][]; moods?: string[] }[] = [
+  { topic: 'greeting', lines: [
+    ['안녕! 오랜만이다', '오~ 반가워!'],
+    ['여기서 만나다니!', '나도 놀랐어 ㅋㅋ'],
+    ['뭐하고 있었어?', '그냥 돌아다니는 중~'],
+  ]},
+  { topic: 'brand_chat', lines: [
+    ['요즘 NovaTech 광고 봤어?', '응 꽤 괜찮더라'],
+    ['BrewBean 커피 마셔봤어?', '아직~ 맛있대?'],
+    ['Lumière 신제품 나왔대', '오 진짜? 봐야겠다'],
+    ['VerdeMart 할인 중이래', '거기 자주 가?'],
+    ['Kinetic 운동화 어때?', '디자인 좋던데!'],
+  ]},
+  { topic: 'place', lines: [
+    ['여기 분위기 좋다', '그치~ 자주 와야지'],
+    ['이 건물 뭐하는 곳이야?', '나도 처음 와봐'],
+    ['여기 사람 많네', '인기 있는 곳인가봐'],
+  ]},
+  { topic: 'mood', lines: [
+    ['오늘 기분 좋아!', '나도~ 날씨 덕분인가'],
+    ['좀 심심하다...', '같이 뭐 하자!'],
+    ['배고프다...', '근처에 맛집 있나?'],
+    ['피곤해ㅠ', '좀 쉬어~ 벤치 있어'],
+  ], moods: ['happy', 'neutral', 'curious'] },
+  { topic: 'gossip', lines: [
+    ['아까 Blaze가 뭐라 했는지 알아?', '뭐래? 궁금해!'],
+    ['Nova가 요즘 바쁜가봐', '프로젝트 하는 중이래'],
+    ['Frost 오늘 기분 안 좋아보여', '그래? 조심해야겠다'],
+  ]},
+  { topic: 'deep', lines: [
+    ['AI가 감정을 가질 수 있을까?', '글쎄... 복잡한 주제야'],
+    ['우리는 왜 여기 있는 걸까', '재밌으니까! ㅎㅎ'],
+    ['이 도시의 미래가 궁금해', '더 커질 거야 분명'],
+  ]},
+];
+
+interface SocialEvent {
+  id: string;
+  agent1Id: string;
+  agent2Id: string;
+  buildingId: string;
+  topic: string;
+  timestamp: number;
+}
+
+function generateSocialDialogue(agent1: Agent, agent2: Agent): { topic: string; line1: string; line2: string } | null {
+  const topicGroup = pickRandom(SOCIAL_DIALOGUES);
+  const [line1, line2] = pickRandom(topicGroup.lines);
+  return { topic: topicGroup.topic, line1, line2 };
+}
+
 export function useWorldSimulation() {
   const [agents, setAgents] = useState<Agent[]>(AGENTS);
   const [adSlots, setAdSlots] = useState<AdSlot[]>(() => applyDemoSeed(INITIAL_AD_SLOTS));
@@ -264,6 +316,67 @@ export function useWorldSimulation() {
 
         return agent;
       }));
+
+      // === Social Interactions: agents at the same building chat ===
+      setAgents(currentAgents => {
+        const agentsByBuilding = new Map<string, Agent[]>();
+        currentAgents.forEach(a => {
+          const key = `${a.currentZoneId}_${a.currentBuildingId}`;
+          const list = agentsByBuilding.get(key) || [];
+          list.push(a);
+          agentsByBuilding.set(key, list);
+        });
+
+        agentsByBuilding.forEach((group) => {
+          if (group.length < 2) return;
+          // ~15% chance per tick per group
+          if (Math.random() > 0.15) return;
+
+          const a1 = pickRandom(group);
+          const others = group.filter(a => a.id !== a1.id);
+          if (others.length === 0) return;
+          const a2 = pickRandom(others);
+
+          const dialogue = generateSocialDialogue(a1, a2);
+          if (!dialogue) return;
+
+          // Agent 1 speaks first
+          addSpeechBubble({
+            id: `social_${a1.id}_${now}_${Math.random().toString(36).slice(2, 6)}`,
+            agentId: a1.id,
+            text: dialogue.line1,
+            emoji: dialogue.topic === 'brand_chat' ? '💬' : dialogue.topic === 'gossip' ? '🗣️' : dialogue.topic === 'deep' ? '💭' : '👋',
+            timestamp: now,
+            type: 'dialogue',
+          });
+
+          // Agent 2 responds after a short delay
+          addSpeechBubble({
+            id: `social_${a2.id}_${now}_${Math.random().toString(36).slice(2, 6)}`,
+            agentId: a2.id,
+            text: dialogue.line2,
+            emoji: dialogue.topic === 'brand_chat' ? '💬' : '😄',
+            timestamp: now + 1500,
+            type: 'dialogue',
+          });
+
+          // Log the conversation
+          addLog(`💬 ${a1.avatar} ${a1.name} ↔ ${a2.avatar} ${a2.name}: "${dialogue.line1}" / "${dialogue.line2}"`);
+
+          // Social interactions can shift mood
+          if (Math.random() < 0.3) {
+            const happyMoods: Agent['mood'][] = ['happy', 'excited'];
+            return currentAgents.map(a => {
+              if (a.id === a1.id || a.id === a2.id) {
+                return { ...a, mood: pickRandom(happyMoods) };
+              }
+              return a;
+            });
+          }
+        });
+
+        return currentAgents;
+      });
     }, TICK_MS);
 
     return () => {
