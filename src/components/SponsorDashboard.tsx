@@ -198,6 +198,29 @@ export const SponsorDashboard: React.FC<Props> = ({
         </div>
       </div>
     </div>
+
+    {selectedBrand && (
+      <BrandDetailPanel
+        brandId={selectedBrand}
+        brandStats={brandStats}
+        leagueScores={leagueScores}
+        agents={allAgents}
+        worldLog={worldLog}
+        worldEvents={worldEvents}
+        onAgentClick={(id) => { setSelectedBrand(null); setSelectedAgentId(id); }}
+        onClose={() => setSelectedBrand(null)}
+      />
+    )}
+
+    {selectedAgent && (
+      <AgentProfilePanel
+        agent={selectedAgent}
+        worldLog={worldLog}
+        onBrandClick={(id) => { setSelectedAgentId(null); setSelectedBrand(id); }}
+        onClose={() => setSelectedAgentId(null)}
+      />
+    )}
+    </>
   );
 };
 
