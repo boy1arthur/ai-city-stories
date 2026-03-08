@@ -10,7 +10,7 @@ import type { Highlight } from '@/components/sponsor/TodayHighlights';
 import type { WorldEvent } from '@/components/WorldEventBanner';
 
 const TICK_MS = 2500;
-const WALK_SPEED = 2.0; // grid units per second — slower natural walking pace
+const WALK_SPEED = 1.2; // grid units per second — leisurely walking pace
 
 function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
