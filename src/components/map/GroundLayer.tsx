@@ -145,7 +145,7 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
 
       // Road center line
       if (isRoadCenterInZone(zone.tileMap, gx, gy, GRID)) {
-        const isVert = (gx === 8);
+        const isVert = (gx === 16 || gx === 17);
         tiles.push(
           <line key={`rm_${gx}_${gy}`}
             x1={isVert ? pos.x : pos.x - 6} y1={isVert ? pos.y - 3 : pos.y}
