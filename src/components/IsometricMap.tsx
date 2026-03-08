@@ -125,6 +125,17 @@ export const IsometricMap: React.FC<Props> = ({
         </g>
 
         <rect width="1000" height="600" fill="url(#vignette)" pointerEvents="none" />
+
+        {/* Energy overlay */}
+        {energyStatus && energyStatus !== 'stable' && (
+          <rect width="1000" height="600" pointerEvents="none"
+            fill={energyStatus === 'critical' ? 'hsl(0,30%,8%)' : 'hsl(220,20%,8%)'}
+            fillOpacity={energyStatus === 'critical' ? 0.35 : 0.18}>
+            {energyStatus === 'critical' && (
+              <animate attributeName="fillOpacity" values="0.25;0.4;0.25" dur="2s" repeatCount="indefinite" />
+            )}
+          </rect>
+        )}
       </svg>
 
       {/* Zoom controls */}
