@@ -64,12 +64,12 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
             <animate attributeName="fillOpacity" values="0.04;0.12;0.04" dur="2s" repeatCount="indefinite" />
           </polygon>
         )}
-        <g transform={`rotate(${angle}, ${cx}, ${cy})`}>
-          <text x={cx - fs * 1.5} y={cy - fsT * 0.3} textAnchor="middle" fontSize={fs}
+        <g>
+          <text x={cx} y={cy - fsN * 0.6} textAnchor="middle" fontSize={fs}
             fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-          <text x={cx + fsN * 0.3} y={cy - fsT * 0.3} textAnchor="middle" fontSize={fsN}
+          <text x={cx} y={cy + fsN * 0.5} textAnchor="middle" fontSize={fsN}
             fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="1">{ad.brandName}</text>
-          <text x={cx} y={cy + fsT * 2.5} textAnchor="middle" fontSize={fsT}
+          <text x={cx} y={cy + fsN * 0.5 + fsT * 1.8} textAnchor="middle" fontSize={fsT}
             fill="hsl(0,0%,100%)" fillOpacity={0.7} fontFamily="Inter" fontWeight={500} fontStyle="italic">{ad.tagline}</text>
         </g>
       </g>
@@ -100,12 +100,12 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
             <animate attributeName="fillOpacity" values="0.04;0.12;0.04" dur="2s" repeatCount="indefinite" />
           </polygon>
         )}
-        <g transform={`rotate(${angle}, ${cx}, ${cy})`}>
-          <text x={cx - fs * 1.5} y={cy - fsT * 0.3} textAnchor="middle" fontSize={fs}
+        <g>
+          <text x={cx} y={cy - fsN * 0.6} textAnchor="middle" fontSize={fs}
             fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-          <text x={cx + fsN * 0.3} y={cy - fsT * 0.3} textAnchor="middle" fontSize={fsN}
+          <text x={cx} y={cy + fsN * 0.5} textAnchor="middle" fontSize={fsN}
             fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="0.8">{ad.brandName}</text>
-          <text x={cx} y={cy + fsT * 2.5} textAnchor="middle" fontSize={fsT}
+          <text x={cx} y={cy + fsN * 0.5 + fsT * 1.8} textAnchor="middle" fontSize={fsT}
             fill="hsl(0,0%,100%)" fillOpacity={0.7} fontFamily="Inter" fontWeight={500} fontStyle="italic">{ad.tagline}</text>
         </g>
       </g>
@@ -138,7 +138,7 @@ const RooftopBillboard: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }>
       <line x1={cx + 4} y1={roofY} x2={cx + 4} y2={roofY - postH} stroke="hsl(220,5%,45%)" strokeWidth={1.2} />
 
       {/* Billboard panel */}
-      <g transform={`rotate(${angle}, ${cx}, ${signCy})`}>
+      <g>
         {/* Back panel frame */}
         <rect x={cx - signW / 2 - 1} y={signCy - signH / 2 - 1} width={signW + 2} height={signH + 2} rx={2}
           fill="hsl(220,5%,30%)" stroke="hsl(220,5%,45%)" strokeWidth={0.8} />
@@ -147,13 +147,13 @@ const RooftopBillboard: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }>
           fill={ad.brandColor} />
 
         {/* Brand initial */}
-        <text x={cx - signW / 3} y={signCy + 1} textAnchor="middle" fontSize={8}
+        <text x={cx} y={signCy - 2} textAnchor="middle" fontSize={6}
           fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
         {/* Brand name */}
-        <text x={cx + 2} y={signCy - 0.5} textAnchor="middle" fontSize={5}
+        <text x={cx} y={signCy + 3} textAnchor="middle" fontSize={3.5}
           fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="0.8">{ad.brandName}</text>
         {/* Tagline */}
-        <text x={cx + 2} y={signCy + 4.5} textAnchor="middle" fontSize={2.8}
+        <text x={cx} y={signCy + 6} textAnchor="middle" fontSize={2.5}
           fill="hsl(0,0%,100%)" fillOpacity={0.7} fontFamily="Inter" fontWeight={400} fontStyle="italic">{ad.tagline}</text>
       </g>
     </g>
