@@ -34,7 +34,7 @@ export function getTileTypeFromMap(tileMap: string[], gx: number, gy: number, gr
   const ch = tileMap[mapY]?.[mapX];
   if (!ch) return 'grass';
   // Building footprint chars map to sidewalk
-  if ('ALTOKBCNEHOV'.includes(ch)) {
+  if ('ALTOKBCNEHOVDXM'.includes(ch)) {
     if (ch === 'K') return 'park';
     if (ch === 'W') return 'water';
     return 'sidewalk';
