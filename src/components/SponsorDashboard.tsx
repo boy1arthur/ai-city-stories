@@ -4,11 +4,13 @@ import { SPONSOR_TIERS, ZONES, type SponsorTier } from '@/data/world';
 import type { BrandStats } from '@/lib/esv';
 import type { CityEnergyState } from '@/lib/cityEnergy';
 import type { AdCampaign } from '@/lib/adCampaign';
+import type { BrandLeagueSeason, BrandLeagueScore } from '@/lib/brandLeague';
 import type { Highlight } from '@/components/sponsor/TodayHighlights';
 import { BrandRanking } from '@/components/sponsor/BrandRanking';
 import { TodayHighlights } from '@/components/sponsor/TodayHighlights';
 import { CampaignForm } from '@/components/sponsor/CampaignForm';
 import { CampaignList } from '@/components/sponsor/CampaignList';
+import { LeagueStandings } from '@/components/sponsor/LeagueStandings';
 import { EnergyBar } from '@/components/EnergyBar';
 
 interface Props {
@@ -22,6 +24,8 @@ interface Props {
   campaigns: AdCampaign[];
   currentTick: number;
   zones: Zone[];
+  leagueSeason: BrandLeagueSeason | null;
+  leagueScores: BrandLeagueScore[];
   onCreateCampaign: (input: { brandId: string; zoneId: string; slotIds: string[]; durationTicks: number; startTick: number }) => void;
   onEndCampaign: (id: string) => void;
   onBack: () => void;
@@ -29,7 +33,7 @@ interface Props {
 
 export const SponsorDashboard: React.FC<Props> = ({
   adSlots, allAdSlots, agents, currentZone, brandStats, highlights,
-  cityEnergy, campaigns, currentTick, zones,
+  cityEnergy, campaigns, currentTick, zones, leagueSeason, leagueScores,
   onCreateCampaign, onEndCampaign, onBack,
 }) => {
   const activeAds = allAdSlots.filter(s => s.brand);
@@ -76,6 +80,11 @@ export const SponsorDashboard: React.FC<Props> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <BrandRanking brandStats={brandStats} />
           <TodayHighlights highlights={highlights} />
+        </div>
+
+        {/* Brand League */}
+        <div className="mb-8">
+          <LeagueStandings season={leagueSeason} scores={leagueScores} currentTick={currentTick} />
         </div>
 
         {/* Campaign Management */}
