@@ -173,6 +173,8 @@ const Index = () => {
         energyBar={<EnergyBar energy={cityEnergy} />}
         isFullView={isFullView}
         onToggleFullView={() => setIsFullView(v => !v)}
+        user={user}
+        onSignOut={signOut}
       />
 
       <div className="flex-1 relative overflow-hidden">
