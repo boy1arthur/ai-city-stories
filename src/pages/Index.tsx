@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IsometricMap } from '@/components/IsometricMap';
 import { WorldPanel } from '@/components/WorldPanel';
@@ -12,6 +12,7 @@ import { AgentProfilePanel } from '@/components/agent/AgentProfilePanel';
 import { SlotInteractionModal } from '@/components/SlotInteractionModal';
 import { useWorldSimulation } from '@/hooks/useWorldSimulation';
 import { useCampaigns } from '@/hooks/useCampaigns';
+import { useSlots, filterPatronTiles } from '@/hooks/useSlots';
 import { isCampaignActive } from '@/lib/adCampaign';
 import { handleSlotInteraction } from '@/lib/slotInteraction';
 import type { Building, Agent } from '@/data/world';
@@ -29,6 +30,12 @@ const Index = () => {
   } = sim;
 
   const { campaigns, createCampaign, endCampaign, updateCampaignSlots } = useCampaigns();
+
+  // Fetch slots from Cloud DB
+  const { data: dbSlots, isLoading: slotsLoading } = useSlots(currentZoneId);
+
+  const zoneSlots = useMemo(() => dbSlots ?? [], [dbSlots]);
+  const patronSlots = useMemo(() => filterPatronTiles(zoneSlots), [zoneSlots]);
 
   const [searchParams] = useSearchParams();
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
@@ -111,6 +118,9 @@ const Index = () => {
           adReactions={adReactions}
           agentVisuals={agentVisuals}
           energyStatus={cityEnergy.status}
+          zoneSlots={zoneSlots}
+          patronSlots={patronSlots}
+          slotsLoading={slotsLoading}
           onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
           onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
           onSlotClick={onSlotClick}

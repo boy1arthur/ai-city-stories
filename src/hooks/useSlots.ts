@@ -50,7 +50,15 @@ export function useSlots(zone?: string) {
 export function useUpdateSlot() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (params: { id: string; label?: string; ownerType?: string; ownerId?: string; ownerName?: string; ownerMessage?: string; displayConfig?: Record<string, unknown> }) => {
+    mutationFn: async (params: {
+      id: string;
+      label?: string;
+      ownerType?: string;
+      ownerId?: string;
+      ownerName?: string;
+      ownerMessage?: string;
+      displayConfig?: Record<string, unknown>;
+    }) => {
       const update: Record<string, any> = {};
       if (params.label !== undefined) update.label = params.label;
       if (params.ownerType !== undefined) update.owner_type = params.ownerType;
@@ -66,4 +74,13 @@ export function useUpdateSlot() {
       queryClient.invalidateQueries({ queryKey: ['slots'] });
     },
   });
+}
+
+// Pure helpers (no DB dependency) for filtering slot arrays in-memory
+export function filterPatronTiles(slots: Slot[]): Slot[] {
+  return slots.filter(s => s.type === 'PATRON_TILE');
+}
+
+export function filterByZone(slots: Slot[], zone: string): Slot[] {
+  return slots.filter(s => s.zone === zone);
 }
