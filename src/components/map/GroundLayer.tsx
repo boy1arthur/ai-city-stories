@@ -189,53 +189,98 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
 
       // ─── Grass: multi-layered detail ───
       if (type === 'grass') {
-        // Base texture variation
-        if (seed % 4 === 0) {
-          tiles.push(
-            <polygon key={`gv_${gx}_${gy}`} points={diamond(pos.x, pos.y)}
-              fill={`hsl(${118 + seed % 12},${20 + seed % 8}%,${30 + seed % 6}%)`}
-              fillOpacity={0.3} stroke="none" />
-          );
-        }
-        // Grass tufts
-        if (seed % 5 === 0) {
-          const ox = (seed % 7 - 3) * 1.5;
-          const oy = (seed % 5 - 2) * 0.8;
-          decorations.push(
-            <g key={`tuft_${gx}_${gy}`}>
-              <line x1={pos.x + ox - 1} y1={pos.y + oy} x2={pos.x + ox - 2} y2={pos.y + oy - 3}
-                stroke="hsl(128,28%,38%)" strokeWidth={0.7} opacity={0.6} />
-              <line x1={pos.x + ox} y1={pos.y + oy} x2={pos.x + ox} y2={pos.y + oy - 4}
-                stroke="hsl(130,30%,40%)" strokeWidth={0.7} opacity={0.5} />
-              <line x1={pos.x + ox + 1} y1={pos.y + oy} x2={pos.x + ox + 2} y2={pos.y + oy - 3}
-                stroke="hsl(125,26%,36%)" strokeWidth={0.7} opacity={0.6} />
-            </g>
-          );
-        }
-        // Edge hedges (perimeter)
-        renderEdgeHedge(gx, gy, GRID, decorations);
-        
-        // Scattered flowers on grass
-        if (seed % 11 === 0) {
-          decorations.push(renderFlowerBed(pos, `flwr_${gx}_${gy}`, seed));
-        }
-        // Scattered bushes on grass (not near edges with buildings)
-        if (seed % 9 === 0 && gx > 1 && gx < GRID - 2 && gy > 1 && gy < GRID - 2) {
-          decorations.push(renderBushCluster(pos, `bush_${gx}_${gy}`, 0.8));
+        if (isResidential) {
+          // Luxury: subtle concrete texture variation
+          if (seed % 6 === 0) {
+            tiles.push(
+              <polygon key={`gv_${gx}_${gy}`} points={diamond(pos.x, pos.y)}
+                fill={`hsl(40,${4 + seed % 4}%,${88 + seed % 4}%)`}
+                fillOpacity={0.3} stroke="none" />
+            );
+          }
+          // Minimal topiary instead of wild grass
+          if (seed % 12 === 0) {
+            decorations.push(
+              <g key={`topiary_${gx}_${gy}`}>
+                <ellipse cx={pos.x} cy={pos.y - 3} rx={3} ry={2}
+                  fill="hsl(135,20%,65%)" opacity={0.6} />
+                <ellipse cx={pos.x} cy={pos.y - 5} rx={2.2} ry={1.5}
+                  fill="hsl(135,22%,70%)" opacity={0.5} />
+              </g>
+            );
+          }
+        } else {
+          // Base texture variation
+          if (seed % 4 === 0) {
+            tiles.push(
+              <polygon key={`gv_${gx}_${gy}`} points={diamond(pos.x, pos.y)}
+                fill={`hsl(${118 + seed % 12},${20 + seed % 8}%,${30 + seed % 6}%)`}
+                fillOpacity={0.3} stroke="none" />
+            );
+          }
+          // Grass tufts
+          if (seed % 5 === 0) {
+            const ox = (seed % 7 - 3) * 1.5;
+            const oy = (seed % 5 - 2) * 0.8;
+            decorations.push(
+              <g key={`tuft_${gx}_${gy}`}>
+                <line x1={pos.x + ox - 1} y1={pos.y + oy} x2={pos.x + ox - 2} y2={pos.y + oy - 3}
+                  stroke="hsl(128,28%,38%)" strokeWidth={0.7} opacity={0.6} />
+                <line x1={pos.x + ox} y1={pos.y + oy} x2={pos.x + ox} y2={pos.y + oy - 4}
+                  stroke="hsl(130,30%,40%)" strokeWidth={0.7} opacity={0.5} />
+                <line x1={pos.x + ox + 1} y1={pos.y + oy} x2={pos.x + ox + 2} y2={pos.y + oy - 3}
+                  stroke="hsl(125,26%,36%)" strokeWidth={0.7} opacity={0.6} />
+              </g>
+            );
+          }
+          // Edge hedges (perimeter)
+          renderEdgeHedge(gx, gy, GRID, decorations);
+          
+          // Scattered flowers on grass
+          if (seed % 11 === 0) {
+            decorations.push(renderFlowerBed(pos, `flwr_${gx}_${gy}`, seed));
+          }
+          // Scattered bushes on grass (not near edges with buildings)
+          if (seed % 9 === 0 && gx > 1 && gx < GRID - 2 && gy > 1 && gy < GRID - 2) {
+            decorations.push(renderBushCluster(pos, `bush_${gx}_${gy}`, 0.8));
+          }
         }
       }
 
       // ─── Park: lush trees and flowers ───
       if (type === 'park') {
-        if ((gx + gy) % 2 === 0) {
-          decorations.push(renderLargeTree(pos, `ltree_${gx}_${gy}`, seed));
-        } else if ((gx + gy) % 3 === 0) {
-          decorations.push(renderConiferTree(pos, `ctree_${gx}_${gy}`, 0.85));
+        if (isResidential) {
+          // Luxury manicured gardens — minimal, elegant
+          if ((gx + gy) % 3 === 0) {
+            decorations.push(
+              <g key={`rtree_${gx}_${gy}`}>
+                <ellipse cx={pos.x + 2} cy={pos.y + 1} rx={5} ry={2} fill="hsl(0,0%,0%)" opacity={0.05} />
+                <line x1={pos.x} y1={pos.y} x2={pos.x} y2={pos.y - 10}
+                  stroke="hsl(30,15%,55%)" strokeWidth={1.2} strokeLinecap="round" />
+                <circle cx={pos.x} cy={pos.y - 11} r={4.5} fill="hsl(135,18%,68%)" opacity={0.7} />
+                <circle cx={pos.x - 1} cy={pos.y - 12.5} r={3} fill="hsl(135,20%,72%)" opacity={0.6} />
+              </g>
+            );
+          } else if (seed % 5 === 0) {
+            // Small ornamental shrub
+            decorations.push(
+              <g key={`rshrub_${gx}_${gy}`}>
+                <ellipse cx={pos.x} cy={pos.y - 2} rx={3.5} ry={2}
+                  fill="hsl(135,16%,66%)" opacity={0.55} />
+              </g>
+            );
+          }
         } else {
-          // Low shrubs and flowers
-          decorations.push(renderBushCluster(pos, `pbush_${gx}_${gy}`, 0.65));
-          if (seed % 3 === 0) {
-            decorations.push(renderFlowerBed(pos, `pflwr_${gx}_${gy}`, seed));
+          if ((gx + gy) % 2 === 0) {
+            decorations.push(renderLargeTree(pos, `ltree_${gx}_${gy}`, seed));
+          } else if ((gx + gy) % 3 === 0) {
+            decorations.push(renderConiferTree(pos, `ctree_${gx}_${gy}`, 0.85));
+          } else {
+            // Low shrubs and flowers
+            decorations.push(renderBushCluster(pos, `pbush_${gx}_${gy}`, 0.65));
+            if (seed % 3 === 0) {
+              decorations.push(renderFlowerBed(pos, `pflwr_${gx}_${gy}`, seed));
+            }
           }
         }
       }
