@@ -7,6 +7,8 @@ import { BuildingRenderer } from './map/BuildingRenderer';
 import { AdSlotVisual } from './map/AdSlotVisual';
 import { AgentRenderer } from './map/AgentRenderer';
 import { LockedZoneGhost } from './map/LockedZoneGhost';
+import { MultiBuildingAdRenderer } from './map/MultiBuildingAdRenderer';
+import { DEMO_MULTI_BUILDING_ADS } from '@/lib/multiBuildingAd';
 
 interface Props {
   zone: Zone;
@@ -109,6 +111,9 @@ export const IsometricMap: React.FC<Props> = ({
               </g>
             );
           })}
+
+          {/* Layer 3.5: Multi-building ad canvases */}
+          <MultiBuildingAdRenderer ads={DEMO_MULTI_BUILDING_ADS} buildings={buildings} />
 
           {/* Layer 4: Agents */}
           {sortedAgents.map(({ agent, index }) => (
