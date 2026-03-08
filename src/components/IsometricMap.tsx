@@ -13,8 +13,6 @@ import { PatronTileRenderer } from './map/PatronTileRenderer';
 import { SlotVisualRenderer } from './map/SlotVisualRenderer';
 import { GuideNPC } from './map/GuideNPC';
 import { DEMO_MULTI_BUILDING_ADS } from '@/lib/multiBuildingAd';
-import { getPatronTiles, getSlotsByZone } from '@/data/slots';
-import type { SlotZone } from '@/data/slots';
 
 interface Props {
   zone: Zone;
@@ -26,6 +24,9 @@ interface Props {
   adReactions: AdReaction[];
   agentVisuals: Map<string, AgentVisualState>;
   energyStatus?: CityEnergyStatus;
+  zoneSlots: Slot[];
+  patronSlots: Slot[];
+  slotsLoading?: boolean;
   onBuildingClick: (b: Building) => void;
   onAgentClick: (a: Agent) => void;
   onSlotClick?: (slot: Slot) => void;
@@ -34,6 +35,7 @@ interface Props {
 export const IsometricMap: React.FC<Props> = ({
   zone, buildings, agents, adSlots, interactions,
   speechBubbles, adReactions, agentVisuals, energyStatus,
+  zoneSlots, patronSlots, slotsLoading,
   onBuildingClick, onAgentClick, onSlotClick,
 }) => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -83,10 +85,6 @@ export const IsometricMap: React.FC<Props> = ({
     });
   }, [agents, buildings]);
 
-  // Get all non-patron slots for SlotVisualRenderer
-  const zoneSlots = useMemo(() => getSlotsByZone(zone.id as SlotZone), [zone.id]);
-  const patronSlots = useMemo(() => getPatronTiles(zone.id as SlotZone), [zone.id]);
-
   const handleSlotClick = useCallback((slot: Slot) => {
     onSlotClick?.(slot);
   }, [onSlotClick]);
@@ -130,11 +128,15 @@ export const IsometricMap: React.FC<Props> = ({
           {/* Layer 3.5: Multi-building ad canvases */}
           <MultiBuildingAdRenderer ads={DEMO_MULTI_BUILDING_ADS} buildings={buildings} />
 
-          {/* Layer 3.6: Slot-based visuals (BRAND_BUILDING, BRAND_SCREEN, PRODUCT_PPL) */}
-          <SlotVisualRenderer slots={zoneSlots} buildings={buildings} onSlotClick={handleSlotClick} />
+          {/* Layer 3.6: Slot-based visuals from DB (BRAND_BUILDING, BRAND_SCREEN, PRODUCT_PPL) */}
+          {!slotsLoading && (
+            <SlotVisualRenderer slots={zoneSlots} buildings={buildings} onSlotClick={handleSlotClick} />
+          )}
 
-          {/* Layer 3.7: Patron tiles */}
-          <PatronTileRenderer slots={patronSlots} onSlotClick={handleSlotClick} />
+          {/* Layer 3.7: Patron tiles from DB */}
+          {!slotsLoading && (
+            <PatronTileRenderer slots={patronSlots} onSlotClick={handleSlotClick} />
+          )}
 
           {/* Layer 3.8: Guide NPC */}
           {zone.id === 'plaza' && <GuideNPC onGuideClick={handleSlotClick} />}
@@ -161,6 +163,13 @@ export const IsometricMap: React.FC<Props> = ({
           </rect>
         )}
       </svg>
+
+      {/* Loading indicator for slots */}
+      {slotsLoading && (
+        <div className="absolute top-12 left-1/2 -translate-x-1/2 bg-card/90 border border-border rounded-lg px-3 py-1.5 text-xs text-muted-foreground">
+          슬롯 로딩 중...
+        </div>
+      )}
 
       {/* Zoom controls */}
       <div className="absolute bottom-4 right-4 flex flex-col gap-1">
