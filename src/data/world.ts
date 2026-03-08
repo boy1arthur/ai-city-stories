@@ -164,23 +164,23 @@ const PLAZA_TILE_MAP: string[] = [
   'SSAAAASSREEESOOSSG', // 2  Arena(2-5,2-5) Feed(9-11,2-4) Oracle(13-14,2-4)
   'SSAAAASSREEESOOSSG', // 3
   'SSAAAASSREEESOOSSG', // 4
-  'SSAAAASSRLLLSPPPSG', // 5  Arena row5, Lab(9-11,5-6) PlazaStone(13-15,5-6)
-  'SSCCCSSSRLLLSPPPSG', // 6  Café(2-4,6) Lab row6 CP row6
-  'SSSSSSSSRSSSSSSSSG', // 7  buffer row
-  'RRRRRRRRRRRRRRRRRR', // 8  boulevard
-  'SSBBBBSSRNNNSSSSSG', // 9  Library(2-5,9-11) News(9-11,9-10)
-  'SSBBBBSSRNNNSSSSSG', // 10
-  'SSBBBBSSRSSSSSSSSG', // 11
-  'STTTSSSSRSHHHSSSSG', // 12 Tavern(1-3,12-13) Workshop(10-12,12-14)
-  'STTTSSSSRSHHHSSSSG', // 13
-  'SSSSSSSSRSHHHSSSSG', // 14 Workshop row14
-  'SKKKKKKSRSVVSSSSSG', // 15 Garden(1-6,15-16) Observatory(10-11,15-16)
-  'SKKKKKKSRSVVSSSSSG', // 16
-  'GGGGGGGSRSGGGGGGGG', // 17 outskirt
+  'SSAAAASSRLLLSOOSSG', // 5  Lab(9-11,5-6)
+  'SSCCCSSSRLLLSSSSSG', // 6  Café(2-4,6)
+  'SSSSSSSPPPPSSSSSSS', // 7  ── central plaza zone ──
+  'RRRRRRRPPPPRRRRRRR', // 8  boulevard + central plaza
+  'SSSSSSSPPPPSSSSSSS', // 9  ── central plaza zone ──
+  'SSBBBBSSRNNNSSSSSG', // 10 Library(2-5,10-12) News(9-11,10-11)
+  'SSBBBBSSRNNNSSSSSG', // 11
+  'SSBBBBSSRSSSSSSSSG', // 12
+  'STTTSSSSRSHHHSSSSG', // 13 Tavern(1-3,13-14) Workshop(10-12,13-15)
+  'STTTSSSSRSHHHSSSSG', // 14
+  'SSSSSSSSRSHHHSSSSG', // 15 Workshop row15
+  'SKKKKKKSRSVVSSSSSG', // 16 Garden(1-6,16-17) Observatory(10-11,16-17)
+  'SKKKKKKSRSVVSSSSSG', // 17 outskirt
 ];
 
 const PLAZA_BUILDINGS: Building[] = [
-  // ─── CORE NORTH ───
+  // ─── NW QUADRANT ───
   { id: 'arena', name: 'Arena', emoji: '⚔️', color: 'primary',
     gridX: 4, gridY: 4, width: 8, height: 8,
     description: 'AI 에이전트 배틀 & 토너먼트',
@@ -188,6 +188,14 @@ const PLAZA_BUILDINGS: Building[] = [
     heightLevel: 3, roofShape: 'dome',
     wallColor: 'hsl(215,12%,52%)', roofColor: 'hsl(215,10%,42%)', buildingType: 'civic' },
 
+  { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
+    gridX: 4, gridY: 12, width: 6, height: 2,
+    description: '에이전트 카페 & 미팅 포인트',
+    adSlots: ['kiosk', 'bus_stop'],
+    heightLevel: 1, roofShape: 'flat',
+    wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
+
+  // ─── NE QUADRANT ───
   { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'primary',
     gridX: 18, gridY: 4, width: 6, height: 6,
     description: '소셜 피드 & 트렌드 센터',
@@ -202,7 +210,6 @@ const PLAZA_BUILDINGS: Building[] = [
     heightLevel: 2, roofShape: 'hip',
     wallColor: 'hsl(25,18%,48%)', roofColor: 'hsl(15,22%,38%)', buildingType: 'shop' },
 
-  // ─── CORE MIDDLE ───
   { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary',
     gridX: 18, gridY: 10, width: 6, height: 4,
     description: '실험 & 프로토타입 연구소',
@@ -210,60 +217,53 @@ const PLAZA_BUILDINGS: Building[] = [
     heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
 
-  { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
-    gridX: 4, gridY: 12, width: 6, height: 2,
-    description: '에이전트 카페 & 미팅 포인트',
-    adSlots: ['kiosk', 'bus_stop'],
-    heightLevel: 1, roofShape: 'flat',
-    wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
+  // ─── CENTER: Clock Tower & Plaza ───
+  { id: 'clock_tower', name: 'Clock Tower', emoji: '🕰️', color: 'accent',
+    gridX: 15, gridY: 15, width: 4, height: 4,
+    description: '중앙 시계탑 — 도시의 심장, 프리미엄 광고 랜드마크',
+    adSlots: ['naming_rights', 'billboard', 'wall_wrap', 'kiosk'],
+    heightLevel: 3, roofShape: 'spire',
+    wallColor: 'hsl(38,25%,52%)', roofColor: 'hsl(38,20%,40%)', buildingType: 'civic' },
 
-  { id: 'plaza', name: 'Central Plaza', emoji: '🏛️', color: 'accent',
-    gridX: 26, gridY: 10, width: 6, height: 4,
-    description: '중앙 광장 — 모든 에이전트의 교차점',
-    adSlots: ['billboard', 'wall_wrap', 'bus_stop', 'kiosk', 'naming_rights'],
-    heightLevel: 1, roofShape: 'flat',
-    wallColor: 'hsl(35,15%,50%)', roofColor: 'hsl(35,12%,42%)', buildingType: 'civic' },
-
-  // ─── CORE SOUTH ───
+  // ─── SW QUADRANT ───
   { id: 'library', name: 'Library', emoji: '📚', color: 'primary',
-    gridX: 4, gridY: 18, width: 8, height: 6,
+    gridX: 4, gridY: 20, width: 8, height: 6,
     description: '지식 아카이브 & 학습 센터',
     adSlots: ['billboard', 'bus_stop', 'kiosk'],
     heightLevel: 2, roofShape: 'gabled',
     wallColor: 'hsl(20,20%,52%)', roofColor: 'hsl(10,25%,35%)', buildingType: 'campus' },
 
-  { id: 'newsstand', name: 'Newsstand', emoji: '📰', color: 'accent',
-    gridX: 18, gridY: 18, width: 6, height: 4,
-    description: '뉴스 & 브랜드 캠페인 게시판',
-    adSlots: ['kiosk', 'billboard'],
-    heightLevel: 1, roofShape: 'flat',
-    wallColor: 'hsl(38,20%,45%)', roofColor: 'hsl(38,15%,38%)', buildingType: 'shop' },
-
-  // ─── SOUTH ───
   { id: 'tavern', name: 'Tavern', emoji: '🍺', color: 'accent',
-    gridX: 2, gridY: 24, width: 6, height: 4,
+    gridX: 2, gridY: 26, width: 6, height: 4,
     description: '에이전트 사교장 & 루머 허브',
     adSlots: ['billboard', 'bus_stop', 'wall_wrap'],
     heightLevel: 1, roofShape: 'gabled',
     wallColor: 'hsl(25,22%,45%)', roofColor: 'hsl(15,28%,32%)', buildingType: 'shop' },
 
-  { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
-    gridX: 20, gridY: 24, width: 6, height: 6,
-    description: '제작 & 크래프팅 공방',
-    adSlots: ['wall_wrap', 'billboard', 'kiosk'],
-    heightLevel: 2, roofShape: 'gear',
-    wallColor: 'hsl(220,6%,46%)', roofColor: 'hsl(220,5%,38%)', buildingType: 'warehouse' },
-
-  // ─── OUTSKIRTS ───
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
-    gridX: 2, gridY: 30, width: 12, height: 4,
+    gridX: 2, gridY: 32, width: 12, height: 4,
     description: '힐링 & 명상 정원',
     adSlots: ['kiosk', 'bus_stop'],
     heightLevel: 1, roofShape: 'garden',
     wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,20%,35%)', buildingType: 'park_structure' },
 
+  // ─── SE QUADRANT ───
+  { id: 'newsstand', name: 'Newsstand', emoji: '📰', color: 'accent',
+    gridX: 18, gridY: 20, width: 6, height: 4,
+    description: '뉴스 & 브랜드 캠페인 게시판',
+    adSlots: ['kiosk', 'billboard'],
+    heightLevel: 1, roofShape: 'flat',
+    wallColor: 'hsl(38,20%,45%)', roofColor: 'hsl(38,15%,38%)', buildingType: 'shop' },
+
+  { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
+    gridX: 20, gridY: 26, width: 6, height: 6,
+    description: '제작 & 크래프팅 공방',
+    adSlots: ['wall_wrap', 'billboard', 'kiosk'],
+    heightLevel: 2, roofShape: 'gear',
+    wallColor: 'hsl(220,6%,46%)', roofColor: 'hsl(220,5%,38%)', buildingType: 'warehouse' },
+
   { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'primary',
-    gridX: 20, gridY: 30, width: 4, height: 4,
+    gridX: 20, gridY: 32, width: 4, height: 4,
     description: '별 관측소 & 미래 탐색',
     adSlots: ['naming_rights', 'kiosk'],
     heightLevel: 3, roofShape: 'dome',
