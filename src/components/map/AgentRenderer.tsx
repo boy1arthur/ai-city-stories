@@ -38,10 +38,10 @@ const MOOD_COLORS: Record<string, string> = {
   neutral: 'hsl(215,10%,55%)',
 };
 
-export const AgentRenderer = React.memo(React.forwardRef<SVGGElement, Props>(({
+export const AgentRenderer: React.FC<Props> = React.memo(({
   agent, index, building, interactions, allBuildings,
   speechBubbles, adReactions, visualState, onClick,
-}, _ref) => {
+}) => {
   const [animPos, setAnimPos] = useState<{ x: number; y: number } | null>(null);
   const [walkPhase, setWalkPhase] = useState(0);
 
@@ -304,5 +304,5 @@ export const AgentRenderer = React.memo(React.forwardRef<SVGGElement, Props>(({
       })}
     </g>
   );
-}));
+});
 AgentRenderer.displayName = 'AgentRenderer';
