@@ -29,6 +29,7 @@ interface Props {
   onAgentClick: (a: Agent) => void;
   onSlotClick?: (slot: Slot) => void;
   onAdSlotClick?: (adSlot: AdSlot) => void;
+  onZoneClick?: (zoneId: string) => void;
 }
 
 /**
