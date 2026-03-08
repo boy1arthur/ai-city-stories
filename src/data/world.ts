@@ -332,7 +332,7 @@ export const ZONES: Zone[] = [
     themeColor: 'hsl(145,35%,42%)',
     buildings: CAMPUS_BUILDINGS,
     tileMap: CAMPUS_TILE_MAP,
-    locked: true,
+    locked: false,
   },
   {
     id: 'harbor',
