@@ -33,7 +33,7 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
     <g>
       {/* ===== BILLBOARDS ===== */}
       {adSlots.filter(s => s.type === 'billboard').map((slot, i) => {
-        const signPos = iso(b.gridX + b.width + 0.6, b.gridY + i * 1.5);
+        const signPos = iso(b.gridX + b.width + 1.5, b.gridY + i * 2.5);
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
         const boardW = 30;
