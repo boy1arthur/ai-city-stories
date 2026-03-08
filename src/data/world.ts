@@ -112,11 +112,24 @@ const INDUSTRIAL_PALETTE: TilePalette = {
   field:       { fill: 'hsl(110,12%,30%)', stroke: 'hsl(110,10%,34%)' },
 };
 
+const RESIDENTIAL_PALETTE: TilePalette = {
+  grass:       { fill: 'hsl(130,24%,34%)', stroke: 'hsl(130,20%,38%)' },
+  road:        { fill: 'hsl(220,5%,28%)',  stroke: 'hsl(220,6%,32%)' },
+  sidewalk:    { fill: 'hsl(28,14%,52%)',  stroke: 'hsl(28,16%,56%)' },
+  plaza_stone: { fill: 'hsl(30,16%,48%)',  stroke: 'hsl(30,18%,52%)' },
+  park:        { fill: 'hsl(140,30%,32%)', stroke: 'hsl(140,26%,36%)' },
+  dirt:        { fill: 'hsl(28,18%,34%)',  stroke: 'hsl(28,16%,38%)' },
+  water:       { fill: 'hsl(200,42%,36%)', stroke: 'hsl(200,38%,40%)' },
+  parking:     { fill: 'hsl(220,4%,32%)',  stroke: 'hsl(220,5%,36%)' },
+  field:       { fill: 'hsl(125,22%,34%)', stroke: 'hsl(125,18%,38%)' },
+};
+
 export const ZONE_PALETTES: Record<string, TilePalette> = {
   plaza: PLAZA_PALETTE,
   campus: CAMPUS_PALETTE,
   harbor: HARBOR_PALETTE,
   industrial: INDUSTRIAL_PALETTE,
+  residential: RESIDENTIAL_PALETTE,
 };
 
 export function getZonePalette(zoneId: string): TilePalette {
