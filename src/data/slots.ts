@@ -50,37 +50,37 @@ export const PLAZA_SLOTS: Slot[] = [
     triggerType: 'click',
   },
 
-  // ── PATRON_TILE (5) — 교차로(16,16) 주변 벤치/도로 ──
+  // ── PATRON_TILE (5) — 도로 위 + 외곽 공터에 넓게 분산 ──
   {
     id: 'slot_patron_bench_1',
     zone: 'plaza',
     type: 'PATRON_TILE',
-    location: { tile: { x: 15, y: 15 } },
-    label: '교차로 NW 벤치',
+    location: { tile: { x: 16, y: 6 } },  // 북쪽 도로 위
+    label: '북쪽 도로 벤치',
     ownerType: 'patron',
     ownerId: 'demo_patron_1',
     ownerName: '김태희',
-    ownerMessage: 'AI 시티의 첫 번째 후원자 🌟',
+    ownerMessage: 'AI시티 첫후원자🌟',
     triggerType: 'proximity',
   },
   {
     id: 'slot_patron_bench_2',
     zone: 'plaza',
     type: 'PATRON_TILE',
-    location: { tile: { x: 18, y: 15 } },
-    label: '교차로 NE 벤치',
+    location: { tile: { x: 6, y: 16 } },  // 서쪽 도로 위
+    label: '서쪽 도로 벤치',
     ownerType: 'patron',
     ownerId: 'demo_patron_2',
     ownerName: '이준혁',
-    ownerMessage: '커피 한 잔의 여유를 ☕',
+    ownerMessage: '커피한잔의여유☕',
     triggerType: 'proximity',
   },
   {
     id: 'slot_patron_bench_3',
     zone: 'plaza',
     type: 'PATRON_TILE',
-    location: { tile: { x: 15, y: 18 } },
-    label: '교차로 SW 벤치',
+    location: { tile: { x: 28, y: 16 } },  // 동쪽 도로 위
+    label: '동쪽 도로 벤치',
     ownerType: 'empty',
     triggerType: 'click',
   },
@@ -88,8 +88,8 @@ export const PLAZA_SLOTS: Slot[] = [
     id: 'slot_patron_bench_4',
     zone: 'plaza',
     type: 'PATRON_TILE',
-    location: { tile: { x: 18, y: 18 } },
-    label: '교차로 SE 벤치',
+    location: { tile: { x: 16, y: 28 } },  // 남쪽 도로 위
+    label: '남쪽 도로 벤치',
     ownerType: 'empty',
     triggerType: 'click',
   },
@@ -97,12 +97,12 @@ export const PLAZA_SLOTS: Slot[] = [
     id: 'slot_patron_bench_5',
     zone: 'plaza',
     type: 'PATRON_TILE',
-    location: { tile: { x: 16, y: 14 } },
-    label: '교차로 북측 도로 타일',
+    location: { tile: { x: 0, y: 0 } },  // NW 코너 공터
+    label: '북서 코너 타일',
     ownerType: 'patron',
     ownerId: 'demo_patron_3',
     ownerName: '박서연',
-    ownerMessage: '꿈을 코딩하는 도시 💻',
+    ownerMessage: '꿈을코딩하는도시💻',
     triggerType: 'proximity',
   },
 
