@@ -44,22 +44,19 @@ export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots }) => {
                   stroke="hsl(215,8%,30%)" strokeWidth={1} />
               </g>
 
-              {/* Patron plaque */}
+              {/* Patron plaque — compact single-line floating above */}
               <g>
-                <rect x={pos.x - 18} y={pos.y - 18} width={36} height={12} rx={3}
-                  fill="hsl(38,25%,18%)" fillOpacity={0.92}
-                  stroke="hsl(38,50%,45%)" strokeWidth={0.5} />
-                {/* Star icon */}
-                <text x={pos.x - 14} y={pos.y - 9.5} fontSize={5} fill="hsl(38,60%,55%)">⭐</text>
-                {/* Name */}
-                <text x={pos.x - 8} y={pos.y - 10} fontSize={4.5}
-                  fill="hsl(38,50%,70%)" fontFamily="Inter" fontWeight={700}>
-                  {slot.ownerName}
-                </text>
-                {/* Message */}
-                <text x={pos.x} y={pos.y - 14} textAnchor="middle" fontSize={3.5}
-                  fill="hsl(38,30%,60%)" fontFamily="Inter" fontWeight={400}>
-                  {(slot.ownerMessage || '').slice(0, 18)}
+                {/* Connector line */}
+                <line x1={pos.x} y1={pos.y - 5} x2={pos.x} y2={pos.y - 15}
+                  stroke="hsl(38,40%,45%)" strokeWidth={0.5} strokeOpacity={0.5} />
+                {/* Background pill */}
+                <rect x={pos.x - 22} y={pos.y - 25} width={44} height={10} rx={5}
+                  fill="hsl(38,20%,12%)" fillOpacity={0.95}
+                  stroke="hsl(38,50%,45%)" strokeWidth={0.6} />
+                {/* Single line: ⭐ Name · Message */}
+                <text x={pos.x} y={pos.y - 18} textAnchor="middle" fontSize={4}
+                  fill="hsl(38,50%,72%)" fontFamily="Inter" fontWeight={600}>
+                  ⭐ {slot.ownerName} · {(slot.ownerMessage || '').slice(0, 12)}
                 </text>
               </g>
 

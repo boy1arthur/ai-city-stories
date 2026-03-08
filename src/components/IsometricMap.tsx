@@ -97,8 +97,6 @@ export const IsometricMap: React.FC<Props> = ({
           {/* Layer 1: Ground tiles */}
           <GroundLayer zone={zone} />
 
-          {/* Layer 1.5: Patron tiles (benches with plaques) */}
-          <PatronTileRenderer slots={getPatronTiles(zone.id as SlotZone)} />
 
           {/* Layer 2+3: Buildings with integrated ad visuals */}
           {sortedBuildings.map(b => {
@@ -120,6 +118,9 @@ export const IsometricMap: React.FC<Props> = ({
 
           {/* Layer 3.5: Multi-building ad canvases */}
           <MultiBuildingAdRenderer ads={DEMO_MULTI_BUILDING_ADS} buildings={buildings} />
+
+          {/* Layer 3.6: Patron tiles — rendered above buildings for visibility */}
+          <PatronTileRenderer slots={getPatronTiles(zone.id as SlotZone)} />
 
           {/* Layer 4: Agents */}
           {sortedAgents.map(({ agent, index }) => (
