@@ -237,7 +237,7 @@ const PLAZA_BUILDINGS: Building[] = [
     description: '제작 & 크래프팅 공방 — 대형 벽면 광고 가능',
     adSlots: ['wall_wrap', 'billboard', 'kiosk', 'naming_rights'],
     heightLevel: 3, roofShape: 'gear',
-    wallColor: 'hsl(220,6%,46%)', roofColor: 'hsl(220,5%,38%)', buildingType: 'warehouse' },
+    wallColor: 'hsl(30,25%,50%)', roofColor: 'hsl(30,20%,40%)', buildingType: 'warehouse' },
 
   // ═══ SW BLOCK — "Culture Quarter" ═══
   { id: 'library', name: 'Library', emoji: '📚', color: 'primary',
