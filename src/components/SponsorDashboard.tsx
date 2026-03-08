@@ -24,7 +24,7 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
   const sentimentDist = { positive: 42, neutral: 35, negative: 23 };
 
   return (
-    <div className="min-h-screen bg-background p-6 font-mono">
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -36,7 +36,7 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
               {currentZone.emoji} {currentZone.name} — AI Social World 광고 경제 리포트
             </p>
           </div>
-          <button onClick={onBack} className="text-xs font-mono px-3 py-1.5 rounded border border-border hover:border-primary text-foreground transition-colors">
+          <button onClick={onBack} className="text-xs px-3 py-1.5 rounded border border-border hover:border-primary text-foreground transition-colors font-medium">
             ← 월드로 돌아가기
           </button>
         </div>
@@ -45,14 +45,14 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
           <KPICard label="활성 광고" value={activeAds.length.toString()} sub="전체 슬롯" color="primary" />
           <KPICard label="이 구역" value={zoneActiveAds.length.toString()} sub={currentZone.name} color="accent" />
-          <KPICard label="총 노출" value={totalImpressions.toLocaleString()} sub="impressions" color="secondary" />
+          <KPICard label="총 노출" value={totalImpressions.toLocaleString()} sub="impressions" color="primary" />
           <KPICard label="총 ESV" value={`$${totalESV.toLocaleString()}`} sub="estimated value" color="accent" />
           <KPICard label="브랜드" value={uniqueBrands.length.toString()} sub="active brands" color="primary" />
         </div>
 
-        {/* Zone Inventory Summary */}
+        {/* Zone Inventory */}
         <div className="bg-card border border-border rounded-lg p-4 mb-8">
-          <h3 className="text-xs font-bold text-accent uppercase tracking-widest mb-4">📦 {currentZone.name} 광고 인벤토리</h3>
+          <h3 className="text-xs font-semibold text-accent uppercase tracking-wider mb-4">📦 {currentZone.name} 광고 인벤토리</h3>
           <div className="grid grid-cols-3 gap-4">
             <InventoryCard label="프리미엄" slots={premiumSlots} color="text-accent" desc="네이밍 라이츠" />
             <InventoryCard label="스탠다드" slots={standardSlots} color="text-primary" desc="빌보드, 월랩" />
@@ -62,7 +62,7 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
 
         {/* District Overview */}
         <div className="bg-card border border-border rounded-lg p-4 mb-8">
-          <h3 className="text-xs font-bold text-secondary uppercase tracking-widest mb-4">🗺️ 디스트릭트 현황</h3>
+          <h3 className="text-xs font-semibold text-primary uppercase tracking-wider mb-4">🗺️ 디스트릭트 현황</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {ZONES.map(zone => {
               const zSlots = allAdSlots.filter(s => s.zoneId === zone.id);
@@ -72,7 +72,7 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-lg">{zone.emoji}</span>
                     <div>
-                      <p className="text-xs font-bold text-foreground">{zone.name}</p>
+                      <p className="text-xs font-semibold text-foreground">{zone.name}</p>
                       <p className="text-xs text-muted-foreground">{zone.theme}</p>
                     </div>
                   </div>
@@ -110,7 +110,7 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
 
         {/* Active Ads Table */}
         <div className="bg-card border border-border rounded-lg p-4 mb-8">
-          <h3 className="text-xs font-bold text-primary uppercase tracking-widest mb-4">활성 광고 현황</h3>
+          <h3 className="text-xs font-semibold text-primary uppercase tracking-wider mb-4">활성 광고 현황</h3>
           {activeAds.length === 0 ? (
             <p className="text-xs text-muted-foreground">아직 배치된 광고가 없습니다. 맵에서 건물을 클릭하여 광고를 배치하세요.</p>
           ) : (
@@ -154,15 +154,15 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
         {/* Sentiment + Agent reactions */}
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-card border border-border rounded-lg p-4">
-            <h3 className="text-xs font-bold text-secondary uppercase tracking-widest mb-4">감정 분포</h3>
+            <h3 className="text-xs font-semibold text-primary uppercase tracking-wider mb-4">감정 분포</h3>
             <div className="flex gap-4 items-end h-32">
-              <SentimentBar label="긍정" value={sentimentDist.positive} color="hsl(152,76%,44%)" />
-              <SentimentBar label="중립" value={sentimentDist.neutral} color="hsl(215,16%,52%)" />
-              <SentimentBar label="부정" value={sentimentDist.negative} color="hsl(0,72%,50%)" />
+              <SentimentBar label="긍정" value={sentimentDist.positive} color="hsl(145,35%,42%)" />
+              <SentimentBar label="중립" value={sentimentDist.neutral} color="hsl(215,12%,55%)" />
+              <SentimentBar label="부정" value={sentimentDist.negative} color="hsl(0,60%,48%)" />
             </div>
           </div>
           <div className="bg-card border border-border rounded-lg p-4">
-            <h3 className="text-xs font-bold text-secondary uppercase tracking-widest mb-4">에이전트 반응</h3>
+            <h3 className="text-xs font-semibold text-primary uppercase tracking-wider mb-4">에이전트 반응</h3>
             <div className="space-y-2">
               {agents.slice(0, 4).map(agent => (
                 <div key={agent.id} className="flex items-center gap-2 bg-muted/30 rounded p-2">
@@ -172,7 +172,7 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
                     <div className="flex gap-1 mt-0.5">
                       {agent.brandAffinities.map(ba => (
                         <span key={ba.category} className="text-xs px-1 py-0.5 rounded bg-surface-elevated"
-                          style={{ color: ba.score > 0 ? 'hsl(152,76%,44%)' : 'hsl(0,72%,50%)' }}>
+                          style={{ color: ba.score > 0 ? 'hsl(145,35%,50%)' : 'hsl(0,60%,50%)' }}>
                           {ba.category}: {ba.score > 0 ? '+' : ''}{ba.score}
                         </span>
                       ))}
@@ -191,7 +191,6 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
 function KPICard({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
   const colorMap: Record<string, string> = {
     primary: 'border-primary/30 text-primary',
-    secondary: 'border-secondary/30 text-secondary',
     accent: 'border-accent/30 text-accent',
   };
   return (

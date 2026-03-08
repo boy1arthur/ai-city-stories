@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,52 +6,54 @@
 
 @layer base {
   :root {
-    --background: 240 20% 3.9%;
-    --foreground: 210 20% 90%;
+    /* Daytime city / modern town palette */
+    --background: 220 18% 8%;
+    --foreground: 210 15% 88%;
 
-    --card: 240 18% 6%;
-    --card-foreground: 210 20% 90%;
+    --card: 220 16% 11%;
+    --card-foreground: 210 15% 88%;
 
-    --popover: 240 18% 6%;
-    --popover-foreground: 210 20% 90%;
+    --popover: 220 16% 11%;
+    --popover-foreground: 210 15% 88%;
 
-    --primary: 152 76% 44%;
-    --primary-foreground: 240 20% 3.9%;
+    --primary: 210 55% 50%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 270 60% 55%;
+    --secondary: 145 35% 42%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 240 14% 12%;
-    --muted-foreground: 215 16% 52%;
+    --muted: 220 14% 15%;
+    --muted-foreground: 215 12% 55%;
 
-    --accent: 38 92% 50%;
-    --accent-foreground: 240 20% 3.9%;
+    --accent: 38 75% 50%;
+    --accent-foreground: 220 18% 8%;
 
-    --destructive: 0 72% 50%;
+    --destructive: 0 60% 48%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 14% 14%;
-    --input: 240 14% 14%;
-    --ring: 152 76% 44%;
+    --border: 220 12% 18%;
+    --input: 220 12% 18%;
+    --ring: 210 55% 50%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 240 18% 5%;
-    --sidebar-foreground: 210 20% 90%;
-    --sidebar-primary: 152 76% 44%;
-    --sidebar-primary-foreground: 240 20% 3.9%;
-    --sidebar-accent: 240 14% 12%;
-    --sidebar-accent-foreground: 210 20% 90%;
-    --sidebar-border: 240 14% 14%;
-    --sidebar-ring: 152 76% 44%;
+    --sidebar-background: 220 16% 9%;
+    --sidebar-foreground: 210 15% 88%;
+    --sidebar-primary: 210 55% 50%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 220 14% 15%;
+    --sidebar-accent-foreground: 210 15% 88%;
+    --sidebar-border: 220 12% 18%;
+    --sidebar-ring: 210 55% 50%;
 
     /* Custom tokens */
-    --neon-green: 152 76% 44%;
-    --neon-purple: 270 60% 55%;
-    --gold: 38 92% 50%;
-    --surface: 240 16% 8%;
-    --surface-elevated: 240 14% 11%;
-    --grid-line: 240 14% 10%;
+    --sponsor-gold: 38 75% 50%;
+    --city-blue: 210 55% 50%;
+    --nature-green: 145 35% 42%;
+    --warm-brown: 25 30% 35%;
+    --surface: 220 14% 13%;
+    --surface-elevated: 220 12% 16%;
+    --grid-line: 220 10% 14%;
   }
 }
 
@@ -61,47 +63,29 @@
   }
 
   body {
-    @apply bg-background text-foreground font-mono antialiased;
-    font-family: 'JetBrains Mono', monospace;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', 'JetBrains Mono', sans-serif;
   }
 }
 
 @layer utilities {
-  .glow-green {
-    box-shadow: 0 0 20px hsl(152 76% 44% / 0.3), 0 0 40px hsl(152 76% 44% / 0.1);
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
   }
-  .glow-purple {
-    box-shadow: 0 0 20px hsl(270 60% 55% / 0.3), 0 0 40px hsl(270 60% 55% / 0.1);
+  .glow-sponsor {
+    box-shadow: 0 0 12px hsl(38 75% 50% / 0.25), 0 0 24px hsl(38 75% 50% / 0.08);
   }
-  .glow-gold {
-    box-shadow: 0 0 20px hsl(38 92% 50% / 0.3), 0 0 40px hsl(38 92% 50% / 0.1);
-  }
-  .text-glow-green {
-    text-shadow: 0 0 10px hsl(152 76% 44% / 0.5);
-  }
-  .text-glow-purple {
-    text-shadow: 0 0 10px hsl(270 60% 55% / 0.5);
-  }
-  .text-glow-gold {
-    text-shadow: 0 0 10px hsl(38 92% 50% / 0.5);
-  }
-  .scanline {
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      hsl(152 76% 44% / 0.03) 2px,
-      hsl(152 76% 44% / 0.03) 4px
-    );
+  .text-glow-sponsor {
+    text-shadow: 0 0 8px hsl(38 75% 50% / 0.4);
   }
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  50% { transform: translateY(-3px); }
 }
 
-@keyframes pulse-glow {
+@keyframes pulse-soft {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
