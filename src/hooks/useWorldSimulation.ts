@@ -278,6 +278,42 @@ export function useWorldSimulation() {
     return agent?.currentZoneId === currentZoneId;
   });
 
+  // Compute brand stats from all ad slots
+  const brandStats: BrandStats[] = useMemo(() => {
+    const activeSlots = adSlots.filter(s => s.brand);
+    if (activeSlots.length === 0) return [];
+
+    const slotData = activeSlots.map(slot => {
+      const slotInteractions = interactions.filter(i => i.brand === slot.brand);
+      const stats: SlotStats = {
+        impressions: slot.impressions,
+        positiveInteractions: slotInteractions.filter(i => i.affinity > 30).length,
+        neutralInteractions: slotInteractions.filter(i => i.affinity > -10 && i.affinity <= 30).length,
+        negativeInteractions: slotInteractions.filter(i => i.affinity <= -10).length,
+        mentions: slotInteractions.length,
+      };
+      return { brand: slot.brand!, stats };
+    });
+
+    return aggregateBrandStats(slotData);
+  }, [adSlots, interactions, tick]); // eslint-disable-line
+
+  // Generate highlights from recent logs
+  const highlights: Highlight[] = useMemo(() => {
+    return worldLog.slice(0, 10)
+      .filter(log => log.includes('"') || log.includes('📢') || log.includes('→'))
+      .slice(0, 5)
+      .map((log, i) => ({
+        id: `hl_${i}_${tick}`,
+        text: log,
+        timestamp: Date.now() - i * 30000,
+        type: log.includes('좋아') || log.includes('기대') ? 'positive' as const
+          : log.includes('별로') || log.includes('과대') ? 'negative' as const
+          : log.includes('📢') ? 'event' as const
+          : 'neutral' as const,
+      }));
+  }, [worldLog, tick]);
+
   return {
     agents: zoneAgents,
     allAgents: agents,
@@ -297,5 +333,7 @@ export function useWorldSimulation() {
     speechBubbles: zoneBubbles,
     adReactions: zoneReactions,
     agentVisuals,
+    brandStats,
+    highlights,
   };
 }
