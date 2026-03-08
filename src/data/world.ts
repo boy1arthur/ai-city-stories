@@ -157,24 +157,24 @@ const PLAZA_TILE_MAP: string[] = (() => {
   // A=Arena E=Feed O=Oracle L=Lab C=Cafe B=Library N=News T=Tavern H=Workshop V=Obs
   // Grid: 18x18. Vert spine col 8. Horiz boulevard row 8.
   const rows = [
-    'KKGSSSSSRSSSSGKKKK', // 0  -- will be trimmed to 18
-    'KGSSSSSSRSSSSSKKSS',
-    'SSAAAASSREEESOOSSKK',
-    'SSAAAASSREEESOOSSKK',
-    'SSAAAASSREEESOOSSKK',
-    'SSAAAASSRLLLSSPPSKK',
-    'SSCCCSSRRLLLSSPPSKK',
-    'SSCCCSSRRLLLSSPPSKK',
-    'RRRRRRRRRRRRRRRRRR',
-    'SSBBBBSRRNNNSPPSSS',
-    'SSBBBBSRRNNNSPPSSS',
-    'SSBBBBSRRSSSSPPSKK',
-    'STTTSSKKSHHHHSPSSS',
-    'STTTSSKKSHHHHSSSSS',
-    'SKKKKKKKSHHHSSSSSS',
-    'SKKKKKKKSVVVSSSKKK',
-    'SKKKKKKKSVVVSSSKKK',
-    'GKKKKKKKSSSSSSKKKG',
+    'KKGSSSSSRSSSSGKKKK', // 0
+    'KGSSSSSSRSSSSSKKSS', // 1
+    'SSAAAASSREEESOOSSKK', // 2  Arena(2-5,2-5) Feed(9-11,2-4) Oracle(13-14,2-4)
+    'SSAAAASSREEESOOSSKK', // 3
+    'SSAAAASSREEESOOSSKK', // 4
+    'SSAAAASRSLLLSSPPSKK', // 5  Lab(9-11,5-7)
+    'SSCCCSSRSLLLSSPPSKK', // 6  Cafe(2-4,6-7)
+    'SSCCCSSRSLLLSSPPSKK', // 7
+    'RRRRRRRRRRRRRRRRRR',  // 8  boulevard
+    'SSBBBBSRSNNNSPPSSS',  // 9  Library(2-5,9-11) News(9-11,9-10)
+    'SSBBBBSRSNNNSPPSSS',  // 10
+    'SSBBBBSRSSSSPPSKKS',  // 11
+    'STTTSSKKSHHHSPSSSSK', // 12 Tavern(1-3,12-13) Workshop(9-11,12-14)
+    'STTTSSKKSHHHSSSSSSK', // 13
+    'SKKKKKKKSHHSSSSSSSK', // 14 Garden(1-7,14-16)
+    'SKKKKKKKSVVSSSKKKKK', // 15 Observatory(9-10,15-16)
+    'SKKKKKKKSVVSSSKKKKK', // 16
+    'GKKKKKKKSSSSSSKKKG',  // 17
   ];
   // Ensure exactly 18 chars per row
   return rows.map(r => r.slice(0, 18).padEnd(18, 'G'));
