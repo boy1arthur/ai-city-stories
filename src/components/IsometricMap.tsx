@@ -59,7 +59,7 @@ const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
       );
 
       // Road center markings (dashed yellow line)
-      if (isRoadCenter(gx, gy)) {
+      if (isRoadCenterInZone(zone.tileMap, gx, gy, GRID)) {
         const isVert = (gx === 7 || gx === 13);
         if (isVert) {
           tiles.push(
