@@ -84,11 +84,26 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
         </polygon>
       )}
 
-      {/* Logo + brand name — single line only */}
-      <text x={cx - fsN * 1.5} y={cy + fs * 0.2} textAnchor="middle" fontSize={fs}
-        fill={ad.brandColor} fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-      <text x={cx + fsN * 0.8} y={cy + fsN * 0.2} textAnchor="middle" fontSize={fsN}
-        fill="hsl(0,0%,88%)" fontFamily="Inter" fontWeight={700} letterSpacing="0.8">{ad.brandName}</text>
+      {/* Content: premium/standard → logo+name, basic → color strip only */}
+      {ad.tier !== 'basic' ? (
+        <>
+          <text x={cx - fsN * 1.5} y={cy + fs * 0.2} textAnchor="middle" fontSize={fs}
+            fill={ad.brandColor} fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
+          <text x={cx + fsN * 0.8} y={cy + fsN * 0.2} textAnchor="middle" fontSize={fsN}
+            fill="hsl(0,0%,88%)" fontFamily="Inter" fontWeight={700} letterSpacing="0.8">{ad.brandName}</text>
+        </>
+      ) : (
+        /* Basic: just a wider brand color bar across center */
+        (() => {
+          const t1 = 0.3, t2 = 0.7;
+          const sT = { x: tl.x + (bl.x - tl.x) * t1, y: tl.y + (bl.y - tl.y) * t1 };
+          const sTr = { x: tr.x + (br.x - tr.x) * t1, y: tr.y + (br.y - tr.y) * t1 };
+          const sB = { x: tl.x + (bl.x - tl.x) * t2, y: tl.y + (bl.y - tl.y) * t2 };
+          const sBr = { x: tr.x + (br.x - tr.x) * t2, y: tr.y + (br.y - tr.y) * t2 };
+          return <polygon points={`${sT.x},${sT.y} ${sTr.x},${sTr.y} ${sBr.x},${sBr.y} ${sB.x},${sB.y}`}
+            fill={ad.brandColor} fillOpacity={0.5} />;
+        })()
+      )}
     </g>
   );
 };
