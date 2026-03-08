@@ -66,14 +66,7 @@ export const FullCityMap: React.FC<Props> = ({
   const dragStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Animation frame for agents — only animate focused zone
-  const [, setFrame] = useState(0);
-  useEffect(() => {
-    let raf: number;
-    const tick = () => { setFrame(f => f + 1); raf = requestAnimationFrame(tick); };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
+  // No RAF loop — rendering is driven by tick/state changes from parent
 
   // Pan/zoom handlers
   const onMouseDown = useCallback((e: React.MouseEvent) => {
