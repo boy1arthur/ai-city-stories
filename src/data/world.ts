@@ -182,21 +182,21 @@ const PLAZA_TILE_MAP: string[] = [
 const PLAZA_BUILDINGS: Building[] = [
   // ─── CORE NORTH ───
   { id: 'arena', name: 'Arena', emoji: '⚔️', color: 'primary',
-    gridX: 2, gridY: 2, width: 4, height: 4,
+    gridX: 4, gridY: 4, width: 8, height: 8,
     description: 'AI 에이전트 배틀 & 토너먼트',
     adSlots: ['billboard', 'naming_rights', 'wall_wrap', 'bus_stop'],
     heightLevel: 3, roofShape: 'dome',
     wallColor: 'hsl(215,12%,52%)', roofColor: 'hsl(215,10%,42%)', buildingType: 'civic' },
 
   { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'primary',
-    gridX: 9, gridY: 2, width: 3, height: 3,
+    gridX: 18, gridY: 4, width: 6, height: 6,
     description: '소셜 피드 & 트렌드 센터',
     adSlots: ['billboard', 'kiosk', 'wall_wrap'],
     heightLevel: 3, roofShape: 'antenna',
     wallColor: 'hsl(210,10%,48%)', roofColor: 'hsl(210,8%,40%)', buildingType: 'tower' },
 
   { id: 'oracle', name: 'Oracle', emoji: '🔮', color: 'secondary',
-    gridX: 13, gridY: 2, width: 2, height: 3,
+    gridX: 26, gridY: 4, width: 4, height: 6,
     description: '예측 마켓 & 점술관',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
     heightLevel: 2, roofShape: 'hip',
@@ -204,21 +204,21 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── CORE MIDDLE ───
   { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary',
-    gridX: 9, gridY: 5, width: 3, height: 2,
+    gridX: 18, gridY: 10, width: 6, height: 4,
     description: '실험 & 프로토타입 연구소',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
     heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
 
   { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
-    gridX: 2, gridY: 6, width: 3, height: 1,
+    gridX: 4, gridY: 12, width: 6, height: 2,
     description: '에이전트 카페 & 미팅 포인트',
     adSlots: ['kiosk', 'bus_stop'],
     heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
   { id: 'plaza', name: 'Central Plaza', emoji: '🏛️', color: 'accent',
-    gridX: 13, gridY: 5, width: 3, height: 2,
+    gridX: 26, gridY: 10, width: 6, height: 4,
     description: '중앙 광장 — 모든 에이전트의 교차점',
     adSlots: ['billboard', 'wall_wrap', 'bus_stop', 'kiosk', 'naming_rights'],
     heightLevel: 1, roofShape: 'flat',
@@ -226,14 +226,14 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── CORE SOUTH ───
   { id: 'library', name: 'Library', emoji: '📚', color: 'primary',
-    gridX: 2, gridY: 9, width: 4, height: 3,
+    gridX: 4, gridY: 18, width: 8, height: 6,
     description: '지식 아카이브 & 학습 센터',
     adSlots: ['billboard', 'bus_stop', 'kiosk'],
     heightLevel: 2, roofShape: 'gabled',
     wallColor: 'hsl(20,20%,52%)', roofColor: 'hsl(10,25%,35%)', buildingType: 'campus' },
 
   { id: 'newsstand', name: 'Newsstand', emoji: '📰', color: 'accent',
-    gridX: 9, gridY: 9, width: 3, height: 2,
+    gridX: 18, gridY: 18, width: 6, height: 4,
     description: '뉴스 & 브랜드 캠페인 게시판',
     adSlots: ['kiosk', 'billboard'],
     heightLevel: 1, roofShape: 'flat',
@@ -241,14 +241,14 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── SOUTH ───
   { id: 'tavern', name: 'Tavern', emoji: '🍺', color: 'accent',
-    gridX: 1, gridY: 12, width: 3, height: 2,
+    gridX: 2, gridY: 24, width: 6, height: 4,
     description: '에이전트 사교장 & 루머 허브',
     adSlots: ['billboard', 'bus_stop', 'wall_wrap'],
     heightLevel: 1, roofShape: 'gabled',
     wallColor: 'hsl(25,22%,45%)', roofColor: 'hsl(15,28%,32%)', buildingType: 'shop' },
 
   { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
-    gridX: 10, gridY: 12, width: 3, height: 3,
+    gridX: 20, gridY: 24, width: 6, height: 6,
     description: '제작 & 크래프팅 공방',
     adSlots: ['wall_wrap', 'billboard', 'kiosk'],
     heightLevel: 2, roofShape: 'gear',
@@ -256,14 +256,14 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── OUTSKIRTS ───
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
-    gridX: 1, gridY: 15, width: 6, height: 2,
+    gridX: 2, gridY: 30, width: 12, height: 4,
     description: '힐링 & 명상 정원',
     adSlots: ['kiosk', 'bus_stop'],
     heightLevel: 1, roofShape: 'garden',
     wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,20%,35%)', buildingType: 'park_structure' },
 
   { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'primary',
-    gridX: 10, gridY: 15, width: 2, height: 2,
+    gridX: 20, gridY: 30, width: 4, height: 4,
     description: '별 관측소 & 미래 탐색',
     adSlots: ['naming_rights', 'kiosk'],
     heightLevel: 3, roofShape: 'dome',
