@@ -4,11 +4,13 @@ import { SPONSOR_TIERS, ZONES, type SponsorTier } from '@/data/world';
 import type { BrandStats } from '@/lib/esv';
 import type { CityEnergyState } from '@/lib/cityEnergy';
 import type { AdCampaign } from '@/lib/adCampaign';
+import type { BrandLeagueSeason, BrandLeagueScore } from '@/lib/brandLeague';
 import type { Highlight } from '@/components/sponsor/TodayHighlights';
 import { BrandRanking } from '@/components/sponsor/BrandRanking';
 import { TodayHighlights } from '@/components/sponsor/TodayHighlights';
 import { CampaignForm } from '@/components/sponsor/CampaignForm';
 import { CampaignList } from '@/components/sponsor/CampaignList';
+import { LeagueStandings } from '@/components/sponsor/LeagueStandings';
 import { EnergyBar } from '@/components/EnergyBar';
 
 interface Props {

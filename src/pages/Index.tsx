@@ -7,6 +7,7 @@ import { TopBar } from '@/components/TopBar';
 import { EnergyBar } from '@/components/EnergyBar';
 import { SponsorDashboard } from '@/components/SponsorDashboard';
 import { TrendingOpinions } from '@/components/TrendingOpinions';
+import { WorldEventBanner } from '@/components/WorldEventBanner';
 import { useWorldSimulation } from '@/hooks/useWorldSimulation';
 import { useCampaigns } from '@/hooks/useCampaigns';
 import { isCampaignActive } from '@/lib/adCampaign';
@@ -20,6 +21,7 @@ const Index = () => {
     currentZoneId, setCurrentZoneId, currentZone, zones,
     speechBubbles, adReactions, agentVisuals,
     brandStats, highlights, cityEnergy,
+    leagueSeason, leagueScores, worldEvents,
   } = sim;
 
   const { campaigns, createCampaign, endCampaign, updateCampaignSlots } = useCampaigns();
@@ -33,11 +35,9 @@ const Index = () => {
   // Sync campaigns → AdSlots brand assignment
   useEffect(() => {
     setAdSlots(prev => prev.map(slot => {
-      // Find the most recent running campaign that includes this slot
       const activeCampaign = campaigns
         .filter(c => isCampaignActive(c, tick) && c.slotIds.includes(slot.id))
         .sort((a, b) => b.startTick - a.startTick)[0];
-
       if (activeCampaign) {
         return slot.brand === activeCampaign.brandId ? slot : { ...slot, brand: activeCampaign.brandId };
       }
@@ -60,6 +60,8 @@ const Index = () => {
         campaigns={campaigns}
         currentTick={tick}
         zones={zones}
+        leagueSeason={leagueSeason}
+        leagueScores={leagueScores}
         onCreateCampaign={createCampaign}
         onEndCampaign={endCampaign}
         onBack={() => setShowDashboard(false)}
@@ -86,6 +88,7 @@ const Index = () => {
       />
 
       <div className="flex-1 relative overflow-hidden">
+        <WorldEventBanner events={worldEvents} />
         <IsometricMap
           zone={currentZone}
           buildings={buildings}
