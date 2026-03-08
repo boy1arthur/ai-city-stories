@@ -286,7 +286,7 @@ const PLAZA_BUILDINGS: Building[] = [
   { id: 'tech_lab', name: 'Tech Lab', emoji: '💻', color: 'primary',
     gridX: 26, gridY: 24, width: 4, height: 4,
     description: '테크 허브 & AI 스타트업 인큐베이터',
-    adSlots: ['wall_wrap', 'billboard', 'naming_rights'],
+    adSlots: ['billboard'],
     heightLevel: 1, roofShape: 'antenna',
     wallColor: 'hsl(210,8%,48%)', roofColor: 'hsl(210,6%,40%)', buildingType: 'office' },
 ];
