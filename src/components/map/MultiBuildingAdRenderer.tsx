@@ -23,15 +23,8 @@ export const MultiBuildingAdRenderer: React.FC<Props> = React.memo(({ ads, build
           .filter(Boolean) as Building[];
         if (blds.length < 2) return null;
 
-        const occluded = isAdOccluded(ad, buildings);
-
-        if (occluded) {
-          return <FloatingBannerAd key={ad.id} ad={ad} buildings={blds} />;
-        }
-        if (ad.face === 'south') {
-          return <SouthCanvasAd key={ad.id} ad={ad} buildings={blds} />;
-        }
-        return <EastCanvasAd key={ad.id} ad={ad} buildings={blds} />;
+        // Always use floating banner — wall-direct rendering is unstable in isometric SVG
+        return <FloatingBannerAd key={ad.id} ad={ad} buildings={blds} />;
       })}
     </g>
   );
