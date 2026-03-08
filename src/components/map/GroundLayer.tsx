@@ -3,6 +3,13 @@ import type { Zone } from '@/data/world';
 import { getTileTypeFromMap, isRoadCenterInZone, getZonePalette } from '@/data/world';
 import { iso, diamond, TILE_W, TILE_H } from './constants';
 
+// Narrower diamond for road rendering (60% width)
+function narrowDiamond(cx: number, cy: number): string {
+  const w = TILE_W * 0.3;  // half of 60%
+  const h = TILE_H * 0.3;
+  return `${cx},${cy - h} ${cx + w},${cy} ${cx},${cy + h} ${cx - w},${cy}`;
+}
+
 // Street furniture positions for Plaza district (36x36 grid)
 const LAMPPOST_POSITIONS = [
   { gx: 2, gy: 16 }, { gx: 10, gy: 16 }, { gx: 24, gy: 16 }, { gx: 32, gy: 16 },
@@ -137,11 +144,24 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
       const pos = iso(gx, gy);
       const seed = gx * 17 + gy * 31;
 
-      // Base tile
-      tiles.push(
-        <polygon key={`t_${gx}_${gy}`} points={diamond(pos.x, pos.y)}
-          fill={colors.fill} stroke={colors.stroke} strokeWidth={0.5} strokeOpacity={0.4} />
-      );
+      // Base tile — roads render as sidewalk base + narrow road strip
+      if (type === 'road') {
+        // Sidewalk base (full diamond)
+        tiles.push(
+          <polygon key={`t_${gx}_${gy}`} points={diamond(pos.x, pos.y)}
+            fill={palette.sidewalk.fill} stroke={palette.sidewalk.stroke} strokeWidth={0.5} strokeOpacity={0.4} />
+        );
+        // Narrow road strip on top
+        tiles.push(
+          <polygon key={`rd_${gx}_${gy}`} points={narrowDiamond(pos.x, pos.y)}
+            fill={colors.fill} stroke={colors.stroke} strokeWidth={0.3} strokeOpacity={0.5} />
+        );
+      } else {
+        tiles.push(
+          <polygon key={`t_${gx}_${gy}`} points={diamond(pos.x, pos.y)}
+            fill={colors.fill} stroke={colors.stroke} strokeWidth={0.5} strokeOpacity={0.4} />
+        );
+      }
 
       // Road center line
       if (isRoadCenterInZone(zone.tileMap, gx, gy, GRID)) {
