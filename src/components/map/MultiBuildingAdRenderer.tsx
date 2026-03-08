@@ -10,7 +10,7 @@ interface Props {
 
 // Isometric angles
 const SOUTH_ANGLE = Math.atan2(TILE_H, TILE_W) * (180 / Math.PI); // ≈ 26.57°
-const EAST_ANGLE = Math.atan2(TILE_H, -TILE_W) * (180 / Math.PI); // ≈ -26.57°
+const EAST_ANGLE = Math.atan2(TILE_H, TILE_W) * (180 / Math.PI) * -1; // ≈ -26.57° rotation, but we flip text
 
 /** Render brand canvases painted on building walls */
 export const MultiBuildingAdRenderer: React.FC<Props> = React.memo(({ ads, buildings }) => {
