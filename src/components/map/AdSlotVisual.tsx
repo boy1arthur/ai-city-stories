@@ -36,9 +36,9 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         const signPos = iso(b.gridX + b.width + 1.5, b.gridY + i * 2.5);
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
-        const boardW = 30;
-        const boardH = 14;
-        const postH = 18;
+        const boardW = 38;
+        const boardH = 18;
+        const postH = 20;
 
         return (
           <g key={slot.id}>
@@ -55,15 +55,15 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
             {has && bv ? (
               <>
                 {/* Logo */}
-                <circle cx={signPos.x - boardW / 2 + boardH / 2 + 0.5} cy={signPos.y - postH - boardH / 2}
-                  r={4} fill={bv.color} />
-                <text x={signPos.x - boardW / 2 + boardH / 2 + 0.5} y={signPos.y - postH - boardH / 2 + 1.8}
-                  textAnchor="middle" fontSize={4.5} fill="hsl(0,0%,100%)"
+                <circle cx={signPos.x - boardW / 2 + boardH / 2 + 1} cy={signPos.y - postH - boardH / 2}
+                  r={5.5} fill={bv.color} />
+                <text x={signPos.x - boardW / 2 + boardH / 2 + 1} y={signPos.y - postH - boardH / 2 + 2.2}
+                  textAnchor="middle" fontSize={6} fill="hsl(0,0%,100%)"
                   fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
 
                 {/* Brand name */}
-                <text x={signPos.x + 3} y={signPos.y - postH - boardH / 2 + 2}
-                  textAnchor="middle" fontSize={5}
+                <text x={signPos.x + 4} y={signPos.y - postH - boardH / 2 + 2.5}
+                  textAnchor="middle" fontSize={6.5}
                   fill="hsl(220,18%,15%)" fontFamily="Inter" fontWeight={700}>
                   {fitText(slot.brand!, 6)}
                 </text>
@@ -84,9 +84,9 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         const kPos = iso(b.gridX - 2.5, b.gridY + b.height - 1 + i * 2.5);
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
-        const pw = 22;
-        const ph = 10;
-        const postH = 12;
+        const pw = 28;
+        const ph = 14;
+        const postH = 14;
 
         return (
           <g key={slot.id}>
@@ -102,13 +102,13 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
 
             {has && bv ? (
               <>
-                <circle cx={kPos.x - pw / 2 + ph / 2 + 0.5} cy={kPos.y - postH - ph / 2}
-                  r={3} fill={bv.color} />
-                <text x={kPos.x - pw / 2 + ph / 2 + 0.5} y={kPos.y - postH - ph / 2 + 1.3}
-                  textAnchor="middle" fontSize={3.5} fill="hsl(0,0%,100%)"
+                <circle cx={kPos.x - pw / 2 + ph / 2 + 1} cy={kPos.y - postH - ph / 2}
+                  r={4} fill={bv.color} />
+                <text x={kPos.x - pw / 2 + ph / 2 + 1} y={kPos.y - postH - ph / 2 + 1.6}
+                  textAnchor="middle" fontSize={4.5} fill="hsl(0,0%,100%)"
                   fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
-                <text x={kPos.x + 2} y={kPos.y - postH - ph / 2 + 1.5}
-                  textAnchor="middle" fontSize={3.5}
+                <text x={kPos.x + 3} y={kPos.y - postH - ph / 2 + 2}
+                  textAnchor="middle" fontSize={5}
                   fill="hsl(220,18%,15%)" fontFamily="Inter" fontWeight={700}>
                   {fitText(slot.brand!, 5)}
                 </text>
@@ -126,9 +126,9 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         const bsPos = iso(b.gridX + i * 2.5, b.gridY + b.height + 1.5);
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
-        const pw = 26;
-        const ph = 12;
-        const shelterH = 16;
+        const pw = 32;
+        const ph = 16;
+        const shelterH = 18;
 
         return (
           <g key={slot.id}>
@@ -149,13 +149,13 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
 
             {has && bv ? (
               <>
-                <circle cx={bsPos.x - pw / 2 + ph / 2 + 0.5} cy={bsPos.y - shelterH + 2 + ph / 2}
-                  r={3.5} fill={bv.color} />
-                <text x={bsPos.x - pw / 2 + ph / 2 + 0.5} y={bsPos.y - shelterH + 2 + ph / 2 + 1.5}
-                  textAnchor="middle" fontSize={4} fill="hsl(0,0%,100%)"
+                <circle cx={bsPos.x - pw / 2 + ph / 2 + 1} cy={bsPos.y - shelterH + 2 + ph / 2}
+                  r={4.5} fill={bv.color} />
+                <text x={bsPos.x - pw / 2 + ph / 2 + 1} y={bsPos.y - shelterH + 2 + ph / 2 + 1.8}
+                  textAnchor="middle" fontSize={5} fill="hsl(0,0%,100%)"
                   fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
-                <text x={bsPos.x + 3} y={bsPos.y - shelterH + 2 + ph / 2 + 1.8}
-                  textAnchor="middle" fontSize={4}
+                <text x={bsPos.x + 4} y={bsPos.y - shelterH + 2 + ph / 2 + 2}
+                  textAnchor="middle" fontSize={5.5}
                   fill="hsl(220,18%,15%)" fontFamily="Inter" fontWeight={700}>
                   {fitText(slot.brand!, 5)}
                 </text>
