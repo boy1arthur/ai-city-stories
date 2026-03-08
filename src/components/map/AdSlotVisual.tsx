@@ -79,175 +79,143 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         );
       })}
 
-      {/* ===== KIOSKS ===== */}
+      {/* ===== KIOSKS — pill on short post ===== */}
       {adSlots.filter(s => s.type === 'kiosk').map((slot, i) => {
         const kPos = iso(b.gridX - 0.6, b.gridY + b.height - 1 + i);
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
+        const pw = 22;
+        const ph = 10;
+        const postH = 12;
 
         return (
           <g key={slot.id}>
-            {/* Base */}
-            <ellipse cx={kPos.x} cy={kPos.y + 1} rx={4} ry={1.5}
-              fill="hsl(215,5%,28%)" fillOpacity={0.5} />
-            {/* Pillar */}
-            <rect x={kPos.x - 3.5} y={kPos.y - 16} width={7} height={17} rx={1.5}
-              fill={has ? 'hsl(215,10%,38%)' : 'hsl(215,5%,28%)'}
-              stroke={has ? 'hsl(215,12%,48%)' : 'hsl(215,5%,33%)'} strokeWidth={0.5} />
-            {/* Screen area */}
-            <rect x={kPos.x - 2.5} y={kPos.y - 14} width={5} height={8} rx={0.5}
-              fill={has ? bv!.color : 'hsl(210,10%,30%)'} fillOpacity={has ? 0.35 : 0.2} />
+            {/* Post */}
+            <line x1={kPos.x} y1={kPos.y} x2={kPos.x} y2={kPos.y - postH}
+              stroke="hsl(215,6%,38%)" strokeWidth={1.2} strokeLinecap="round" />
+
+            {/* Pill board */}
+            <rect x={kPos.x - pw / 2} y={kPos.y - postH - ph}
+              width={pw} height={ph} rx={ph / 2}
+              fill={has ? bv!.bgColor : 'hsl(215,5%,28%)'} fillOpacity={has ? 0.95 : 0.45}
+              stroke={has ? bv!.color : 'hsl(215,5%,38%)'} strokeWidth={has ? 0.7 : 0.4} />
 
             {has && bv ? (
               <>
-                {/* Logo */}
-                <circle cx={kPos.x} cy={kPos.y - 11} r={2} fill={bv.color} />
-                <text x={kPos.x} y={kPos.y - 9.8} textAnchor="middle" fontSize={2.5}
-                  fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
-                {/* Name below screen */}
-                <text x={kPos.x} y={kPos.y - 5} textAnchor="middle" fontSize={2.2}
-                  fill="hsl(0,0%,80%)" fontFamily="Inter" fontWeight={600}>
+                <circle cx={kPos.x - pw / 2 + ph / 2 + 0.5} cy={kPos.y - postH - ph / 2}
+                  r={3} fill={bv.color} />
+                <text x={kPos.x - pw / 2 + ph / 2 + 0.5} y={kPos.y - postH - ph / 2 + 1.3}
+                  textAnchor="middle" fontSize={3.5} fill="hsl(0,0%,100%)"
+                  fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
+                <text x={kPos.x + 2} y={kPos.y - postH - ph / 2 + 1.5}
+                  textAnchor="middle" fontSize={3.5}
+                  fill="hsl(220,18%,15%)" fontFamily="Inter" fontWeight={700}>
                   {fitText(slot.brand!, 5)}
                 </text>
-                {/* Screen glow */}
-                <rect x={kPos.x - 3} y={kPos.y - 14.5} width={6} height={9} rx={1}
-                  fill="none" stroke={bv.color} strokeWidth={0.3} strokeOpacity={0.3}>
-                  <animate attributeName="strokeOpacity" values="0.15;0.4;0.15" dur="2.5s" repeatCount="indefinite" />
-                </rect>
               </>
             ) : (
-              <text x={kPos.x} y={kPos.y - 9.5} textAnchor="middle" fontSize={2}
-                fill="hsl(215,8%,48%)" fontFamily="Inter">INFO</text>
+              <circle cx={kPos.x} cy={kPos.y - postH - ph / 2} r={1.5}
+                fill="hsl(215,8%,45%)" fillOpacity={0.4} />
             )}
-            {/* Top cap */}
-            <rect x={kPos.x - 4} y={kPos.y - 17} width={8} height={2} rx={1}
-              fill="hsl(215,8%,40%)" fillOpacity={0.7} />
           </g>
         );
       })}
 
-      {/* ===== BUS STOPS ===== */}
+      {/* ===== BUS STOPS — pill on shelter ===== */}
       {adSlots.filter(s => s.type === 'bus_stop').map((slot, i) => {
         const bsPos = iso(b.gridX + i * 1.2, b.gridY + b.height + 0.6);
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
-        const shelterW = 18;
-        const panelH = 10;
+        const pw = 26;
+        const ph = 12;
+        const shelterH = 16;
 
         return (
           <g key={slot.id}>
-            {/* Ground shadow */}
-            <ellipse cx={bsPos.x} cy={bsPos.y + 2} rx={10} ry={3}
-              fill="hsl(0,0%,0%)" fillOpacity={0.1} />
-            {/* Left post */}
-            <line x1={bsPos.x - shelterW / 2} y1={bsPos.y - 1} x2={bsPos.x - shelterW / 2} y2={bsPos.y - 14}
-              stroke="hsl(215,5%,42%)" strokeWidth={1} strokeLinecap="round" />
-            {/* Right post */}
-            <line x1={bsPos.x + shelterW / 2} y1={bsPos.y - 1} x2={bsPos.x + shelterW / 2} y2={bsPos.y - 14}
-              stroke="hsl(215,5%,42%)" strokeWidth={1} strokeLinecap="round" />
-            {/* Roof */}
-            <rect x={bsPos.x - shelterW / 2 - 1} y={bsPos.y - 15} width={shelterW + 2} height={2.5} rx={1}
-              fill="hsl(215,8%,42%)" fillOpacity={0.7} />
+            {/* Posts */}
+            <line x1={bsPos.x - 7} y1={bsPos.y} x2={bsPos.x - 7} y2={bsPos.y - shelterH}
+              stroke="hsl(215,5%,40%)" strokeWidth={0.8} strokeLinecap="round" />
+            <line x1={bsPos.x + 7} y1={bsPos.y} x2={bsPos.x + 7} y2={bsPos.y - shelterH}
+              stroke="hsl(215,5%,40%)" strokeWidth={0.8} strokeLinecap="round" />
+            {/* Roof line */}
+            <line x1={bsPos.x - 8} y1={bsPos.y - shelterH} x2={bsPos.x + 8} y2={bsPos.y - shelterH}
+              stroke="hsl(215,6%,42%)" strokeWidth={1.5} strokeLinecap="round" />
 
-            {/* Ad panel */}
-            <rect x={bsPos.x - 6} y={bsPos.y - 13} width={12} height={panelH} rx={1}
-              fill={has ? bv!.bgColor : 'hsl(200,8%,40%)'} fillOpacity={has ? 0.9 : 0.25}
-              stroke={has ? bv!.color : 'hsl(210,8%,45%)'} strokeWidth={has ? 0.8 : 0.4} />
+            {/* Pill board */}
+            <rect x={bsPos.x - pw / 2} y={bsPos.y - shelterH + 2}
+              width={pw} height={ph} rx={ph / 2}
+              fill={has ? bv!.bgColor : 'hsl(215,5%,28%)'} fillOpacity={has ? 0.95 : 0.4}
+              stroke={has ? bv!.color : 'hsl(215,5%,38%)'} strokeWidth={has ? 0.7 : 0.4} />
 
             {has && bv ? (
               <>
-                {/* Logo */}
-                <circle cx={bsPos.x} cy={bsPos.y - 10} r={2.5} fill={bv.color} />
-                <text x={bsPos.x} y={bsPos.y - 8.8} textAnchor="middle" fontSize={3}
-                  fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
-                {/* Brand name */}
-                <text x={bsPos.x} y={bsPos.y - 5.5} textAnchor="middle" fontSize={3}
-                  fill="hsl(220,18%,18%)" fontFamily="Inter" fontWeight={600}>
+                <circle cx={bsPos.x - pw / 2 + ph / 2 + 0.5} cy={bsPos.y - shelterH + 2 + ph / 2}
+                  r={3.5} fill={bv.color} />
+                <text x={bsPos.x - pw / 2 + ph / 2 + 0.5} y={bsPos.y - shelterH + 2 + ph / 2 + 1.5}
+                  textAnchor="middle" fontSize={4} fill="hsl(0,0%,100%)"
+                  fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
+                <text x={bsPos.x + 3} y={bsPos.y - shelterH + 2 + ph / 2 + 1.8}
+                  textAnchor="middle" fontSize={4}
+                  fill="hsl(220,18%,15%)" fontFamily="Inter" fontWeight={700}>
                   {fitText(slot.brand!, 5)}
                 </text>
               </>
             ) : (
-              <>
-                <text x={bsPos.x} y={bsPos.y - 8} textAnchor="middle" fontSize={3}
-                  fill="hsl(215,8%,50%)" fontFamily="Inter" fontWeight={500}>🚌</text>
-                <text x={bsPos.x} y={bsPos.y - 4.5} textAnchor="middle" fontSize={2}
-                  fill="hsl(215,8%,48%)" fontFamily="Inter">BUS STOP</text>
-              </>
+              <circle cx={bsPos.x} cy={bsPos.y - shelterH + 2 + ph / 2} r={1.5}
+                fill="hsl(215,8%,45%)" fillOpacity={0.4} />
             )}
-
-            {/* Bench */}
-            <rect x={bsPos.x - 5} y={bsPos.y - 1} width={10} height={1.5} rx={0.5}
-              fill="hsl(25,20%,38%)" fillOpacity={0.6} />
           </g>
         );
       })}
 
-      {/* ===== NAMING RIGHTS ===== */}
+      {/* ===== NAMING RIGHTS — pill floating above roof ===== */}
       {adSlots.filter(s => s.type === 'naming_rights').map(slot => {
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
-        const bannerW = 44;
-        const bannerH = 12;
-        const bannerY = center.y - wallHeight - 20;
+        const pw = 48;
+        const ph = 14;
+        const bannerY = center.y - wallHeight - 22;
 
         return (
           <g key={slot.id}>
             {has && bv ? (
               <>
-                {/* Premium banner background */}
-                <rect x={center.x - bannerW / 2} y={bannerY} width={bannerW} height={bannerH} rx={2}
-                  fill={bv.bgColor} fillOpacity={0.92}
-                  stroke={bv.color} strokeWidth={1} />
-
-                {/* Top accent line */}
-                <rect x={center.x - bannerW / 2} y={bannerY} width={bannerW} height={1.5} rx={1}
-                  fill={bv.color} fillOpacity={0.6} />
-
-                {/* Logo */}
-                <circle cx={center.x - bannerW / 2 + 7} cy={bannerY + bannerH / 2 + 0.5}
-                  r={3.5} fill={bv.color} />
-                <text x={center.x - bannerW / 2 + 7} y={bannerY + bannerH / 2 + 2}
-                  textAnchor="middle" fontSize={4} fill="hsl(0,0%,100%)"
+                <rect x={center.x - pw / 2} y={bannerY} width={pw} height={ph} rx={ph / 2}
+                  fill={bv.bgColor} fillOpacity={0.93}
+                  stroke={bv.color} strokeWidth={0.8} />
+                <circle cx={center.x - pw / 2 + ph / 2 + 1} cy={bannerY + ph / 2}
+                  r={4.5} fill={bv.color} />
+                <text x={center.x - pw / 2 + ph / 2 + 1} y={bannerY + ph / 2 + 2}
+                  textAnchor="middle" fontSize={5.5} fill="hsl(0,0%,100%)"
                   fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
-
-                {/* Brand name - large */}
-                <text x={center.x + 3} y={bannerY + bannerH / 2 + 2}
-                  textAnchor="middle" fontSize={6}
-                  fill="hsl(220,18%,12%)" fontFamily="Inter" fontWeight={800}>
+                <text x={center.x + 5} y={bannerY + ph / 2 + 2.5}
+                  textAnchor="middle" fontSize={6.5}
+                  fill="hsl(220,18%,12%)" fontFamily="Inter" fontWeight={700}>
                   {fitText(slot.brand!, 8)}
                 </text>
-
-                {/* Premium glow */}
-                <rect x={center.x - bannerW / 2 - 1.5} y={bannerY - 1.5}
-                  width={bannerW + 3} height={bannerH + 3} rx={3}
-                  fill="none" stroke={bv.color} strokeWidth={0.6} strokeOpacity={0.2}>
-                  <animate attributeName="strokeOpacity" values="0.1;0.3;0.1" dur="4s" repeatCount="indefinite" />
+                {/* Glow */}
+                <rect x={center.x - pw / 2 - 1} y={bannerY - 1}
+                  width={pw + 2} height={ph + 2} rx={ph / 2 + 1}
+                  fill="none" stroke={bv.color} strokeWidth={0.4} strokeOpacity={0.12}>
+                  <animate attributeName="strokeOpacity" values="0.06;0.2;0.06" dur="4s" repeatCount="indefinite" />
                 </rect>
-
-                {/* Crown icon for premium */}
-                <text x={center.x + bannerW / 2 - 5} y={bannerY + bannerH / 2 + 2}
-                  textAnchor="middle" fontSize={6}>👑</text>
               </>
             ) : (
               <>
-                <rect x={center.x - bannerW / 2} y={bannerY} width={bannerW} height={bannerH} rx={2}
-                  fill="hsl(215,5%,28%)" fillOpacity={0.4}
-                  stroke="hsl(215,5%,38%)" strokeWidth={0.5} strokeDasharray="3 2" />
-                <text x={center.x} y={bannerY + bannerH / 2 + 1.5}
-                  textAnchor="middle" fontSize={4}
-                  fill="hsl(215,8%,48%)" fontFamily="Inter" fontWeight={500} opacity={0.6}>
-                  NAMING RIGHTS AVAILABLE
-                </text>
+                <rect x={center.x - pw / 2} y={bannerY} width={pw} height={ph} rx={ph / 2}
+                  fill="hsl(215,5%,25%)" fillOpacity={0.35}
+                  stroke="hsl(215,5%,38%)" strokeWidth={0.4} strokeDasharray="3 2" />
+                <circle cx={center.x} cy={bannerY + ph / 2} r={2}
+                  fill="hsl(215,8%,45%)" fillOpacity={0.3} />
               </>
             )}
           </g>
         );
       })}
 
-      {/* ===== WALL WRAP (visual indicator on building, not standalone) ===== */}
+      {/* ===== WALL WRAP badge ===== */}
       {adSlots.filter(s => s.type === 'wall_wrap' && s.brand).map(slot => {
         const bv = getBrandVisual(slot.brand!);
-        // Small badge on building corner
         const badgePos = iso(b.gridX + b.width, b.gridY + b.height * 0.3);
         return (
           <g key={slot.id}>
