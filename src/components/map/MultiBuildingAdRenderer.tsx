@@ -103,13 +103,16 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
       {/* === Left 60%: logo + brand name === */}
       {!isBasic && (
         <g>
-          {/* Subtle brand tint on left zone */}
+          {/* Bright brand tint on left zone for contrast */}
           <polygon points={pts(tl, ml, mlB, bl)}
-            fill={ad.brandColor} fillOpacity={0.08} />
-          <text x={leftCx - fsN * 1.2} y={leftCy + fs * 0.15} textAnchor="middle" fontSize={fs}
-            fill={ad.brandColor} fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-          <text x={leftCx + fsN * 1.2} y={leftCy + fsN * 0.15} textAnchor="middle" fontSize={fsN}
-            fill="hsl(0,0%,90%)" fontFamily="Inter" fontWeight={700} letterSpacing="0.6">{ad.brandName}</text>
+            fill={ad.brandColor} fillOpacity={0.15} />
+          {/* White glow behind text for readability */}
+          <text x={leftCx} y={leftCy + fs * 0.15} textAnchor="middle" fontSize={fs}
+            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900} letterSpacing="1"
+            stroke="hsl(0,0%,0%)" strokeWidth={0.3}>{ad.brandInitial}</text>
+          <text x={leftCx} y={leftCy + fs * 0.15 + fsN * 1.1} textAnchor="middle" fontSize={fsN}
+            fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="0.8"
+            stroke="hsl(0,0%,0%)" strokeWidth={0.2}>{ad.brandName}</text>
         </g>
       )}
 
