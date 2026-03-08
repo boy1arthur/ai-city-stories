@@ -75,9 +75,6 @@ export const IsometricMap: React.FC<Props> = ({
 
   return (
     <div className="w-full h-full overflow-hidden bg-background relative" style={{ cursor: dragging ? 'grabbing' : 'grab' }}>
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse at 50% 40%, hsla(210,20%,20%,0.3) 0%, transparent 60%)',
-      }} />
 
       <svg width="100%" height="100%" viewBox="0 0 1000 600"
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
