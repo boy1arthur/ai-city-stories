@@ -6,6 +6,7 @@ interface Props {
   season: BrandLeagueSeason | null;
   scores: BrandLeagueScore[];
   currentTick: number;
+  onBrandClick?: (brandId: string) => void;
 }
 
 const RANK_MEDALS = ['🥇', '🥈', '🥉'];
