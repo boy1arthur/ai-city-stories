@@ -9,13 +9,14 @@ import { AdSlotVisual } from './AdSlotVisual';
 import { AgentRenderer } from './AgentRenderer';
 import { SlotVisualRenderer } from './SlotVisualRenderer';
 import { PatronTileRenderer } from './PatronTileRenderer';
+import { iso } from './constants';
 import type { Agent, InteractionEvent } from '@/data/world';
 
 interface Props {
   zone: Zone;
   offsetX: number;
   offsetY: number;
-  lod: 'full' | 'simplified';
+  lod: 'full' | 'simplified' | 'silhouette';
   agents: Agent[];
   adSlots: AdSlot[];
   interactions: InteractionEvent[];
@@ -35,6 +36,7 @@ interface Props {
  * LOD controls detail level:
  * - 'full': All details including agents, ad slots, decorations
  * - 'simplified': Just ground + simple building blocks (colored rectangles)
+ * - 'silhouette': Minimal — just a colored zone outline with label (fastest)
  */
 export const ZoneRenderer: React.FC<Props> = React.memo(({
   zone, offsetX, offsetY, lod,
@@ -44,6 +46,44 @@ export const ZoneRenderer: React.FC<Props> = React.memo(({
   onBuildingClick, onAgentClick, onSlotClick, onAdSlotClick,
 }) => {
   const buildings = zone.buildings;
+
+  // Silhouette mode: just a colored diamond footprint + label
+  if (lod === 'silhouette') {
+    const gridSize = zone.gridSize;
+    // Compute isometric bounding diamond for the zone
+    const topLeft = iso(0, 0);
+    const topRight = iso(gridSize, 0);
+    const bottomRight = iso(gridSize, gridSize);
+    const bottomLeft = iso(0, gridSize);
+    const points = `${topLeft.x},${topLeft.y} ${topRight.x},${topRight.y} ${bottomRight.x},${bottomRight.y} ${bottomLeft.x},${bottomLeft.y}`;
+    const centerX = (topLeft.x + bottomRight.x) / 2;
+    const centerY = (topLeft.y + bottomRight.y) / 2;
+
+    return (
+      <g transform={`translate(${offsetX}, ${offsetY})`}>
+        <polygon points={points}
+          fill={zone.themeColor} fillOpacity={0.08}
+          stroke={zone.themeColor} strokeWidth={1.5} strokeOpacity={0.3} />
+        {/* Simplified building silhouettes */}
+        {buildings.slice(0, 8).map(b => {
+          const bPos = iso(b.gridX, b.gridY);
+          const w = (b.w || 3) * 8;
+          const h = (b.h || 2) * 6;
+          return (
+            <rect key={b.id}
+              x={bPos.x - w / 2} y={bPos.y - h}
+              width={w} height={h}
+              fill={zone.themeColor} fillOpacity={0.12}
+              rx={1} />
+          );
+        })}
+        <text x={centerX} y={centerY + 4} textAnchor="middle" fontSize={14}
+          fill={zone.themeColor} fillOpacity={0.6} fontWeight={700}>
+          {zone.emoji} {zone.name}
+        </text>
+      </g>
+    );
+  }
 
   const sortedBuildings = useMemo(() =>
     [...buildings].sort((a, b) => (a.gridX + a.gridY) - (b.gridX + b.gridY)),

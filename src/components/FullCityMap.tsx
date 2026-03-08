@@ -161,18 +161,6 @@ export const FullCityMap: React.FC<Props> = ({
 
             return (
               <g key={zone.id}>
-                {/* Zone ground tint for visual distinction */}
-                {lod === 'simplified' && (
-                  <g transform={`translate(${isoOff.x}, ${isoOff.y})`} opacity={0.6}>
-                    {/* Zone label when zoomed out */}
-                    {zoom < LOD_THRESHOLD && (
-                      <text x={500} y={250} textAnchor="middle" fontSize={28 / zoom}
-                        fill={zone.themeColor} fillOpacity={0.5} fontFamily="Inter" fontWeight={700}>
-                        {zone.emoji} {zone.name}
-                      </text>
-                    )}
-                  </g>
-                )}
                 <ZoneRenderer
                   zone={zone}
                   offsetX={isoOff.x}
