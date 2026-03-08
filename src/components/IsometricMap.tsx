@@ -5,6 +5,7 @@ import type { CityEnergyStatus } from '@/lib/cityEnergy';
 import type { Slot } from '@/data/slots';
 import { GroundLayer } from './map/GroundLayer';
 import { BuildingRenderer } from './map/BuildingRenderer';
+import { LandmarkRenderer } from './map/LandmarkRenderer';
 import { AdSlotVisual } from './map/AdSlotVisual';
 import { AgentRenderer } from './map/AgentRenderer';
 import { LockedZoneGhost } from './map/LockedZoneGhost';
