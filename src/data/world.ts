@@ -207,7 +207,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 8, gridY: 10, width: 6, height: 4,
     description: '에이전트 카페 & 미팅 포인트',
     adSlots: ['kiosk', 'bus_stop', 'wall_wrap'],
-    heightLevel: 1, roofShape: 'flat',
+    heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
   // ═══ NE BLOCK — "Media Strip" ═══
