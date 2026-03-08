@@ -56,8 +56,8 @@ const FloatingBannerAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }>
   }
   const anchorY = anchorIso.y - maxWallH * 0.5;
 
-  const bannerW = 40;
-  const bannerH = 12;
+  const bannerW = 52;
+  const bannerH = 16;
   const bgColor = bgFromBrand(ad.brandColor, 38);
 
   return (
@@ -79,15 +79,15 @@ const FloatingBannerAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }>
       />
 
       {/* Logo circle */}
-      <circle cx={centerIso.x - bannerW / 2 + bannerH / 2 + 1} cy={floatY + bannerH / 2} r={4}
+      <circle cx={centerIso.x - bannerW / 2 + bannerH / 2 + 1} cy={floatY + bannerH / 2} r={5}
         fill={ad.brandColor} fillOpacity={0.9} />
-      <text x={centerIso.x - bannerW / 2 + bannerH / 2 + 1} y={floatY + bannerH / 2 + 2}
-        textAnchor="middle" fontSize={5}
+      <text x={centerIso.x - bannerW / 2 + bannerH / 2 + 1} y={floatY + bannerH / 2 + 2.5}
+        textAnchor="middle" fontSize={6}
         fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800}>{ad.brandInitial}</text>
 
-      {/* Brand name only */}
-      <text x={centerIso.x + 4} y={floatY + bannerH / 2 + 2.5}
-        textAnchor="middle" fontSize={6}
+      {/* Brand name */}
+      <text x={centerIso.x + 5} y={floatY + bannerH / 2 + 3}
+        textAnchor="middle" fontSize={7.5}
         fill="hsl(220,18%,12%)" fontFamily="Inter" fontWeight={700}>
         {ad.brandName}
       </text>
