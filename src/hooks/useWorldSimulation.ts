@@ -71,7 +71,7 @@ const IDLE_THOUGHTS = [
 
 export function useWorldSimulation() {
   const [agents, setAgents] = useState<Agent[]>(AGENTS);
-  const [adSlots, setAdSlots] = useState<AdSlot[]>(INITIAL_AD_SLOTS);
+  const [adSlots, setAdSlots] = useState<AdSlot[]>(() => applyDemoSeed(INITIAL_AD_SLOTS));
   const [worldLog, setWorldLog] = useState<string[]>([]);
   const [tick, setTick] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
