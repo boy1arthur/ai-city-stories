@@ -61,8 +61,8 @@ const BrandBuildingSlot: React.FC<{ slot: Slot; building: Building; onClick: () 
     // Floating banner above the roof
     const bx = center.x;
     const by = center.y - wallH - 38;
-    const w = 52;
-    const h = 14;
+    const w = 58;
+    const h = 16;
     const accentColor = isOwned ? 'hsl(38,80%,55%)' : 'hsl(215,20%,45%)';
     const bgColor = isOwned ? 'hsl(38,30%,12%)' : 'hsl(215,10%,15%)';
 
@@ -94,8 +94,8 @@ const BrandBuildingSlot: React.FC<{ slot: Slot; building: Building; onClick: () 
             {/* Crown icon */}
             <text x={bx - w / 2 + 7} y={by + h / 2 + 2.5} textAnchor="middle" fontSize={7}>👑</text>
             {/* Brand name */}
-            <text x={bx + 3} y={by + h / 2 + 2} textAnchor="middle" fontSize={5.5}
-              fill="hsl(38,70%,72%)" fontFamily="Inter" fontWeight={800}>
+            <text x={bx + 3} y={by + h / 2 + 2.5} textAnchor="middle" fontSize={7}
+              fill="hsl(38,70%,80%)" fontFamily="Inter" fontWeight={800}>
               {fit(label, 10)}
             </text>
             {/* PREMIUM badge */}
@@ -105,10 +105,16 @@ const BrandBuildingSlot: React.FC<{ slot: Slot; building: Building; onClick: () 
             </text>
           </>
         ) : (
-          <text x={bx} y={by + h / 2 + 2} textAnchor="middle" fontSize={4}
-            fill="hsl(215,15%,55%)" fontFamily="Inter" fontWeight={500}>
-            🏢 BRAND SLOT — {fit(slot.label, 12)}
-          </text>
+          <>
+            <text x={bx} y={by + h / 2 + 0.5} textAnchor="middle" fontSize={5}
+              fill="hsl(215,20%,65%)" fontFamily="Inter" fontWeight={600}>
+              🏢 BRAND SLOT
+            </text>
+            <text x={bx} y={by + h / 2 + 5.5} textAnchor="middle" fontSize={3.5}
+              fill="hsl(215,15%,50%)" fontFamily="Inter" fontWeight={500}>
+              {fit(slot.label, 16)}
+            </text>
+          </>
         )}
       </g>
     );

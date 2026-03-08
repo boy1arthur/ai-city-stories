@@ -76,9 +76,7 @@ export function isAdOccluded(ad: MultiBuildingAd, allBuildings: Building[]): boo
 export const DEMO_MULTI_BUILDING_ADS: MultiBuildingAd[] = [
   // ══ S-TIER: 핵심 브랜드 배너 (브랜드당 최대 2회) ══
 
-  // NovaTech — arena 정면 대형 배너 (1/2)
-  { id: 'b_arena_s', brandName: 'NovaTech', brandColor: 'hsl(210,60%,55%)', brandInitial: 'N', tagline: 'Future, simplified.', buildingIds: ['arena'], face: 'south', tier: 'premium', placement: 'wall' },
-  // NovaTech — lab 옥상 빌보드 (2/2)
+  // NovaTech — lab 옥상 빌보드 (1/1, arena는 BRAND_BUILDING 슬롯이므로 배너 없음)
   { id: 'b_lab_s', brandName: 'NovaTech', brandColor: 'hsl(210,60%,55%)', brandInitial: 'N', tagline: 'Build the future.', buildingIds: ['lab'], face: 'south', tier: 'standard', placement: 'rooftop' },
 
   // FinFlow — feed_tower 정면 대형 배너 (1/2)
