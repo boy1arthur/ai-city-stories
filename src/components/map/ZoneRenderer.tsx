@@ -47,10 +47,22 @@ export const ZoneRenderer: React.FC<Props> = React.memo(({
 }) => {
   const buildings = zone.buildings;
 
+  const sortedBuildings = useMemo(() =>
+    [...buildings].sort((a, b) => (a.gridX + a.gridY) - (b.gridX + b.gridY)),
+    [buildings]
+  );
+
+  const sortedAgents = useMemo(() => {
+    return agents.map((agent, i) => ({ agent, index: i })).sort((a, b) => {
+      const ba = buildings.find(bld => bld.id === a.agent.currentBuildingId);
+      const bb = buildings.find(bld => bld.id === b.agent.currentBuildingId);
+      return ((ba?.gridY ?? 0) + (ba?.gridX ?? 0)) - ((bb?.gridY ?? 0) + (bb?.gridX ?? 0));
+    });
+  }, [agents, buildings]);
+
   // Silhouette mode: just a colored diamond footprint + label
   if (lod === 'silhouette') {
     const gridSize = zone.gridSize;
-    // Compute isometric bounding diamond for the zone
     const topLeft = iso(0, 0);
     const topRight = iso(gridSize, 0);
     const bottomRight = iso(gridSize, gridSize);
@@ -67,8 +79,8 @@ export const ZoneRenderer: React.FC<Props> = React.memo(({
         {/* Simplified building silhouettes */}
         {buildings.slice(0, 8).map(b => {
           const bPos = iso(b.gridX, b.gridY);
-          const w = (b.w || 3) * 8;
-          const h = (b.h || 2) * 6;
+          const w = 24;
+          const h = 12;
           return (
             <rect key={b.id}
               x={bPos.x - w / 2} y={bPos.y - h}
@@ -84,19 +96,6 @@ export const ZoneRenderer: React.FC<Props> = React.memo(({
       </g>
     );
   }
-
-  const sortedBuildings = useMemo(() =>
-    [...buildings].sort((a, b) => (a.gridX + a.gridY) - (b.gridX + b.gridY)),
-    [buildings]
-  );
-
-  const sortedAgents = useMemo(() => {
-    return agents.map((agent, i) => ({ agent, index: i })).sort((a, b) => {
-      const ba = buildings.find(bld => bld.id === a.agent.currentBuildingId);
-      const bb = buildings.find(bld => bld.id === b.agent.currentBuildingId);
-      return ((ba?.gridY ?? 0) + (ba?.gridX ?? 0)) - ((bb?.gridY ?? 0) + (bb?.gridX ?? 0));
-    });
-  }, [agents, buildings]);
 
   if (lod === 'simplified') {
     return (
