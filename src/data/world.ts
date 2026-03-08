@@ -1,3 +1,68 @@
+// ===== TILE TYPES =====
+export type TileType = 'grass' | 'road' | 'sidewalk' | 'plaza_stone' | 'dirt' | 'water' | 'park';
+
+// 18x18 tile map - each cell defines ground type
+// R=road, S=sidewalk, G=grass, P=plaza_stone, K=park, D=dirt
+const MAP_KEY: Record<string, TileType> = {
+  G: 'grass', R: 'road', S: 'sidewalk', P: 'plaza_stone', K: 'park', D: 'dirt', W: 'water',
+};
+
+// 18x18 ground map layout - roads form a grid, buildings sit on sidewalk/grass
+const RAW_MAP = [
+  'GGGSSSRRSSSSRRSSGG',
+  'GGGSSSRRSSSSRRSSGG',
+  'GGGSSARRSSSSORRSGG',
+  'GGGSSARRSSSSORRSGG',
+  'GGGSSARRSSSSORRSGG',
+  'RRRRRRRRRRRRRRRRGG',
+  'SSSSSSRRPPPPRRSSSG',
+  'SLLLSSRRPPPPRRLLSG',
+  'SLLLSSRRPPPPRRLLSG',
+  'SSSSSSRRPPPPRRSSSG',
+  'RRRRRRRRRRRRRRRRGG',
+  'GSSSSSRRSSSSRRSSSG',
+  'GSTTSGRRSSSGRRKWSG',
+  'GSSSSGRRGGGGRRKWSG',
+  'GSSSSGRRGGGGRRSSSG',
+  'GSSSSGRRGGGGRRTTSG',
+  'GSSSSGRRSSSSRRTTSG',
+  'GGGGGGRRSSSSRRGGGG',
+];
+
+export function getTileType(gx: number, gy: number): TileType {
+  if (gx < 0 || gx >= 18 || gy < 0 || gy >= 18) return 'grass';
+  const ch = RAW_MAP[gy]?.[gx];
+  if (!ch) return 'grass';
+  // Building-specific markers become sidewalk
+  if ('ALTOKW'.includes(ch)) {
+    if (ch === 'K') return 'park';
+    if (ch === 'W') return 'water';
+    return 'sidewalk';
+  }
+  return MAP_KEY[ch] || 'grass';
+}
+
+export const TILE_COLORS: Record<TileType, { fill: string; stroke: string; strokeOpacity: number }> = {
+  grass:       { fill: 'hsl(140,30%,12%)', stroke: 'hsl(140,25%,16%)', strokeOpacity: 0.3 },
+  road:        { fill: 'hsl(220,8%,14%)',  stroke: 'hsl(220,10%,20%)', strokeOpacity: 0.4 },
+  sidewalk:    { fill: 'hsl(200,6%,18%)',  stroke: 'hsl(200,8%,24%)',  strokeOpacity: 0.3 },
+  plaza_stone: { fill: 'hsl(38,20%,16%)',  stroke: 'hsl(38,30%,24%)',  strokeOpacity: 0.4 },
+  park:        { fill: 'hsl(145,35%,14%)', stroke: 'hsl(145,30%,20%)', strokeOpacity: 0.3 },
+  dirt:        { fill: 'hsl(30,20%,14%)',  stroke: 'hsl(30,18%,20%)',  strokeOpacity: 0.3 },
+  water:       { fill: 'hsl(210,50%,15%)', stroke: 'hsl(210,40%,22%)', strokeOpacity: 0.4 },
+};
+
+// Road markings (center line tiles)
+export function isRoadCenter(gx: number, gy: number): boolean {
+  const t = getTileType(gx, gy);
+  if (t !== 'road') return false;
+  // Vertical roads at x=7 and x=12
+  if (gx === 7 || gx === 13) return true;
+  // Horizontal roads at y=5 and y=10
+  if (gy === 5 || gy === 10) return true;
+  return false;
+}
+
 // ===== BUILDINGS =====
 export interface Building {
   id: string;
@@ -12,6 +77,8 @@ export interface Building {
   adSlots: AdSlotType[];
   heightLevel: 1 | 2 | 3;
   roofShape: 'flat' | 'antenna' | 'dish' | 'garden' | 'dome' | 'spire' | 'gear' | 'chimney' | 'lantern' | 'telescope';
+  wallColor: string; // HSL color for walls
+  roofColor: string; // HSL color for roof
 }
 
 export type AdSlotType = 'billboard' | 'wall_wrap' | 'bus_stop' | 'kiosk' | 'naming_rights';
@@ -25,51 +92,16 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 };
 
 export const BUILDINGS: Building[] = [
-  { id: 'arena', name: 'Arena', emoji: '⚔️', color: 'primary', gridX: 3, gridY: 2, width: 3, height: 3, description: 'AI 에이전트 배틀 & 토너먼트', adSlots: ['billboard', 'naming_rights', 'wall_wrap'], heightLevel: 3, roofShape: 'dome' },
-  { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'secondary', gridX: 8, gridY: 1, width: 2, height: 3, description: '소셜 피드 & 트렌드 센터', adSlots: ['billboard', 'kiosk'], heightLevel: 3, roofShape: 'antenna' },
-  { id: 'oracle', name: 'Oracle', emoji: '🔮', color: 'secondary', gridX: 13, gridY: 2, width: 2, height: 2, description: '예측 마켓 & 점술관', adSlots: ['wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'dish' },
-  { id: 'library', name: 'Library', emoji: '📚', color: 'primary', gridX: 1, gridY: 7, width: 3, height: 2, description: '지식 아카이브 & 학습 센터', adSlots: ['billboard', 'bus_stop'], heightLevel: 2, roofShape: 'spire' },
-  { id: 'plaza', name: 'Plaza', emoji: '🏛️', color: 'accent', gridX: 7, gridY: 6, width: 4, height: 4, description: '중앙 광장 — 모든 에이전트의 교차점', adSlots: ['billboard', 'wall_wrap', 'bus_stop', 'kiosk', 'naming_rights'], heightLevel: 1, roofShape: 'flat' },
-  { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary', gridX: 14, gridY: 6, width: 3, height: 2, description: '실험 & 프로토타입 연구소', adSlots: ['wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'antenna' },
-  { id: 'tavern', name: 'Tavern', emoji: '🍺', color: 'accent', gridX: 2, gridY: 12, width: 2, height: 2, description: '에이전트 사교장 & 루머 허브', adSlots: ['billboard', 'bus_stop'], heightLevel: 1, roofShape: 'lantern' },
-  { id: 'garden', name: 'Garden', emoji: '🌿', color: 'primary', gridX: 6, gridY: 13, width: 3, height: 3, description: '힐링 & 명상 정원', adSlots: ['kiosk', 'bus_stop'], heightLevel: 1, roofShape: 'garden' },
-  { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'secondary', gridX: 12, gridY: 12, width: 3, height: 2, description: '제작 & 크래프팅 공방', adSlots: ['wall_wrap', 'billboard'], heightLevel: 2, roofShape: 'gear' },
-  { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'secondary', gridX: 15, gridY: 14, width: 2, height: 3, description: '별 관측소 & 미래 탐색', adSlots: ['naming_rights', 'kiosk'], heightLevel: 3, roofShape: 'telescope' },
-];
-
-// Road segments connecting buildings (pairs of grid coordinates)
-export interface RoadSegment {
-  from: { x: number; y: number };
-  to: { x: number; y: number };
-}
-
-export const ROAD_SEGMENTS: RoadSegment[] = [
-  // Arena -> Feed Tower
-  { from: { x: 6, y: 3 }, to: { x: 8, y: 3 } },
-  // Feed Tower -> Oracle
-  { from: { x: 10, y: 2 }, to: { x: 13, y: 2 } },
-  // Arena -> Library (vertical)
-  { from: { x: 3, y: 5 }, to: { x: 3, y: 7 } },
-  // Library -> Plaza
-  { from: { x: 4, y: 8 }, to: { x: 7, y: 8 } },
-  // Plaza -> Lab
-  { from: { x: 11, y: 7 }, to: { x: 14, y: 7 } },
-  // Oracle -> Lab
-  { from: { x: 14, y: 4 }, to: { x: 14, y: 6 } },
-  // Plaza -> Garden (vertical)
-  { from: { x: 8, y: 10 }, to: { x: 8, y: 13 } },
-  // Library -> Tavern (vertical)
-  { from: { x: 2, y: 9 }, to: { x: 2, y: 12 } },
-  // Garden -> Workshop
-  { from: { x: 9, y: 14 }, to: { x: 12, y: 14 } },
-  // Workshop -> Observatory
-  { from: { x: 15, y: 13 }, to: { x: 15, y: 14 } },
-  // Lab -> Workshop (vertical)
-  { from: { x: 15, y: 8 }, to: { x: 15, y: 12 } },
-  // Feed Tower -> Plaza
-  { from: { x: 9, y: 4 }, to: { x: 9, y: 6 } },
-  // Tavern -> Garden
-  { from: { x: 4, y: 13 }, to: { x: 6, y: 13 } },
+  { id: 'arena', name: 'Arena', emoji: '⚔️', color: 'primary', gridX: 3, gridY: 2, width: 3, height: 3, description: 'AI 에이전트 배틀 & 토너먼트', adSlots: ['billboard', 'naming_rights', 'wall_wrap'], heightLevel: 3, roofShape: 'dome', wallColor: 'hsl(200,15%,25%)', roofColor: 'hsl(152,40%,20%)' },
+  { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'secondary', gridX: 9, gridY: 1, width: 2, height: 3, description: '소셜 피드 & 트렌드 센터', adSlots: ['billboard', 'kiosk'], heightLevel: 3, roofShape: 'antenna', wallColor: 'hsl(260,15%,22%)', roofColor: 'hsl(270,30%,18%)' },
+  { id: 'oracle', name: 'Oracle', emoji: '🔮', color: 'secondary', gridX: 14, gridY: 2, width: 2, height: 2, description: '예측 마켓 & 점술관', adSlots: ['wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'dish', wallColor: 'hsl(280,12%,24%)', roofColor: 'hsl(270,25%,16%)' },
+  { id: 'library', name: 'Library', emoji: '📚', color: 'primary', gridX: 1, gridY: 7, width: 3, height: 2, description: '지식 아카이브 & 학습 센터', adSlots: ['billboard', 'bus_stop'], heightLevel: 2, roofShape: 'spire', wallColor: 'hsl(180,10%,26%)', roofColor: 'hsl(152,25%,18%)' },
+  { id: 'plaza', name: 'Plaza', emoji: '🏛️', color: 'accent', gridX: 8, gridY: 6, width: 4, height: 4, description: '중앙 광장 — 모든 에이전트의 교차점', adSlots: ['billboard', 'wall_wrap', 'bus_stop', 'kiosk', 'naming_rights'], heightLevel: 1, roofShape: 'flat', wallColor: 'hsl(38,15%,28%)', roofColor: 'hsl(38,20%,20%)' },
+  { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary', gridX: 14, gridY: 7, width: 2, height: 2, description: '실험 & 프로토타입 연구소', adSlots: ['wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'antenna', wallColor: 'hsl(170,12%,22%)', roofColor: 'hsl(152,20%,16%)' },
+  { id: 'tavern', name: 'Tavern', emoji: '🍺', color: 'accent', gridX: 2, gridY: 12, width: 2, height: 2, description: '에이전트 사교장 & 루머 허브', adSlots: ['billboard', 'bus_stop'], heightLevel: 1, roofShape: 'lantern', wallColor: 'hsl(25,18%,26%)', roofColor: 'hsl(20,22%,18%)' },
+  { id: 'garden', name: 'Garden', emoji: '🌿', color: 'primary', gridX: 8, gridY: 13, width: 3, height: 3, description: '힐링 & 명상 정원', adSlots: ['kiosk', 'bus_stop'], heightLevel: 1, roofShape: 'garden', wallColor: 'hsl(140,15%,22%)', roofColor: 'hsl(140,30%,18%)' },
+  { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'secondary', gridX: 14, gridY: 12, width: 2, height: 2, description: '제작 & 크래프팅 공방', adSlots: ['wall_wrap', 'billboard'], heightLevel: 2, roofShape: 'gear', wallColor: 'hsl(240,10%,24%)', roofColor: 'hsl(240,15%,18%)' },
+  { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'secondary', gridX: 14, gridY: 15, width: 2, height: 2, description: '별 관측소 & 미래 탐색', adSlots: ['naming_rights', 'kiosk'], heightLevel: 3, roofShape: 'telescope', wallColor: 'hsl(260,12%,22%)', roofColor: 'hsl(250,20%,16%)' },
 ];
 
 // ===== AGENTS =====
@@ -77,7 +109,7 @@ export type AgentMood = 'happy' | 'curious' | 'critical' | 'neutral' | 'excited'
 
 export interface BrandAffinity {
   category: string;
-  score: number; // -100 to 100
+  score: number;
 }
 
 export interface Agent {
@@ -134,7 +166,6 @@ export const SPONSOR_TIERS: Record<SponsorTier, { label: string; emoji: string; 
 
 export const BRAND_CATEGORIES = ['tech', 'fashion', 'food', 'entertainment', 'finance', 'education', 'health'] as const;
 
-// ===== INTERACTION EVENT (for synapse lines) =====
 export interface InteractionEvent {
   id: string;
   agentId: string;
@@ -144,7 +175,6 @@ export interface InteractionEvent {
   timestamp: number;
 }
 
-// ===== DIALOGUE TEMPLATES =====
 export function generateBrandDialogue(agentName: string, brand: string, affinity: number): string {
   if (affinity > 50) {
     const positive = [

@@ -1,22 +1,29 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import type { Building, Agent, AdSlot, InteractionEvent } from '@/data/world';
-import { ROAD_SEGMENTS } from '@/data/world';
+import { getTileType, TILE_COLORS, isRoadCenter } from '@/data/world';
 
-const TILE_W = 64;
-const TILE_H = 32;
-const GRID_SIZE = 18;
+// Isometric constants - 2:1 diamond ratio like Zomboid
+const TILE_W = 48;
+const TILE_H = 24;
+const GRID = 18;
+const WALL_H_UNIT = 18; // pixels per height level
 
-function isoToScreen(gx: number, gy: number) {
+function iso(gx: number, gy: number): { x: number; y: number } {
   return {
-    x: (gx - gy) * (TILE_W / 2) + (GRID_SIZE * TILE_W) / 2,
-    y: (gx + gy) * (TILE_H / 2) + 80,
+    x: (gx - gy) * (TILE_W / 2) + 500,
+    y: (gx + gy) * (TILE_H / 2) + 40,
   };
 }
 
-const COLOR_MAP: Record<string, { main: string; light: string; dark: string }> = {
-  primary: { main: 'hsl(152,76%,44%)', light: 'hsl(152,76%,55%)', dark: 'hsl(152,76%,25%)' },
-  secondary: { main: 'hsl(270,60%,55%)', light: 'hsl(270,60%,65%)', dark: 'hsl(270,60%,35%)' },
-  accent: { main: 'hsl(38,92%,50%)', light: 'hsl(38,92%,62%)', dark: 'hsl(38,92%,32%)' },
+// Diamond tile points
+function diamond(cx: number, cy: number): string {
+  return `${cx},${cy - TILE_H / 2} ${cx + TILE_W / 2},${cy} ${cx},${cy + TILE_H / 2} ${cx - TILE_W / 2},${cy}`;
+}
+
+const COLOR_MAP: Record<string, string> = {
+  primary: 'hsl(152,76%,44%)',
+  secondary: 'hsl(270,60%,55%)',
+  accent: 'hsl(38,92%,50%)',
 };
 
 interface Props {
@@ -28,34 +35,93 @@ interface Props {
   onAgentClick: (a: Agent) => void;
 }
 
-// ===== GROUND LAYER =====
+// ===== GROUND LAYER - Filled diamond tiles =====
 const GroundLayer: React.FC = React.memo(() => {
   const tiles: React.ReactNode[] = [];
 
-  for (let gx = 0; gx < GRID_SIZE; gx++) {
-    for (let gy = 0; gy < GRID_SIZE; gy++) {
-      const pos = isoToScreen(gx, gy);
-      // Distance from center (9,9) for vignette
-      const dist = Math.sqrt((gx - 9) ** 2 + (gy - 9) ** 2);
-      const maxDist = 12;
-      const fade = Math.max(0, 1 - dist / maxDist);
-
-      // Plaza zone highlight (7-10, 6-9)
-      const isPlazaZone = gx >= 7 && gx <= 10 && gy >= 6 && gy <= 9;
-
-      const baseFill = isPlazaZone
-        ? `hsla(38,92%,50%,${0.04 + fade * 0.06})`
-        : `hsla(152,76%,44%,${fade * 0.025})`;
+  // Render back-to-front (Y-sort)
+  for (let gy = 0; gy < GRID; gy++) {
+    for (let gx = 0; gx < GRID; gx++) {
+      const type = getTileType(gx, gy);
+      const colors = TILE_COLORS[type];
+      const pos = iso(gx, gy);
 
       tiles.push(
         <polygon
-          key={`tile_${gx}_${gy}`}
-          points={`${pos.x},${pos.y - TILE_H / 2} ${pos.x + TILE_W / 2},${pos.y} ${pos.x},${pos.y + TILE_H / 2} ${pos.x - TILE_W / 2},${pos.y}`}
-          fill={baseFill}
-          stroke={`hsla(240,14%,100%,${fade * 0.04})`}
+          key={`t_${gx}_${gy}`}
+          points={diamond(pos.x, pos.y)}
+          fill={colors.fill}
+          stroke={colors.stroke}
           strokeWidth={0.5}
+          strokeOpacity={colors.strokeOpacity}
         />
       );
+
+      // Road center markings (dashed yellow line)
+      if (isRoadCenter(gx, gy)) {
+        const isVert = (gx === 7 || gx === 13);
+        if (isVert) {
+          tiles.push(
+            <line key={`rm_${gx}_${gy}`}
+              x1={pos.x} y1={pos.y - 4} x2={pos.x} y2={pos.y + 4}
+              stroke="hsl(38,70%,40%)" strokeWidth={1} strokeOpacity={0.3}
+              strokeDasharray="2 3"
+            />
+          );
+        } else {
+          tiles.push(
+            <line key={`rm_${gx}_${gy}`}
+              x1={pos.x - 8} y1={pos.y} x2={pos.x + 8} y2={pos.y}
+              stroke="hsl(38,70%,40%)" strokeWidth={1} strokeOpacity={0.3}
+              strokeDasharray="2 3"
+            />
+          );
+        }
+      }
+
+      // Grass detail (little patches)
+      if (type === 'grass' && Math.random() > 0.7) {
+        tiles.push(
+          <circle key={`gd_${gx}_${gy}`} cx={pos.x + (Math.random()-0.5)*12} cy={pos.y + (Math.random()-0.5)*6}
+            r={1} fill="hsl(140,40%,18%)" opacity={0.5}
+          />
+        );
+      }
+
+      // Park trees
+      if (type === 'park') {
+        if ((gx + gy) % 3 === 0) {
+          tiles.push(
+            <g key={`tree_${gx}_${gy}`}>
+              <line x1={pos.x} y1={pos.y} x2={pos.x} y2={pos.y - 8} stroke="hsl(25,30%,20%)" strokeWidth={1.5} />
+              <circle cx={pos.x} cy={pos.y - 10} r={4} fill="hsl(140,35%,22%)" opacity={0.8} />
+              <circle cx={pos.x - 2} cy={pos.y - 12} r={3} fill="hsl(145,40%,25%)" opacity={0.7} />
+            </g>
+          );
+        }
+      }
+
+      // Water shimmer
+      if (type === 'water') {
+        tiles.push(
+          <line key={`ws_${gx}_${gy}`}
+            x1={pos.x - 6} y1={pos.y} x2={pos.x + 6} y2={pos.y}
+            stroke="hsl(210,60%,30%)" strokeWidth={0.5} strokeOpacity={0.5}>
+            <animate attributeName="strokeOpacity" values="0.2;0.6;0.2" dur="3s" repeatCount="indefinite" />
+          </line>
+        );
+      }
+
+      // Plaza decorative pattern
+      if (type === 'plaza_stone' && (gx + gy) % 2 === 0) {
+        tiles.push(
+          <polygon key={`pd_${gx}_${gy}`}
+            points={diamond(pos.x, pos.y)}
+            fill="hsl(38,25%,20%)" fillOpacity={0.3}
+            stroke="none"
+          />
+        );
+      }
     }
   }
 
@@ -63,213 +129,212 @@ const GroundLayer: React.FC = React.memo(() => {
 });
 GroundLayer.displayName = 'GroundLayer';
 
-// ===== ROADS =====
-const RoadLayer: React.FC = React.memo(() => {
-  return (
-    <g>
-      {ROAD_SEGMENTS.map((seg, i) => {
-        const from = isoToScreen(seg.from.x, seg.from.y);
-        const to = isoToScreen(seg.to.x, seg.to.y);
-        return (
-          <g key={`road_${i}`}>
-            <line
-              x1={from.x} y1={from.y} x2={to.x} y2={to.y}
-              stroke="hsla(152,76%,44%,0.08)"
-              strokeWidth={8}
-              strokeLinecap="round"
-            />
-            <line
-              x1={from.x} y1={from.y} x2={to.x} y2={to.y}
-              stroke="hsla(152,76%,44%,0.15)"
-              strokeWidth={1.5}
-              strokeDasharray="4 6"
-              strokeLinecap="round"
-            />
-          </g>
-        );
-      })}
-    </g>
-  );
-});
-RoadLayer.displayName = 'RoadLayer';
-
-// ===== BUILDING RENDERER =====
-function renderRoof(b: Building, cx: number, topY: number, bw: number, bh: number, colors: typeof COLOR_MAP.primary) {
-  const roofElements: React.ReactNode[] = [];
-  switch (b.roofShape) {
-    case 'dome':
-      roofElements.push(
-        <ellipse key="dome" cx={cx} cy={topY - bh * 0.3} rx={bw * 0.6} ry={bh * 0.5} fill={colors.main} fillOpacity={0.15} stroke={colors.main} strokeWidth={1} strokeOpacity={0.5} />,
-        <line key="dome-peak" x1={cx} y1={topY - bh * 0.8} x2={cx} y2={topY - bh * 0.3} stroke={colors.light} strokeWidth={1} strokeOpacity={0.6} />
-      );
-      break;
-    case 'antenna':
-      roofElements.push(
-        <line key="ant1" x1={cx} y1={topY} x2={cx} y2={topY - 25} stroke={colors.main} strokeWidth={1.5} strokeOpacity={0.8} />,
-        <circle key="ant-tip" cx={cx} cy={topY - 27} r={2.5} fill={colors.light} fillOpacity={0.9}>
-          <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" />
-        </circle>,
-        <line key="ant2" x1={cx - 6} y1={topY - 15} x2={cx + 6} y2={topY - 15} stroke={colors.main} strokeWidth={1} strokeOpacity={0.5} />
-      );
-      break;
-    case 'dish':
-      roofElements.push(
-        <path key="dish" d={`M${cx - 10},${topY - 5} Q${cx},${topY - 18} ${cx + 10},${topY - 5}`} fill="none" stroke={colors.main} strokeWidth={1.5} strokeOpacity={0.7} />,
-        <circle key="dish-center" cx={cx} cy={topY - 10} r={2} fill={colors.light} fillOpacity={0.8}>
-          <animate attributeName="r" values="1.5;3;1.5" dur="3s" repeatCount="indefinite" />
-        </circle>
-      );
-      break;
-    case 'spire':
-      roofElements.push(
-        <polygon key="spire" points={`${cx},${topY - 22} ${cx - 5},${topY - 3} ${cx + 5},${topY - 3}`} fill={colors.main} fillOpacity={0.2} stroke={colors.main} strokeWidth={1} strokeOpacity={0.6} />,
-        <line key="spire-l1" x1={cx - 3} y1={topY - 8} x2={cx + 3} y2={topY - 8} stroke={colors.light} strokeWidth={0.5} strokeOpacity={0.4} />,
-        <line key="spire-l2" x1={cx - 2} y1={topY - 13} x2={cx + 2} y2={topY - 13} stroke={colors.light} strokeWidth={0.5} strokeOpacity={0.4} />
-      );
-      break;
-    case 'garden':
-      roofElements.push(
-        <ellipse key="bush1" cx={cx - 6} cy={topY - 4} rx={5} ry={4} fill="hsl(152,76%,35%)" fillOpacity={0.4} />,
-        <ellipse key="bush2" cx={cx + 5} cy={topY - 3} rx={6} ry={5} fill="hsl(152,76%,40%)" fillOpacity={0.35} />,
-        <ellipse key="bush3" cx={cx} cy={topY - 6} rx={4} ry={3.5} fill="hsl(152,76%,50%)" fillOpacity={0.3}>
-          <animate attributeName="ry" values="3;4;3" dur="4s" repeatCount="indefinite" />
-        </ellipse>
-      );
-      break;
-    case 'gear':
-      const gearR = 8;
-      const teeth = 6;
-      let gearPath = '';
-      for (let t = 0; t < teeth; t++) {
-        const a1 = (t / teeth) * Math.PI * 2;
-        const a2 = ((t + 0.4) / teeth) * Math.PI * 2;
-        const a3 = ((t + 0.5) / teeth) * Math.PI * 2;
-        const a4 = ((t + 0.9) / teeth) * Math.PI * 2;
-        gearPath += `${t === 0 ? 'M' : 'L'}${cx + Math.cos(a1) * gearR},${topY - 8 + Math.sin(a1) * gearR * 0.5} `;
-        gearPath += `L${cx + Math.cos(a2) * (gearR + 4)},${topY - 8 + Math.sin(a2) * (gearR + 4) * 0.5} `;
-        gearPath += `L${cx + Math.cos(a3) * (gearR + 4)},${topY - 8 + Math.sin(a3) * (gearR + 4) * 0.5} `;
-        gearPath += `L${cx + Math.cos(a4) * gearR},${topY - 8 + Math.sin(a4) * gearR * 0.5} `;
-      }
-      gearPath += 'Z';
-      roofElements.push(
-        <path key="gear" d={gearPath} fill={colors.main} fillOpacity={0.15} stroke={colors.main} strokeWidth={1} strokeOpacity={0.5}>
-          <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${topY - 8}`} to={`360 ${cx} ${topY - 8}`} dur="20s" repeatCount="indefinite" />
-        </path>
-      );
-      break;
-    case 'lantern':
-      roofElements.push(
-        <rect key="lant-base" x={cx - 3} y={topY - 12} width={6} height={8} rx={1} fill={colors.main} fillOpacity={0.1} stroke={colors.main} strokeWidth={0.8} />,
-        <circle key="lant-glow" cx={cx} cy={topY - 8} r={4} fill={colors.light} fillOpacity={0.2}>
-          <animate attributeName="fillOpacity" values="0.1;0.35;0.1" dur="2.5s" repeatCount="indefinite" />
-        </circle>
-      );
-      break;
-    case 'telescope':
-      roofElements.push(
-        <line key="tube" x1={cx - 8} y1={topY - 2} x2={cx + 5} y2={topY - 18} stroke={colors.main} strokeWidth={2.5} strokeOpacity={0.7} strokeLinecap="round" />,
-        <circle key="lens" cx={cx + 6} cy={topY - 19} r={3} fill={colors.light} fillOpacity={0.3} stroke={colors.main} strokeWidth={1}>
-          <animate attributeName="fillOpacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" />
-        </circle>
-      );
-      break;
-    default: // flat
-      break;
-  }
-  return roofElements;
-}
-
+// ===== BUILDING RENDERER (Zomboid-style walls) =====
 const BuildingRenderer: React.FC<{
   b: Building;
   adSlots: AdSlot[];
   onClick: () => void;
 }> = React.memo(({ b, adSlots, onClick }) => {
-  const pos = isoToScreen(b.gridX + b.width / 2, b.gridY + b.height / 2);
-  const colors = COLOR_MAP[b.color] || COLOR_MAP.primary;
   const buildingAds = adSlots.filter(s => s.buildingId === b.id);
-  const hasAds = buildingAds.some(s => s.brand);
   const wallWrapAd = buildingAds.find(s => s.type === 'wall_wrap' && s.brand);
+  const wallHeight = WALL_H_UNIT * b.heightLevel;
 
-  const bw = b.width * TILE_W * 0.38;
-  const bh = b.height * TILE_H * 0.38;
-  const buildingHeight = 20 + b.heightLevel * 22;
+  // Get 4 corners of building footprint in iso space
+  const nw = iso(b.gridX, b.gridY); // top-left in grid = NW corner
+  const ne = iso(b.gridX + b.width, b.gridY);
+  const se = iso(b.gridX + b.width, b.gridY + b.height);
+  const sw = iso(b.gridX, b.gridY + b.height);
 
-  const topY = pos.y - buildingHeight;
-  const wallColor = wallWrapAd ? 'hsl(38,92%,50%)' : colors.main;
-  const wallOpacityR = wallWrapAd ? 0.25 : 0.15;
-  const wallOpacityL = wallWrapAd ? 0.18 : 0.08;
+  const wColor = wallWrapAd ? 'hsl(38,40%,30%)' : b.wallColor;
+  const wColorLight = wallWrapAd ? 'hsl(38,50%,35%)' : b.wallColor.replace(/(\d+)%\)$/, (_, n) => `${Math.min(100, parseInt(n) + 8)}%)`);
+  const rColor = b.roofColor;
+
+  // Center for labels
+  const center = iso(b.gridX + b.width / 2, b.gridY + b.height / 2);
 
   return (
-    <g onClick={onClick} style={{ cursor: 'pointer' }}>
-      {/* Base shadow */}
-      <ellipse cx={pos.x} cy={pos.y + 6} rx={bw * 0.8} ry={bh * 0.45} fill="hsl(0,0%,0%)" fillOpacity={0.35}>
-        <animate attributeName="fillOpacity" values="0.25;0.4;0.25" dur="4s" repeatCount="indefinite" />
-      </ellipse>
-
-      {/* Base platform */}
+    <g onClick={onClick} style={{ cursor: 'pointer' }} className="building-group">
+      {/* Floor fill */}
       <polygon
-        points={`${pos.x},${pos.y - 4} ${pos.x + bw},${pos.y + bh / 2 - 4} ${pos.x},${pos.y + bh - 4} ${pos.x - bw},${pos.y + bh / 2 - 4}`}
-        fill={colors.dark} fillOpacity={0.3} stroke={colors.main} strokeWidth={0.5} strokeOpacity={0.2}
+        points={`${nw.x},${nw.y} ${ne.x},${ne.y} ${se.x},${se.y} ${sw.x},${sw.y}`}
+        fill={rColor}
+        fillOpacity={0.15}
+        stroke="none"
       />
 
-      {/* Right wall */}
+      {/* South wall (visible face - East side in iso) */}
       <polygon
-        points={`${pos.x},${topY} ${pos.x + bw},${topY + bh / 2} ${pos.x + bw},${pos.y + bh / 2} ${pos.x},${pos.y + bh}`}
-        fill={wallColor} fillOpacity={wallOpacityR}
-        stroke={wallColor} strokeWidth={1.2} strokeOpacity={0.5}
+        points={`
+          ${se.x},${se.y}
+          ${sw.x},${sw.y}
+          ${sw.x},${sw.y - wallHeight}
+          ${se.x},${se.y - wallHeight}
+        `}
+        fill={wColor}
+        fillOpacity={0.7}
+        stroke={wColorLight}
+        strokeWidth={0.8}
       />
-      {/* Window lines on right wall */}
-      {[...Array(b.heightLevel)].map((_, i) => {
-        const wy = topY + (buildingHeight / (b.heightLevel + 1)) * (i + 1);
-        return (
-          <line key={`rw_${i}`} x1={pos.x + 4} y1={wy + bh * 0.1} x2={pos.x + bw - 4} y2={wy + bh * 0.35}
-            stroke={colors.light} strokeWidth={0.6} strokeOpacity={0.3} />
-        );
+      {/* Windows on south wall */}
+      {[...Array(b.width)].map((_, wi) => {
+        const t = wi / b.width;
+        const wx = sw.x + (se.x - sw.x) * (t + 0.5 / b.width);
+        const wy = sw.y + (se.y - sw.y) * (t + 0.5 / b.width);
+        return [...Array(b.heightLevel)].map((_, hi) => {
+          const winY = wy - wallHeight + (wallHeight / (b.heightLevel + 1)) * (hi + 1);
+          return (
+            <rect key={`sw_${wi}_${hi}`}
+              x={wx - 3} y={winY - 2} width={6} height={4} rx={0.5}
+              fill="hsl(200,40%,30%)" fillOpacity={0.5}
+              stroke="hsl(200,30%,40%)" strokeWidth={0.3}
+            />
+          );
+        });
       })}
 
-      {/* Left wall */}
+      {/* East wall (visible face) */}
       <polygon
-        points={`${pos.x},${topY} ${pos.x - bw},${topY + bh / 2} ${pos.x - bw},${pos.y + bh / 2} ${pos.x},${pos.y + bh}`}
-        fill={wallColor} fillOpacity={wallOpacityL}
-        stroke={wallColor} strokeWidth={0.8} strokeOpacity={0.35}
+        points={`
+          ${ne.x},${ne.y}
+          ${se.x},${se.y}
+          ${se.x},${se.y - wallHeight}
+          ${ne.x},${ne.y - wallHeight}
+        `}
+        fill={wColor}
+        fillOpacity={0.5}
+        stroke={wColorLight}
+        strokeWidth={0.8}
       />
-      {/* Window lines on left wall */}
-      {[...Array(Math.max(1, b.heightLevel - 1))].map((_, i) => {
-        const wy = topY + (buildingHeight / b.heightLevel) * (i + 0.5);
-        return (
-          <line key={`lw_${i}`} x1={pos.x - 4} y1={wy + bh * 0.1} x2={pos.x - bw + 4} y2={wy + bh * 0.35}
-            stroke={colors.light} strokeWidth={0.5} strokeOpacity={0.2} />
-        );
+      {/* Windows on east wall */}
+      {[...Array(b.height)].map((_, wi) => {
+        const t = wi / b.height;
+        const wx = ne.x + (se.x - ne.x) * (t + 0.5 / b.height);
+        const wy = ne.y + (se.y - ne.y) * (t + 0.5 / b.height);
+        return [...Array(b.heightLevel)].map((_, hi) => {
+          const winY = wy - wallHeight + (wallHeight / (b.heightLevel + 1)) * (hi + 1);
+          return (
+            <rect key={`ew_${wi}_${hi}`}
+              x={wx - 3} y={winY - 2} width={6} height={4} rx={0.5}
+              fill="hsl(220,35%,28%)" fillOpacity={0.4}
+              stroke="hsl(220,25%,35%)" strokeWidth={0.3}
+            />
+          );
+        });
       })}
 
-      {/* Top face */}
+      {/* Wall wrap glow effect */}
+      {wallWrapAd && (
+        <>
+          <polygon points={`${se.x},${se.y} ${sw.x},${sw.y} ${sw.x},${sw.y - wallHeight} ${se.x},${se.y - wallHeight}`}
+            fill="hsl(38,92%,50%)" fillOpacity={0.08}>
+            <animate attributeName="fillOpacity" values="0.04;0.12;0.04" dur="3s" repeatCount="indefinite" />
+          </polygon>
+          <text x={(sw.x + se.x) / 2} y={(sw.y + se.y) / 2 - wallHeight / 2}
+            textAnchor="middle" fontSize={8} fill="hsl(38,92%,50%)" fontFamily="JetBrains Mono" fontWeight={700} opacity={0.7}>
+            {wallWrapAd.brand}
+          </text>
+        </>
+      )}
+
+      {/* Roof (top face) */}
       <polygon
-        points={`${pos.x},${topY - bh / 2} ${pos.x + bw},${topY} ${pos.x},${topY + bh / 2} ${pos.x - bw},${topY}`}
-        fill={colors.main} fillOpacity={0.2}
-        stroke={colors.main} strokeWidth={1} strokeOpacity={0.4}
+        points={`
+          ${nw.x},${nw.y - wallHeight}
+          ${ne.x},${ne.y - wallHeight}
+          ${se.x},${se.y - wallHeight}
+          ${sw.x},${sw.y - wallHeight}
+        `}
+        fill={rColor}
+        fillOpacity={0.6}
+        stroke={wColorLight}
+        strokeWidth={1}
+        strokeOpacity={0.5}
       />
 
-      {/* Roof details */}
-      {renderRoof(b, pos.x, topY - bh / 2, bw, bh, colors)}
+      {/* Roof details by type */}
+      {b.roofShape === 'antenna' && (
+        <g>
+          <line x1={center.x} y1={center.y - wallHeight} x2={center.x} y2={center.y - wallHeight - 20}
+            stroke="hsl(200,20%,40%)" strokeWidth={1.5} />
+          <circle cx={center.x} cy={center.y - wallHeight - 22} r={2} fill={COLOR_MAP[b.color] || COLOR_MAP.primary}>
+            <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" />
+          </circle>
+        </g>
+      )}
+      {b.roofShape === 'dome' && (
+        <ellipse cx={center.x} cy={center.y - wallHeight - 4}
+          rx={Math.min(b.width, b.height) * TILE_W * 0.15}
+          ry={Math.min(b.width, b.height) * TILE_H * 0.15 + 4}
+          fill={rColor} fillOpacity={0.4} stroke={wColorLight} strokeWidth={0.8} />
+      )}
+      {b.roofShape === 'dish' && (
+        <path d={`M${center.x - 10},${center.y - wallHeight - 2} Q${center.x},${center.y - wallHeight - 14} ${center.x + 10},${center.y - wallHeight - 2}`}
+          fill="none" stroke={COLOR_MAP[b.color]} strokeWidth={1.5} strokeOpacity={0.6}>
+          <animate attributeName="strokeOpacity" values="0.3;0.8;0.3" dur="4s" repeatCount="indefinite" />
+        </path>
+      )}
+      {b.roofShape === 'spire' && (
+        <polygon points={`${center.x},${center.y - wallHeight - 18} ${center.x - 6},${center.y - wallHeight} ${center.x + 6},${center.y - wallHeight}`}
+          fill={rColor} fillOpacity={0.5} stroke={wColorLight} strokeWidth={0.8} />
+      )}
+      {b.roofShape === 'garden' && (
+        <g>
+          {[...Array(3)].map((_, i) => (
+            <circle key={i} cx={center.x + (i - 1) * 10} cy={center.y - wallHeight - 3}
+              r={4 + Math.random() * 2} fill="hsl(140,40%,22%)" fillOpacity={0.7}>
+              <animate attributeName="r" values={`${3 + i};${5 + i};${3 + i}`} dur={`${3 + i}s`} repeatCount="indefinite" />
+            </circle>
+          ))}
+        </g>
+      )}
+      {b.roofShape === 'gear' && (
+        <circle cx={center.x} cy={center.y - wallHeight - 3} r={6}
+          fill="none" stroke={COLOR_MAP[b.color]} strokeWidth={1.5} strokeOpacity={0.5}
+          strokeDasharray="3 2">
+          <animateTransform attributeName="transform" type="rotate" from={`0 ${center.x} ${center.y - wallHeight - 3}`} to={`360 ${center.x} ${center.y - wallHeight - 3}`} dur="15s" repeatCount="indefinite" />
+        </circle>
+      )}
+      {b.roofShape === 'lantern' && (
+        <circle cx={center.x} cy={center.y - wallHeight - 4} r={3}
+          fill="hsl(38,80%,50%)" fillOpacity={0.3}>
+          <animate attributeName="fillOpacity" values="0.15;0.5;0.15" dur="2s" repeatCount="indefinite" />
+        </circle>
+      )}
+      {b.roofShape === 'telescope' && (
+        <g>
+          <line x1={center.x - 6} y1={center.y - wallHeight} x2={center.x + 4} y2={center.y - wallHeight - 14}
+            stroke={COLOR_MAP[b.color]} strokeWidth={2} strokeOpacity={0.6} strokeLinecap="round" />
+          <circle cx={center.x + 5} cy={center.y - wallHeight - 15} r={2.5}
+            fill={COLOR_MAP[b.color]} fillOpacity={0.4}>
+            <animate attributeName="fillOpacity" values="0.2;0.6;0.2" dur="3s" repeatCount="indefinite" />
+          </circle>
+        </g>
+      )}
 
-      {/* Billboard ad slot */}
+      {/* Billboard ad - standing sign next to building */}
       {buildingAds.filter(s => s.type === 'billboard').map((slot, i) => {
-        const bx = pos.x + bw + 3;
-        const by = topY + i * 14;
+        const signPos = iso(b.gridX + b.width + 0.5, b.gridY + i * 1.2);
         return (
           <g key={slot.id}>
-            <rect x={bx} y={by} width={18} height={10} rx={1}
-              fill={slot.brand ? 'hsl(38,92%,50%)' : 'hsl(240,14%,14%)'}
-              fillOpacity={slot.brand ? 0.7 : 0.4}
-              stroke={slot.brand ? 'hsl(38,92%,50%)' : colors.main}
-              strokeWidth={0.8} strokeOpacity={0.6}
+            {/* Post */}
+            <line x1={signPos.x} y1={signPos.y} x2={signPos.x} y2={signPos.y - 22}
+              stroke="hsl(220,10%,30%)" strokeWidth={1.5} />
+            {/* Sign panel */}
+            <rect x={signPos.x - 10} y={signPos.y - 30} width={20} height={10} rx={1}
+              fill={slot.brand ? 'hsl(38,92%,50%)' : 'hsl(220,10%,16%)'}
+              fillOpacity={slot.brand ? 0.8 : 0.5}
+              stroke={slot.brand ? 'hsl(38,92%,60%)' : 'hsl(220,10%,25%)'}
+              strokeWidth={0.8}
             />
             {slot.brand && (
               <>
-                <text x={bx + 9} y={by + 7} textAnchor="middle" fontSize={4} fill="hsl(240,20%,3.9%)" fontFamily="JetBrains Mono" fontWeight={700}>
-                  {slot.brand.slice(0, 6)}
+                <text x={signPos.x} y={signPos.y - 23.5} textAnchor="middle"
+                  fontSize={5} fill="hsl(240,20%,4%)" fontFamily="JetBrains Mono" fontWeight={700}>
+                  {slot.brand.slice(0, 7)}
                 </text>
-                <rect x={bx} y={by} width={18} height={10} rx={1} fill="hsl(38,92%,50%)" fillOpacity={0.1}>
+                {/* Glow */}
+                <rect x={signPos.x - 10} y={signPos.y - 30} width={20} height={10} rx={1}
+                  fill="hsl(38,92%,50%)" fillOpacity={0.15} filter="url(#glow-gold)">
                   <animate attributeName="fillOpacity" values="0.05;0.2;0.05" dur="2s" repeatCount="indefinite" />
                 </rect>
               </>
@@ -278,42 +343,46 @@ const BuildingRenderer: React.FC<{
         );
       })}
 
-      {/* Kiosk */}
+      {/* Kiosk - small standing screen */}
       {buildingAds.filter(s => s.type === 'kiosk').map((slot, i) => {
-        const kx = pos.x - bw - 12 + i * 8;
-        const ky = pos.y + bh / 2 - 2;
+        const kPos = iso(b.gridX - 0.5, b.gridY + b.height - 1 + i);
         return (
           <g key={slot.id}>
-            <rect x={kx} y={ky - 12} width={5} height={12} rx={0.5}
-              fill={slot.brand ? 'hsl(38,92%,50%)' : 'hsl(240,16%,8%)'}
-              fillOpacity={slot.brand ? 0.6 : 0.3}
-              stroke={slot.brand ? 'hsl(38,92%,60%)' : 'hsl(240,14%,18%)'}
+            <rect x={kPos.x - 3} y={kPos.y - 14} width={6} height={14} rx={1}
+              fill={slot.brand ? 'hsl(38,60%,25%)' : 'hsl(220,10%,14%)'}
+              stroke={slot.brand ? 'hsl(38,70%,40%)' : 'hsl(220,10%,20%)'}
               strokeWidth={0.6}
             />
             {slot.brand && (
-              <circle cx={kx + 2.5} cy={ky - 6} r={1.5} fill="hsl(38,92%,50%)" fillOpacity={0.8}>
-                <animate attributeName="fillOpacity" values="0.5;1;0.5" dur="1.8s" repeatCount="indefinite" />
-              </circle>
+              <rect x={kPos.x - 2} y={kPos.y - 12} width={4} height={6} rx={0.5}
+                fill="hsl(38,92%,50%)" fillOpacity={0.6}>
+                <animate attributeName="fillOpacity" values="0.3;0.8;0.3" dur="2.5s" repeatCount="indefinite" />
+              </rect>
             )}
           </g>
         );
       })}
 
-      {/* Bus stop */}
+      {/* Bus stop - bench + sign on road edge */}
       {buildingAds.filter(s => s.type === 'bus_stop').map((slot, i) => {
-        const sx = pos.x + (i % 2 === 0 ? -bw * 0.3 : bw * 0.3);
-        const sy = pos.y + bh + 4 + i * 3;
+        const bsPos = iso(b.gridX + i, b.gridY + b.height + 0.5);
         return (
           <g key={slot.id}>
-            <line x1={sx} y1={sy} x2={sx} y2={sy - 8} stroke={slot.brand ? 'hsl(38,92%,50%)' : 'hsl(240,14%,18%)'} strokeWidth={1} strokeOpacity={0.7} />
-            <rect x={sx - 4} y={sy - 8} width={8} height={5} rx={0.5}
-              fill={slot.brand ? 'hsl(38,92%,50%)' : 'hsl(240,16%,8%)'}
-              fillOpacity={slot.brand ? 0.5 : 0.2}
-              stroke={slot.brand ? 'hsl(38,92%,55%)' : 'hsl(240,14%,15%)'}
+            {/* Bench */}
+            <rect x={bsPos.x - 6} y={bsPos.y - 3} width={12} height={3} rx={0.5}
+              fill="hsl(220,8%,20%)" stroke="hsl(220,10%,28%)" strokeWidth={0.5} />
+            {/* Sign */}
+            <line x1={bsPos.x + 7} y1={bsPos.y} x2={bsPos.x + 7} y2={bsPos.y - 16}
+              stroke="hsl(220,10%,30%)" strokeWidth={1} />
+            <rect x={bsPos.x + 3} y={bsPos.y - 18} width={8} height={6} rx={0.5}
+              fill={slot.brand ? 'hsl(38,80%,45%)' : 'hsl(220,8%,14%)'}
+              fillOpacity={slot.brand ? 0.7 : 0.4}
+              stroke={slot.brand ? 'hsl(38,90%,55%)' : 'hsl(220,8%,22%)'}
               strokeWidth={0.5}
             />
             {slot.brand && (
-              <text x={sx} y={sy - 4.5} textAnchor="middle" fontSize={3} fill="hsl(240,20%,3.9%)" fontFamily="JetBrains Mono" fontWeight={600}>
+              <text x={bsPos.x + 7} y={bsPos.y - 13.5} textAnchor="middle"
+                fontSize={3.5} fill="hsl(240,20%,4%)" fontFamily="JetBrains Mono" fontWeight={600}>
                 {slot.brand.slice(0, 4)}
               </text>
             )}
@@ -321,33 +390,27 @@ const BuildingRenderer: React.FC<{
         );
       })}
 
-      {/* Naming rights glow */}
+      {/* Naming rights - floating hologram above building */}
       {buildingAds.filter(s => s.type === 'naming_rights' && s.brand).map(slot => (
         <g key={slot.id}>
-          <text x={pos.x} y={topY - bh / 2 - 28} textAnchor="middle" fontSize={6} fill="hsl(38,92%,50%)" fontFamily="JetBrains Mono" fontWeight={700} opacity={0.9}>
+          <text x={center.x} y={center.y - wallHeight - 30} textAnchor="middle"
+            fontSize={9} fill="hsl(38,92%,50%)" fontFamily="JetBrains Mono" fontWeight={800}
+            opacity={0.9} filter="url(#glow-gold)">
             {slot.brand}
           </text>
-          <text x={pos.x} y={topY - bh / 2 - 28} textAnchor="middle" fontSize={6} fill="hsl(38,92%,50%)" fontFamily="JetBrains Mono" fontWeight={700} filter="url(#glow-gold)">
-            {slot.brand}
-          </text>
+          {/* Hologram lines */}
+          <line x1={center.x - 15} y1={center.y - wallHeight - 24} x2={center.x + 15} y2={center.y - wallHeight - 24}
+            stroke="hsl(38,92%,50%)" strokeWidth={0.5} strokeOpacity={0.3} />
+          <line x1={center.x} y1={center.y - wallHeight - 22} x2={center.x} y2={center.y - wallHeight}
+            stroke="hsl(38,92%,50%)" strokeWidth={0.3} strokeOpacity={0.15}
+            strokeDasharray="2 3" />
         </g>
       ))}
 
-      {/* Ad indicator dot for buildings with any ads */}
-      {hasAds && !buildingAds.some(s => s.type === 'naming_rights' && s.brand) && (
-        <circle cx={pos.x + bw - 2} cy={topY - bh / 2 - 6} r={3} fill="hsl(38,92%,50%)" fillOpacity={0.8}>
-          <animate attributeName="r" values="2;4;2" dur="2s" repeatCount="indefinite" />
-          <animate attributeName="fillOpacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" />
-        </circle>
-      )}
-
-      {/* Emoji */}
-      <text x={pos.x} y={topY - bh / 2 - 16} textAnchor="middle" fontSize={b.heightLevel === 3 ? 20 : b.heightLevel === 2 ? 16 : 14}>
-        {b.emoji}
-      </text>
-
-      {/* Name label */}
-      <text x={pos.x} y={pos.y + bh + 16 + (buildingAds.some(s => s.type === 'bus_stop') ? 8 : 0)} textAnchor="middle" fontSize={7} fill={colors.main} fontFamily="JetBrains Mono" fontWeight={600} opacity={0.8}>
+      {/* Building name & emoji label */}
+      <text x={center.x} y={center.y - wallHeight - 6} textAnchor="middle" fontSize={14}>{b.emoji}</text>
+      <text x={center.x} y={se.y + 10} textAnchor="middle"
+        fontSize={7} fill={COLOR_MAP[b.color] || '#888'} fontFamily="JetBrains Mono" fontWeight={600} opacity={0.85}>
         {b.name}
       </text>
     </g>
@@ -355,76 +418,67 @@ const BuildingRenderer: React.FC<{
 });
 BuildingRenderer.displayName = 'BuildingRenderer';
 
-// ===== AGENT RENDERER =====
+// ===== AGENT =====
 const AgentRenderer: React.FC<{
   agent: Agent;
   index: number;
   building: Building | undefined;
   interactions: InteractionEvent[];
+  allBuildings: Building[];
   onClick: () => void;
-}> = React.memo(({ agent, index, building, interactions, onClick }) => {
+}> = React.memo(({ agent, index, building, interactions, allBuildings, onClick }) => {
   if (!building) return null;
-  const pos = isoToScreen(building.gridX + building.width / 2, building.gridY + building.height / 2);
-  const angle = (index / 8) * Math.PI * 2;
-  const radius = 20 + (index % 3) * 8;
-  const ox = Math.cos(angle) * radius;
-  const oy = Math.sin(angle) * radius * 0.5;
 
-  const ax = pos.x + ox;
-  const ay = pos.y - 10 + oy;
+  // Place agent on the sidewalk around the building
+  const side = index % 4;
+  let agx: number, agy: number;
+  switch (side) {
+    case 0: agx = building.gridX + (index % building.width); agy = building.gridY - 0.5; break;
+    case 1: agx = building.gridX + building.width + 0.3; agy = building.gridY + (index % building.height); break;
+    case 2: agx = building.gridX + (index % building.width); agy = building.gridY + building.height + 0.3; break;
+    default: agx = building.gridX - 0.5; agy = building.gridY + (index % building.height); break;
+  }
+
+  const pos = iso(agx, agy);
+  const avgAffinity = agent.brandAffinities.reduce((s, a) => s + a.score, 0) / Math.max(1, agent.brandAffinities.length);
+  const haloColor = avgAffinity > 30 ? 'hsl(38,92%,50%)' : avgAffinity > 0 ? 'hsl(152,76%,44%)' : avgAffinity > -30 ? 'hsl(270,60%,55%)' : 'hsl(0,72%,50%)';
 
   const agentInteractions = interactions.filter(e => e.agentId === agent.id);
-  const avgAffinity = agent.brandAffinities.reduce((s, a) => s + a.score, 0) / Math.max(1, agent.brandAffinities.length);
-
-  // Halo color based on affinity
-  const haloColor = avgAffinity > 30 ? 'hsl(38,92%,50%)' : avgAffinity > 0 ? 'hsl(152,76%,44%)' : avgAffinity > -30 ? 'hsl(270,60%,55%)' : 'hsl(0,72%,50%)';
-  const haloOpacity = Math.min(0.6, Math.abs(avgAffinity) / 100);
 
   return (
     <g onClick={onClick} style={{ cursor: 'pointer' }}>
-      {/* Synapse lines to building center (when interacting with ads) */}
+      {/* Synapse lines */}
       {agentInteractions.map(event => {
-        const targetBuilding = building;
-        if (!targetBuilding) return null;
-        const bPos = isoToScreen(targetBuilding.gridX + targetBuilding.width / 2, targetBuilding.gridY + targetBuilding.height / 2);
+        const targetB = allBuildings.find(b => b.id === event.buildingId);
+        if (!targetB) return null;
+        const tPos = iso(targetB.gridX + targetB.width / 2, targetB.gridY + targetB.height / 2);
         const lineColor = event.affinity > 0 ? 'hsl(38,92%,50%)' : 'hsl(0,72%,50%)';
         const age = (Date.now() - event.timestamp) / 5000;
         return (
-          <line key={event.id}
-            x1={ax} y1={ay} x2={bPos.x} y2={bPos.y - 20}
-            stroke={lineColor} strokeWidth={0.8} strokeOpacity={Math.max(0, 0.6 - age)}
-            strokeDasharray="3 4"
-          >
+          <line key={event.id} x1={pos.x} y1={pos.y - 6} x2={tPos.x} y2={tPos.y - 20}
+            stroke={lineColor} strokeWidth={0.8} strokeOpacity={Math.max(0, 0.5 - age)}
+            strokeDasharray="3 4">
             <animate attributeName="strokeDashoffset" from="0" to="-14" dur="0.8s" repeatCount="indefinite" />
           </line>
         );
       })}
 
-      {/* Affinity halo */}
-      <circle cx={ax} cy={ay} r={12} fill="none" stroke={haloColor} strokeWidth={1.5} strokeOpacity={haloOpacity}>
-        <animate attributeName="r" values="10;14;10" dur="3s" repeatCount="indefinite" />
-        <animate attributeName="strokeOpacity" values={`${haloOpacity * 0.5};${haloOpacity};${haloOpacity * 0.5}`} dur="3s" repeatCount="indefinite" />
+      {/* Shadow */}
+      <ellipse cx={pos.x} cy={pos.y + 2} rx={5} ry={2.5} fill="hsl(0,0%,0%)" fillOpacity={0.3} />
+
+      {/* Halo */}
+      <circle cx={pos.x} cy={pos.y - 6} r={10} fill="none" stroke={haloColor} strokeWidth={1} strokeOpacity={0.25}>
+        <animate attributeName="r" values="8;11;8" dur="3s" repeatCount="indefinite" />
       </circle>
 
-      {/* Agent body */}
-      <circle cx={ax} cy={ay} r={9} fill="hsl(240,16%,6%)" stroke={haloColor} strokeWidth={1.2} strokeOpacity={0.7} />
+      {/* Body */}
+      <ellipse cx={pos.x} cy={pos.y - 4} rx={6} ry={8} fill="hsl(240,16%,8%)" stroke={haloColor} strokeWidth={1} strokeOpacity={0.6} />
 
-      {/* Agent emoji */}
-      <text x={ax} y={ay + 4} textAnchor="middle" fontSize={11}>
-        {agent.avatar}
-      </text>
-
-      {/* Mood indicator */}
-      <text x={ax + 8} y={ay - 6} fontSize={6} opacity={0.7}>
-        {agent.mood === 'happy' && '😊'}
-        {agent.mood === 'curious' && '🤔'}
-        {agent.mood === 'critical' && '😤'}
-        {agent.mood === 'neutral' && '😐'}
-        {agent.mood === 'excited' && '🤩'}
-      </text>
+      {/* Avatar */}
+      <text x={pos.x} y={pos.y - 1} textAnchor="middle" fontSize={10}>{agent.avatar}</text>
 
       {/* Name */}
-      <text x={ax} y={ay + 16} textAnchor="middle" fontSize={5.5} fill="hsl(210,20%,80%)" fontFamily="JetBrains Mono" fontWeight={500} opacity={0.7}>
+      <text x={pos.x} y={pos.y + 12} textAnchor="middle" fontSize={5} fill="hsl(210,20%,75%)" fontFamily="JetBrains Mono" fontWeight={500} opacity={0.7}>
         {agent.name}
       </text>
     </g>
@@ -435,7 +489,7 @@ AgentRenderer.displayName = 'AgentRenderer';
 // ===== MAIN MAP =====
 export const IsometricMap: React.FC<Props> = ({ buildings, agents, adSlots, interactions, onBuildingClick, onAgentClick }) => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(0.85);
   const [dragging, setDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
 
@@ -456,92 +510,79 @@ export const IsometricMap: React.FC<Props> = ({ buildings, agents, adSlots, inte
 
   const onWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault();
-    setZoom(z => Math.max(0.3, Math.min(3, z - e.deltaY * 0.001)));
+    setZoom(z => Math.max(0.25, Math.min(3, z - e.deltaY * 0.001)));
   }, []);
 
+  // Y-sort: render buildings back to front
   const sortedBuildings = useMemo(() =>
     [...buildings].sort((a, b) => (a.gridX + a.gridY) - (b.gridX + b.gridY)),
     [buildings]
   );
 
+  // Sort agents by Y position too
+  const sortedAgents = useMemo(() => {
+    return agents.map((agent, i) => ({ agent, index: i })).sort((a, b) => {
+      const ba = buildings.find(bld => bld.id === a.agent.currentBuildingId);
+      const bb = buildings.find(bld => bld.id === b.agent.currentBuildingId);
+      return ((ba?.gridY ?? 0) + (ba?.gridX ?? 0)) - ((bb?.gridY ?? 0) + (bb?.gridX ?? 0));
+    });
+  }, [agents, buildings]);
+
   return (
     <div className="w-full h-full overflow-hidden bg-background relative" style={{ cursor: dragging ? 'grabbing' : 'grab' }}>
-      {/* Ambient gradient overlay */}
+      {/* Ambient gradients */}
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse at 50% 40%, hsla(152,76%,44%,0.03) 0%, transparent 60%), radial-gradient(ellipse at 50% 50%, hsla(270,60%,55%,0.02) 0%, transparent 50%)',
+        background: 'radial-gradient(ellipse at 50% 35%, hsla(152,76%,44%,0.02) 0%, transparent 60%), radial-gradient(ellipse at 60% 50%, hsla(38,92%,50%,0.015) 0%, transparent 40%)',
       }} />
 
-      <svg
-        width="100%" height="100%"
-        viewBox="0 0 1200 700"
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseLeave={onMouseUp}
-        onWheel={onWheel}
-      >
+      <svg width="100%" height="100%" viewBox="0 0 1000 600"
+        onMouseDown={onMouseDown} onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
+        onWheel={onWheel}>
         <defs>
-          {/* Glow filters */}
-          <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
           <filter id="glow-gold" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="2" result="blur" />
             <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
-          <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="2.5" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-          {/* Vignette */}
           <radialGradient id="vignette" cx="50%" cy="45%" r="55%">
             <stop offset="0%" stopColor="transparent" />
-            <stop offset="85%" stopColor="transparent" />
-            <stop offset="100%" stopColor="hsl(240,20%,3.9%)" stopOpacity="0.8" />
+            <stop offset="80%" stopColor="transparent" />
+            <stop offset="100%" stopColor="hsl(240,20%,3.9%)" stopOpacity="0.85" />
           </radialGradient>
         </defs>
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
-          {/* Ground */}
           <GroundLayer />
 
-          {/* Roads */}
-          <RoadLayer />
-
-          {/* Buildings (sorted by depth) */}
+          {/* Interleave buildings and agents by Y-sort */}
           {sortedBuildings.map(b => (
             <BuildingRenderer key={b.id} b={b} adSlots={adSlots} onClick={() => onBuildingClick(b)} />
           ))}
 
-          {/* Agents */}
-          {agents.map((agent, i) => (
-            <AgentRenderer
-              key={agent.id}
-              agent={agent}
-              index={i}
-              building={buildings.find(b => b.id === agent.currentBuildingId)}
-              interactions={interactions}
-              onClick={() => onAgentClick(agent)}
-            />
+          {sortedAgents.map(({ agent, index }) => (
+            <AgentRenderer key={agent.id} agent={agent} index={index}
+              building={buildings.find(bld => bld.id === agent.currentBuildingId)}
+              interactions={interactions} allBuildings={buildings}
+              onClick={() => onAgentClick(agent)} />
           ))}
         </g>
 
-        {/* Vignette overlay */}
-        <rect width="1200" height="700" fill="url(#vignette)" pointerEvents="none" />
+        <rect width="1000" height="600" fill="url(#vignette)" pointerEvents="none" />
       </svg>
 
-      {/* Zoom controls */}
+      {/* Zoom */}
       <div className="absolute bottom-4 right-4 flex flex-col gap-1">
-        <button onClick={() => setZoom(z => Math.min(3, z + 0.2))} className="w-8 h-8 rounded bg-surface-elevated border border-border flex items-center justify-center text-foreground hover:border-primary transition-colors text-sm font-mono">+</button>
-        <button onClick={() => setZoom(z => Math.max(0.3, z - 0.2))} className="w-8 h-8 rounded bg-surface-elevated border border-border flex items-center justify-center text-foreground hover:border-primary transition-colors text-sm font-mono">−</button>
+        <button onClick={() => setZoom(z => Math.min(3, z + 0.15))} className="w-8 h-8 rounded bg-surface-elevated border border-border flex items-center justify-center text-foreground hover:border-primary transition-colors text-sm font-mono">+</button>
+        <button onClick={() => setZoom(z => Math.max(0.25, z - 0.15))} className="w-8 h-8 rounded bg-surface-elevated border border-border flex items-center justify-center text-foreground hover:border-primary transition-colors text-sm font-mono">−</button>
       </div>
 
-      {/* Legend */}
-      <div className="absolute top-3 left-3 bg-card/80 backdrop-blur-sm rounded-md border border-border px-3 py-2 text-xs font-mono space-y-1">
-        <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-primary" /> 건물</div>
-        <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-accent" /> 광고 슬롯</div>
-        <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-secondary" /> 에이전트</div>
+      {/* Mini legend */}
+      <div className="absolute top-3 left-3 bg-card/90 backdrop-blur-sm rounded border border-border px-3 py-2 text-xs font-mono space-y-1">
+        <div className="text-muted-foreground font-semibold mb-1">MAP LEGEND</div>
+        <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded-sm" style={{ background: 'hsl(220,8%,14%)' }} /> 도로</div>
+        <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded-sm" style={{ background: 'hsl(38,20%,16%)' }} /> 광장</div>
+        <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded-sm" style={{ background: 'hsl(140,30%,12%)' }} /> 초지</div>
+        <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full" style={{ background: 'hsl(38,92%,50%)' }} /> 광고</div>
       </div>
     </div>
   );
