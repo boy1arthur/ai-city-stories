@@ -11,6 +11,8 @@ interface Props {
   onSponsorDashboard: () => void;
   onHome?: () => void;
   energyBar?: React.ReactNode;
+  isFullView?: boolean;
+  onToggleFullView?: () => void;
 }
 
 export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard, onHome, energyBar }) => {
