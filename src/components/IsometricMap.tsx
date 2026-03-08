@@ -306,14 +306,13 @@ const AgentRenderer: React.FC<{
   visualState: AgentVisualState | undefined;
   onClick: () => void;
 }> = React.memo(({ agent, index, building, interactions, allBuildings, speechBubbles, adReactions, visualState, onClick }) => {
-  if (!building) return null;
-
-  // Use animated position from visual state
+  // Hooks must be before any early return
   const [animPos, setAnimPos] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
+    if (!building) return;
+
     if (!visualState || !visualState.isMoving) {
-      // Static position
       const side = index % 4;
       const jitter = ((index * 7 + 3) % 5) * 0.3;
       let gx: number, gy: number;
@@ -327,7 +326,6 @@ const AgentRenderer: React.FC<{
       return;
     }
 
-    // Animate movement
     let raf: number;
     const animate = () => {
       const elapsed = Date.now() - visualState.moveStartTime;
@@ -343,7 +341,7 @@ const AgentRenderer: React.FC<{
     return () => cancelAnimationFrame(raf);
   }, [visualState, building, index]);
 
-  if (!animPos) return null;
+  if (!building || !animPos) return null;
   const pos = animPos;
 
   const avgAffinity = agent.brandAffinities.reduce((s, a) => s + a.score, 0) / Math.max(1, agent.brandAffinities.length);
