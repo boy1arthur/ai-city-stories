@@ -37,73 +37,110 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
   const b = buildings.find(bld => ad.buildingIds.includes(bld.id));
   if (!b) return null;
   const wallH = WALL_H_UNIT * b.heightLevel;
-  const isPremium = ad.tier === 'premium';
+  const isBasic = ad.tier === 'basic';
 
-  // Compute wall endpoints based on face
+  // Wall endpoints
   const isEast = ad.face === 'east';
   const p1 = isEast ? iso(b.gridX + b.width, b.gridY) : iso(b.gridX, b.gridY + b.height);
   const p2 = isEast ? iso(b.gridX + b.width, b.gridY + b.height) : iso(b.gridX + b.width, b.gridY + b.height);
 
-  // Floating LED panel — fits building width, thinner for basic
-  const panelTop = isPremium ? 0.85 : 0.80;
-  const panelBot = isPremium ? 0.62 : 0.66;
-  const inset = 0.05; // tight to building edges
-  const lerp = (a: {x:number,y:number}, b2: {x:number,y:number}, t: number) => ({ x: a.x + (b2.x - a.x) * t, y: a.y + (b2.y - a.y) * t });
+  const lerp = (a: {x:number,y:number}, b2: {x:number,y:number}, t: number) => ({
+    x: a.x + (b2.x - a.x) * t, y: a.y + (b2.y - a.y) * t,
+  });
 
-  const tl = { x: lerp(p1, p2, inset).x, y: lerp(p1, p2, inset).y - wallH * panelTop };
-  const tr = { x: lerp(p1, p2, 1 - inset).x, y: lerp(p1, p2, 1 - inset).y - wallH * panelTop };
-  const bl = { x: lerp(p1, p2, inset).x, y: lerp(p1, p2, inset).y - wallH * panelBot };
-  const br = { x: lerp(p1, p2, 1 - inset).x, y: lerp(p1, p2, 1 - inset).y - wallH * panelBot };
+  // Panel position — floats slightly off wall
+  const panelTop = 0.82, panelBot = 0.65, inset = 0.06;
+  const shadowOff = 1.5; // drop shadow offset to simulate depth
 
-  const cx = (tl.x + tr.x + bl.x + br.x) / 4;
-  const cy = (tl.y + tr.y + bl.y + br.y) / 4;
+  const tl = { ...lerp(p1, p2, inset), y: lerp(p1, p2, inset).y - wallH * panelTop };
+  const tr = { ...lerp(p1, p2, 1 - inset), y: lerp(p1, p2, 1 - inset).y - wallH * panelTop };
+  const bl = { ...lerp(p1, p2, inset), y: lerp(p1, p2, inset).y - wallH * panelBot };
+  const br = { ...lerp(p1, p2, 1 - inset), y: lerp(p1, p2, 1 - inset).y - wallH * panelBot };
+
+  // 60/40 split point for content vs pattern area
+  const split = 0.6;
+  const ml = { x: tl.x + (tr.x - tl.x) * split, y: tl.y + (tr.y - tl.y) * split };
+  const mlB = { x: bl.x + (br.x - bl.x) * split, y: bl.y + (br.y - bl.y) * split };
+
+  const leftCx = (tl.x + ml.x + bl.x + mlB.x) / 4;
+  const leftCy = (tl.y + ml.y + bl.y + mlB.y) / 4;
   const panelH = Math.abs(tl.y - bl.y);
-  const fs = Math.max(4, panelH * 0.45);
-  const fsN = Math.max(3, panelH * 0.3);
+  const fs = Math.max(4.5, panelH * 0.4);
+  const fsN = Math.max(3.5, panelH * 0.28);
+
+  const pts = (a: any, b2: any, c: any, d: any) => `${a.x},${a.y} ${b2.x},${b2.y} ${c.x},${c.y} ${d.x},${d.y}`;
 
   return (
     <g>
-      {/* Dark LED panel backing */}
-      <polygon points={`${tl.x},${tl.y} ${tr.x},${tr.y} ${br.x},${br.y} ${bl.x},${bl.y}`}
-        fill="hsl(220,8%,12%)" stroke="hsl(220,5%,25%)" strokeWidth={0.6} />
+      {/* Drop shadow — depth illusion */}
+      <polygon points={pts(
+        { x: tl.x + shadowOff, y: tl.y + shadowOff },
+        { x: tr.x + shadowOff, y: tr.y + shadowOff },
+        { x: br.x + shadowOff, y: br.y + shadowOff },
+        { x: bl.x + shadowOff, y: bl.y + shadowOff }
+      )} fill="hsl(0,0%,0%)" fillOpacity={0.3} />
 
-      {/* Brand color accent strip at top edge */}
+      {/* Metal frame outer */}
+      <polygon points={pts(
+        { x: tl.x - 0.8, y: tl.y - 0.8 },
+        { x: tr.x + 0.8, y: tr.y - 0.8 },
+        { x: br.x + 0.8, y: br.y + 0.8 },
+        { x: bl.x - 0.8, y: bl.y + 0.8 }
+      )} fill="hsl(220,5%,32%)" />
+
+      {/* Metal frame inner highlight */}
+      <polygon points={pts(
+        { x: tl.x - 0.3, y: tl.y - 0.3 },
+        { x: tr.x + 0.3, y: tr.y - 0.3 },
+        { x: br.x + 0.3, y: br.y + 0.3 },
+        { x: bl.x - 0.3, y: bl.y + 0.3 }
+      )} fill="hsl(220,5%,42%)" />
+
+      {/* Main dark panel */}
+      <polygon points={pts(tl, tr, br, bl)}
+        fill="hsl(220,10%,10%)" />
+
+      {/* === Left 60%: logo + brand name === */}
+      {!isBasic && (
+        <g>
+          {/* Subtle brand tint on left zone */}
+          <polygon points={pts(tl, ml, mlB, bl)}
+            fill={ad.brandColor} fillOpacity={0.08} />
+          <text x={leftCx - fsN * 1.2} y={leftCy + fs * 0.15} textAnchor="middle" fontSize={fs}
+            fill={ad.brandColor} fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
+          <text x={leftCx + fsN * 1.2} y={leftCy + fsN * 0.15} textAnchor="middle" fontSize={fsN}
+            fill="hsl(0,0%,90%)" fontFamily="Inter" fontWeight={700} letterSpacing="0.6">{ad.brandName}</text>
+        </g>
+      )}
+
+      {/* === Right 40%: brand pattern/gradient === */}
+      <polygon points={pts(ml, tr, br, mlB)}
+        fill={ad.brandColor} fillOpacity={isBasic ? 0.35 : 0.15} />
+      {/* Diagonal accent lines for texture */}
+      {[0.25, 0.5, 0.75].map((t, i) => {
+        const lnT = { x: ml.x + (tr.x - ml.x) * t, y: ml.y + (tr.y - ml.y) * t };
+        const lnB = { x: mlB.x + (br.x - mlB.x) * Math.max(0, t - 0.15), y: mlB.y + (br.y - mlB.y) * Math.max(0, t - 0.15) };
+        return <line key={i} x1={lnT.x} y1={lnT.y} x2={lnB.x} y2={lnB.y}
+          stroke={ad.brandColor} strokeWidth={0.4} strokeOpacity={isBasic ? 0.3 : 0.2} />;
+      })}
+
+      {/* Top accent bar */}
       {(() => {
-        const t = 0.12;
+        const t = 0.08;
         const stBl = { x: tl.x + (bl.x - tl.x) * t, y: tl.y + (bl.y - tl.y) * t };
         const stBr = { x: tr.x + (br.x - tr.x) * t, y: tr.y + (br.y - tr.y) * t };
-        return <polygon points={`${tl.x},${tl.y} ${tr.x},${tr.y} ${stBr.x},${stBr.y} ${stBl.x},${stBl.y}`}
-          fill={ad.brandColor} fillOpacity={0.9} />;
+        return <polygon points={pts(tl, tr, stBr, stBl)}
+          fill={ad.brandColor} fillOpacity={0.85} />;
       })()}
 
-      {/* LED glow pulse for premium */}
-      {isPremium && (
-        <polygon points={`${tl.x},${tl.y} ${tr.x},${tr.y} ${br.x},${br.y} ${bl.x},${bl.y}`}
-          fill={ad.brandColor} fillOpacity={0.06}>
-          <animate attributeName="fillOpacity" values="0.03;0.1;0.03" dur="2.5s" repeatCount="indefinite" />
-        </polygon>
-      )}
-
-      {/* Content: premium/standard → logo+name, basic → color strip only */}
-      {ad.tier !== 'basic' ? (
-        <>
-          <text x={cx - fsN * 1.5} y={cy + fs * 0.2} textAnchor="middle" fontSize={fs}
-            fill={ad.brandColor} fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-          <text x={cx + fsN * 0.8} y={cy + fsN * 0.2} textAnchor="middle" fontSize={fsN}
-            fill="hsl(0,0%,88%)" fontFamily="Inter" fontWeight={700} letterSpacing="0.8">{ad.brandName}</text>
-        </>
-      ) : (
-        /* Basic: just a wider brand color bar across center */
-        (() => {
-          const t1 = 0.3, t2 = 0.7;
-          const sT = { x: tl.x + (bl.x - tl.x) * t1, y: tl.y + (bl.y - tl.y) * t1 };
-          const sTr = { x: tr.x + (br.x - tr.x) * t1, y: tr.y + (br.y - tr.y) * t1 };
-          const sB = { x: tl.x + (bl.x - tl.x) * t2, y: tl.y + (bl.y - tl.y) * t2 };
-          const sBr = { x: tr.x + (br.x - tr.x) * t2, y: tr.y + (br.y - tr.y) * t2 };
-          return <polygon points={`${sT.x},${sT.y} ${sTr.x},${sTr.y} ${sBr.x},${sBr.y} ${sB.x},${sB.y}`}
-            fill={ad.brandColor} fillOpacity={0.5} />;
-        })()
-      )}
+      {/* Bottom accent bar */}
+      {(() => {
+        const t = 0.92;
+        const stTl = { x: tl.x + (bl.x - tl.x) * t, y: tl.y + (bl.y - tl.y) * t };
+        const stTr = { x: tr.x + (br.x - tr.x) * t, y: tr.y + (br.y - tr.y) * t };
+        return <polygon points={pts(stTl, stTr, br, bl)}
+          fill={ad.brandColor} fillOpacity={0.6} />;
+      })()}
     </g>
   );
 };
