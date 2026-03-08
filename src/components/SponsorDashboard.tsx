@@ -12,11 +12,15 @@ import { CampaignForm } from '@/components/sponsor/CampaignForm';
 import { CampaignList } from '@/components/sponsor/CampaignList';
 import { LeagueStandings } from '@/components/sponsor/LeagueStandings';
 import { EnergyBar } from '@/components/EnergyBar';
+import { BrandDetailPanel } from '@/components/sponsor/BrandDetailPanel';
+import { AgentProfilePanel } from '@/components/agent/AgentProfilePanel';
+import type { WorldEvent } from '@/components/WorldEventBanner';
 
 interface Props {
   adSlots: AdSlot[];
   allAdSlots: AdSlot[];
   agents: Agent[];
+  allAgents: Agent[];
   currentZone: Zone;
   brandStats: BrandStats[];
   highlights: Highlight[];
@@ -26,16 +30,22 @@ interface Props {
   zones: Zone[];
   leagueSeason: BrandLeagueSeason | null;
   leagueScores: BrandLeagueScore[];
+  worldLog: string[];
+  worldEvents: WorldEvent[];
   onCreateCampaign: (input: { brandId: string; zoneId: string; slotIds: string[]; durationTicks: number; startTick: number }) => void;
   onEndCampaign: (id: string) => void;
   onBack: () => void;
 }
 
 export const SponsorDashboard: React.FC<Props> = ({
-  adSlots, allAdSlots, agents, currentZone, brandStats, highlights,
+  adSlots, allAdSlots, agents, allAgents, currentZone, brandStats, highlights,
   cityEnergy, campaigns, currentTick, zones, leagueSeason, leagueScores,
+  worldLog, worldEvents,
   onCreateCampaign, onEndCampaign, onBack,
 }) => {
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+  const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
+
   const activeAds = allAdSlots.filter(s => s.brand);
   const zoneActiveAds = adSlots.filter(s => s.brand);
   const totalImpressions = activeAds.reduce((sum, s) => sum + s.impressions, 0);
@@ -46,7 +56,10 @@ export const SponsorDashboard: React.FC<Props> = ({
   const standardSlots = adSlots.filter(s => s.priority === 'standard');
   const basicSlots = adSlots.filter(s => s.priority === 'basic');
 
+  const selectedAgent = selectedAgentId ? allAgents.find(a => a.id === selectedAgentId) : null;
+
   return (
+    <>
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
