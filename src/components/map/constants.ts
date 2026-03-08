@@ -1,6 +1,6 @@
 // Isometric rendering constants shared across map layers
-export const TILE_W = 48;
-export const TILE_H = 24;
+export const TILE_W = 24;
+export const TILE_H = 12;
 export const WALL_H_UNIT = 16;
 export const MOVE_DURATION = 1200;
 

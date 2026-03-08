@@ -28,7 +28,10 @@ const MAP_KEY: Record<string, TileType> = {
 
 export function getTileTypeFromMap(tileMap: string[], gx: number, gy: number, gridSize: number): TileType {
   if (gx < 0 || gx >= gridSize || gy < 0 || gy >= gridSize) return 'grass';
-  const ch = tileMap[gy]?.[gx];
+  // Map high-res grid (36x36) back to source tile map (18x18)
+  const mapX = Math.floor(gx / 2);
+  const mapY = Math.floor(gy / 2);
+  const ch = tileMap[mapY]?.[mapX];
   if (!ch) return 'grass';
   // Building footprint chars map to sidewalk
   if ('ALTOKBCNEHOV'.includes(ch)) {
