@@ -116,15 +116,15 @@ const INDUSTRIAL_PALETTE: TilePalette = {
 };
 
 const RESIDENTIAL_PALETTE: TilePalette = {
-  grass:       { fill: 'hsl(130,12%,78%)', stroke: 'hsl(130,10%,72%)' },
-  road:        { fill: 'hsl(0,0%,88%)',    stroke: 'hsl(0,0%,82%)' },
-  sidewalk:    { fill: 'hsl(0,0%,92%)',    stroke: 'hsl(0,0%,86%)' },
-  plaza_stone: { fill: 'hsl(40,8%,90%)',   stroke: 'hsl(40,6%,84%)' },
-  park:        { fill: 'hsl(135,18%,72%)', stroke: 'hsl(135,14%,66%)' },
-  dirt:        { fill: 'hsl(35,12%,82%)',  stroke: 'hsl(35,10%,76%)' },
-  water:       { fill: 'hsl(200,25%,78%)', stroke: 'hsl(200,20%,72%)' },
-  parking:     { fill: 'hsl(0,0%,90%)',    stroke: 'hsl(0,0%,84%)' },
-  field:       { fill: 'hsl(130,14%,80%)', stroke: 'hsl(130,10%,74%)' },
+  grass:       { fill: 'hsl(145,18%,38%)', stroke: 'hsl(145,15%,32%)' },
+  road:        { fill: 'hsl(30,8%,42%)',   stroke: 'hsl(30,6%,36%)' },
+  sidewalk:    { fill: 'hsl(35,12%,52%)',  stroke: 'hsl(35,10%,46%)' },
+  plaza_stone: { fill: 'hsl(28,14%,48%)',  stroke: 'hsl(28,12%,42%)' },
+  park:        { fill: 'hsl(140,22%,34%)', stroke: 'hsl(140,18%,28%)' },
+  dirt:        { fill: 'hsl(25,18%,44%)',  stroke: 'hsl(25,14%,38%)' },
+  water:       { fill: 'hsl(195,28%,38%)', stroke: 'hsl(195,24%,32%)' },
+  parking:     { fill: 'hsl(30,6%,46%)',   stroke: 'hsl(30,5%,40%)' },
+  field:       { fill: 'hsl(140,16%,36%)', stroke: 'hsl(140,12%,30%)' },
 };
 
 export const ZONE_PALETTES: Record<string, TilePalette> = {
@@ -634,18 +634,18 @@ const RESIDENTIAL_TILE_MAP = [
 ];
 
 const RESIDENTIAL_BUILDINGS: Building[] = [
-  // NW: Brand houses — white walls, gold trim
-  { id: 'brand_house_a', name: 'Brand House A', emoji: '🏠', color: 'primary', gridX: 2, gridY: 2, width: 6, height: 6, description: '프리미엄 브랜드 하우스 A — 네이밍 라이츠 전용', adSlots: ['naming_rights', 'wall_wrap'], heightLevel: 2, roofShape: 'hip', wallColor: 'hsl(0,0%,95%)', roofColor: 'hsl(43,56%,62%)', buildingType: 'house' },
-  { id: 'brand_house_b', name: 'Brand House B', emoji: '🏡', color: 'secondary', gridX: 8, gridY: 2, width: 6, height: 6, description: '프리미엄 브랜드 하우스 B — 벽면 래핑 가능', adSlots: ['naming_rights', 'wall_wrap'], heightLevel: 2, roofShape: 'gabled', wallColor: 'hsl(0,0%,96%)', roofColor: 'hsl(30,18%,55%)', buildingType: 'house' },
+  // NW: Brand houses — warm stone & timber
+  { id: 'brand_house_a', name: 'Brand House A', emoji: '🏠', color: 'primary', gridX: 2, gridY: 2, width: 6, height: 6, description: '프리미엄 브랜드 하우스 A — 네이밍 라이츠 전용', adSlots: ['naming_rights', 'wall_wrap'], heightLevel: 2, roofShape: 'hip', wallColor: 'hsl(35,18%,58%)', roofColor: 'hsl(25,22%,38%)', buildingType: 'house' },
+  { id: 'brand_house_b', name: 'Brand House B', emoji: '🏡', color: 'secondary', gridX: 8, gridY: 2, width: 6, height: 6, description: '프리미엄 브랜드 하우스 B — 벽면 래핑 가능', adSlots: ['naming_rights', 'wall_wrap'], heightLevel: 2, roofShape: 'gabled', wallColor: 'hsl(30,15%,55%)', roofColor: 'hsl(20,20%,35%)', buildingType: 'house' },
   // NE: Brand pavilions
-  { id: 'brand_pavilion', name: 'Brand Pavilion', emoji: '🏛️', color: 'primary', gridX: 18, gridY: 2, width: 8, height: 8, description: '브랜드 파빌리온 — 대형 체험관 & 전시', adSlots: ['naming_rights', 'billboard', 'wall_wrap', 'kiosk'], heightLevel: 3, roofShape: 'dome', wallColor: 'hsl(0,0%,94%)', roofColor: 'hsl(43,50%,58%)', buildingType: 'civic' },
-  { id: 'flagship_store', name: 'Flagship Store', emoji: '⭐', color: 'accent', gridX: 26, gridY: 2, width: 6, height: 6, description: '플래그십 스토어 — 브랜드 쇼룸', adSlots: ['naming_rights', 'wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'flat', wallColor: 'hsl(0,0%,97%)', roofColor: 'hsl(0,0%,88%)', buildingType: 'shop' },
+  { id: 'brand_pavilion', name: 'Brand Pavilion', emoji: '🏛️', color: 'primary', gridX: 18, gridY: 2, width: 8, height: 8, description: '브랜드 파빌리온 — 대형 체험관 & 전시', adSlots: ['naming_rights', 'billboard', 'wall_wrap', 'kiosk'], heightLevel: 3, roofShape: 'dome', wallColor: 'hsl(32,16%,52%)', roofColor: 'hsl(28,25%,36%)', buildingType: 'civic' },
+  { id: 'flagship_store', name: 'Flagship Store', emoji: '⭐', color: 'accent', gridX: 26, gridY: 2, width: 6, height: 6, description: '플래그십 스토어 — 브랜드 쇼룸', adSlots: ['naming_rights', 'wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'flat', wallColor: 'hsl(38,14%,56%)', roofColor: 'hsl(30,10%,42%)', buildingType: 'shop' },
   // SW: More brand houses
-  { id: 'brand_house_c', name: 'Brand House C', emoji: '🏘️', color: 'accent', gridX: 2, gridY: 20, width: 6, height: 6, description: '라이프스타일 브랜드 하우스', adSlots: ['naming_rights', 'wall_wrap'], heightLevel: 2, roofShape: 'hip', wallColor: 'hsl(0,0%,96%)', roofColor: 'hsl(43,52%,60%)', buildingType: 'house' },
-  { id: 'brand_house_d', name: 'Brand House D', emoji: '🏠', color: 'primary', gridX: 8, gridY: 20, width: 6, height: 6, description: '테크 브랜드 하우스', adSlots: ['naming_rights', 'wall_wrap', 'billboard'], heightLevel: 2, roofShape: 'gabled', wallColor: 'hsl(0,0%,95%)', roofColor: 'hsl(30,15%,52%)', buildingType: 'house' },
+  { id: 'brand_house_c', name: 'Brand House C', emoji: '🏘️', color: 'accent', gridX: 2, gridY: 20, width: 6, height: 6, description: '라이프스타일 브랜드 하우스', adSlots: ['naming_rights', 'wall_wrap'], heightLevel: 2, roofShape: 'hip', wallColor: 'hsl(33,17%,54%)', roofColor: 'hsl(22,20%,36%)', buildingType: 'house' },
+  { id: 'brand_house_d', name: 'Brand House D', emoji: '🏠', color: 'primary', gridX: 8, gridY: 20, width: 6, height: 6, description: '테크 브랜드 하우스', adSlots: ['naming_rights', 'wall_wrap', 'billboard'], heightLevel: 2, roofShape: 'gabled', wallColor: 'hsl(28,16%,56%)', roofColor: 'hsl(20,18%,34%)', buildingType: 'house' },
   // SE: Community + brand space
-  { id: 'brand_gallery', name: 'Brand Gallery', emoji: '🖼️', color: 'secondary', gridX: 18, gridY: 20, width: 8, height: 6, description: '브랜드 갤러리 — 아트 & 캠페인 전시', adSlots: ['naming_rights', 'billboard', 'wall_wrap'], heightLevel: 2, roofShape: 'flat', wallColor: 'hsl(0,0%,97%)', roofColor: 'hsl(0,0%,90%)', buildingType: 'civic' },
-  { id: 'community_hall', name: 'Community Hall', emoji: '🤝', color: 'accent', gridX: 26, gridY: 20, width: 6, height: 6, description: '커뮤니티 홀 — 브랜드 팬 모임 공간', adSlots: ['naming_rights', 'kiosk'], heightLevel: 2, roofShape: 'dome', wallColor: 'hsl(0,0%,94%)', roofColor: 'hsl(43,48%,56%)', buildingType: 'civic' },
+  { id: 'brand_gallery', name: 'Brand Gallery', emoji: '🖼️', color: 'secondary', gridX: 18, gridY: 20, width: 8, height: 6, description: '브랜드 갤러리 — 아트 & 캠페인 전시', adSlots: ['naming_rights', 'billboard', 'wall_wrap'], heightLevel: 2, roofShape: 'flat', wallColor: 'hsl(35,14%,50%)', roofColor: 'hsl(30,12%,38%)', buildingType: 'civic' },
+  { id: 'community_hall', name: 'Community Hall', emoji: '🤝', color: 'accent', gridX: 26, gridY: 20, width: 6, height: 6, description: '커뮤니티 홀 — 브랜드 팬 모임 공간', adSlots: ['naming_rights', 'kiosk'], heightLevel: 2, roofShape: 'dome', wallColor: 'hsl(32,18%,52%)', roofColor: 'hsl(25,22%,34%)', buildingType: 'civic' },
 ];
 
 // ===== ALL ZONES =====
@@ -705,7 +705,7 @@ export const ZONES: Zone[] = [
     description: '브랜드 마을 — 각 건물이 하나의 브랜드를 대표하는 프리미엄 구역',
     gridSize: 36,
     theme: 'residential',
-    themeColor: 'hsl(280,30%,45%)',
+    themeColor: 'hsl(30,20%,40%)',
     buildings: RESIDENTIAL_BUILDINGS,
     tileMap: RESIDENTIAL_TILE_MAP,
     locked: false,
