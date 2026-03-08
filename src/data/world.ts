@@ -76,40 +76,43 @@ const PLAZA_PALETTE: TilePalette = {
   field:       { fill: 'hsl(120,20%,36%)', stroke: 'hsl(120,18%,40%)' },
 };
 
+// Campus — Warm academia: brick, ivy, warm wood
 const CAMPUS_PALETTE: TilePalette = {
-  grass:       { fill: 'hsl(125,26%,36%)', stroke: 'hsl(125,22%,40%)' },
-  road:        { fill: 'hsl(220,5%,30%)',  stroke: 'hsl(220,6%,34%)' },
-  sidewalk:    { fill: 'hsl(25,12%,54%)',  stroke: 'hsl(25,14%,58%)' },
-  plaza_stone: { fill: 'hsl(20,15%,50%)',  stroke: 'hsl(20,18%,55%)' },
-  park:        { fill: 'hsl(135,30%,35%)', stroke: 'hsl(135,26%,39%)' },
-  dirt:        { fill: 'hsl(25,20%,36%)',  stroke: 'hsl(25,18%,40%)' },
-  water:       { fill: 'hsl(200,45%,40%)', stroke: 'hsl(200,40%,44%)' },
-  parking:     { fill: 'hsl(220,4%,36%)',  stroke: 'hsl(220,5%,40%)' },
-  field:       { fill: 'hsl(100,25%,38%)', stroke: 'hsl(100,22%,42%)' },
+  grass:       { fill: 'hsl(125,28%,34%)', stroke: 'hsl(125,24%,38%)' },
+  road:        { fill: 'hsl(20,8%,32%)',   stroke: 'hsl(20,10%,36%)' },
+  sidewalk:    { fill: 'hsl(25,18%,48%)',  stroke: 'hsl(25,20%,52%)' },
+  plaza_stone: { fill: 'hsl(15,22%,42%)',  stroke: 'hsl(15,24%,46%)' },
+  park:        { fill: 'hsl(135,32%,30%)', stroke: 'hsl(135,28%,34%)' },
+  dirt:        { fill: 'hsl(25,22%,34%)',  stroke: 'hsl(25,20%,38%)' },
+  water:       { fill: 'hsl(195,35%,38%)', stroke: 'hsl(195,30%,42%)' },
+  parking:     { fill: 'hsl(20,6%,34%)',   stroke: 'hsl(20,8%,38%)' },
+  field:       { fill: 'hsl(100,30%,34%)', stroke: 'hsl(100,26%,38%)' },
 };
 
+// Harbor — Warm coastal: terracotta, sand, ocean
 const HARBOR_PALETTE: TilePalette = {
-  grass:       { fill: 'hsl(115,18%,30%)', stroke: 'hsl(115,15%,34%)' },
-  road:        { fill: 'hsl(215,5%,30%)',  stroke: 'hsl(215,6%,34%)' },
-  sidewalk:    { fill: 'hsl(210,6%,46%)',  stroke: 'hsl(210,8%,50%)' },
-  plaza_stone: { fill: 'hsl(210,8%,42%)',  stroke: 'hsl(210,10%,46%)' },
-  park:        { fill: 'hsl(130,22%,30%)', stroke: 'hsl(130,18%,34%)' },
-  dirt:        { fill: 'hsl(30,12%,32%)',  stroke: 'hsl(30,10%,36%)' },
-  water:       { fill: 'hsl(200,50%,35%)', stroke: 'hsl(200,45%,40%)' },
-  parking:     { fill: 'hsl(215,4%,34%)',  stroke: 'hsl(215,5%,38%)' },
-  field:       { fill: 'hsl(120,15%,32%)', stroke: 'hsl(120,12%,36%)' },
+  grass:       { fill: 'hsl(80,18%,42%)',  stroke: 'hsl(80,15%,46%)' },
+  road:        { fill: 'hsl(25,10%,35%)',  stroke: 'hsl(25,12%,39%)' },
+  sidewalk:    { fill: 'hsl(35,22%,55%)',  stroke: 'hsl(35,24%,59%)' },
+  plaza_stone: { fill: 'hsl(30,25%,50%)',  stroke: 'hsl(30,28%,54%)' },
+  park:        { fill: 'hsl(90,22%,38%)',  stroke: 'hsl(90,18%,42%)' },
+  dirt:        { fill: 'hsl(38,28%,42%)',  stroke: 'hsl(38,25%,46%)' },
+  water:       { fill: 'hsl(195,55%,38%)', stroke: 'hsl(195,50%,42%)' },
+  parking:     { fill: 'hsl(30,8%,38%)',   stroke: 'hsl(30,10%,42%)' },
+  field:       { fill: 'hsl(80,20%,40%)',  stroke: 'hsl(80,16%,44%)' },
 };
 
+// Industrial — Cyberpunk: ultra-dark, neon accents
 const INDUSTRIAL_PALETTE: TilePalette = {
-  grass:       { fill: 'hsl(110,14%,28%)', stroke: 'hsl(110,12%,32%)' },
-  road:        { fill: 'hsl(220,4%,26%)',  stroke: 'hsl(220,5%,30%)' },
-  sidewalk:    { fill: 'hsl(220,5%,40%)',  stroke: 'hsl(220,6%,44%)' },
-  plaza_stone: { fill: 'hsl(220,6%,38%)',  stroke: 'hsl(220,7%,42%)' },
-  park:        { fill: 'hsl(125,18%,28%)', stroke: 'hsl(125,15%,32%)' },
-  dirt:        { fill: 'hsl(30,10%,30%)',  stroke: 'hsl(30,8%,34%)' },
-  water:       { fill: 'hsl(200,35%,30%)', stroke: 'hsl(200,30%,34%)' },
-  parking:     { fill: 'hsl(220,3%,30%)',  stroke: 'hsl(220,4%,34%)' },
-  field:       { fill: 'hsl(110,12%,30%)', stroke: 'hsl(110,10%,34%)' },
+  grass:       { fill: 'hsl(180,8%,16%)',  stroke: 'hsl(180,6%,20%)' },
+  road:        { fill: 'hsl(230,6%,14%)',  stroke: 'hsl(230,8%,18%)' },
+  sidewalk:    { fill: 'hsl(240,5%,22%)',  stroke: 'hsl(240,6%,26%)' },
+  plaza_stone: { fill: 'hsl(250,6%,20%)',  stroke: 'hsl(250,8%,24%)' },
+  park:        { fill: 'hsl(160,12%,16%)', stroke: 'hsl(160,10%,20%)' },
+  dirt:        { fill: 'hsl(30,6%,18%)',   stroke: 'hsl(30,5%,22%)' },
+  water:       { fill: 'hsl(220,30%,18%)', stroke: 'hsl(220,25%,22%)' },
+  parking:     { fill: 'hsl(240,4%,16%)',  stroke: 'hsl(240,5%,20%)' },
+  field:       { fill: 'hsl(180,8%,14%)',  stroke: 'hsl(180,6%,18%)' },
 };
 
 const RESIDENTIAL_PALETTE: TilePalette = {
