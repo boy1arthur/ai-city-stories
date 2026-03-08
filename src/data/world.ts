@@ -334,7 +334,7 @@ export const ZONES: Zone[] = [
     name: 'Harbor District',
     emoji: '⚓',
     description: '항구 & 물류 지구 — 글로벌 브랜드 노출 극대화',
-    gridSize: 18,
+    gridSize: 36,
     theme: 'harbor',
     themeColor: 'hsl(205,50%,45%)',
     buildings: [],
