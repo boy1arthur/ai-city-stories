@@ -261,7 +261,7 @@ const PLAZA_BUILDINGS: Building[] = [
     wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,20%,35%)', buildingType: 'park_structure' },
 
   { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'primary',
-    gridX: 9, gridY: 15, width: 3, height: 2,
+    gridX: 10, gridY: 15, width: 2, height: 2,
     description: '별 관측소 & 미래 탐색',
     adSlots: ['naming_rights', 'kiosk'],
     heightLevel: 3, roofShape: 'dome',
