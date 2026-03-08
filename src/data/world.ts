@@ -154,25 +154,25 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 // Buildings occupy sidewalk tiles. Single-tile pedestrian spines: col 9 (vert), row 8 (horiz).
 // Core: rows 2-13, cols 1-16  |  Outskirts: row 0-1, 14-17 & col 0, 17
 const PLAZA_TILE_MAP = [
-  // 0123456789012345678
-  'KKGSSSSSSRSSSSSSGKK', // 0  park edge
-  'KGSSSSSSSRSSSSSSSKK', // 1  park + sidewalk border
-  'SSAAAASSSPRFFFSSSSS', // 2  Arena(2-5,2-5) FeedTower(11-13,2-4)
-  'SSAAAASSSPRFFFSSPSS', // 3  
-  'SSAAAASSSPRFFFSPPSS', // 4  Oracle(15-16,3-5) + plaza paving
-  'SSAAAASSSPLLLSOPPSS', // 5  Lab(10-12,5-7) Oracle
-  'SSCCCSSSSPLLLSSPPPS', // 6  Cafe(2-4,6-7) Plaza paving area
-  'SSCCCSSPSPLLLSSPPPS', // 7  
-  'RRRRRRRRRRRRRRRRRRS', // 8  ── main pedestrian boulevard ──
-  'SSBBBBSPPSSNNNSSPPS', // 9  Library(2-5,9-11) Newsstand(10-12,9-10) 
-  'SSBBBBSPPSSNNNSSPPS', // 10 
-  'SSBBBBSPPSSSSSSPPSS', // 11 
-  'SSTTTSSKSSWWWWSSPSS', // 12 Tavern(2-4,12-13) Workshop(10-13,12-14)
-  'SSTTTSSKSSWWWWSSSSS', // 13 
-  'SSKKKKKKSSWWWWSSSSS', // 14 Garden park(2-7,14-16)
-  'SSKKKKKKSSOOOSSSKKS', // 15 Observatory(10-12,15-16)
-  'SSKKKKKKSSOOOSSSKKS', // 16 
-  'GKKKKKKKKSSSSSSKKKK', // 17 park edge
+  //0123456789012345 67
+  'KKGSSSSSRSSSSSGKK', // 0  park edge
+  'KGSSSSSSRSSSSSKKK', // 1  park + sidewalk border
+  'SSAAAASSPRFFFSSSS', // 2  Arena(2-5,2-5) FeedTower(10-12,2-4)
+  'SSAAAASSPRFFFSPSS', // 3  
+  'SSAAAASSPRFFFPPSS', // 4  Oracle(14-15,3-5)
+  'SSAAAASSPLLLSOPPS', // 5  Lab(9-11,5-7) Oracle
+  'SSCCCSSUPLLLSSPPS', // 6  Cafe(2-4,6-7) Plaza paving
+  'SSCCCSPUPLLLSSPPS', // 7  
+  'RRRRRRRRRRRRRRRRRR', // 8  ── main pedestrian boulevard ──
+  'SSBBBBPPSSNNNSPPSS', // 9  Library(2-5,9-11) Newsstand(10-12,9-10)
+  'SSBBBBPPSSNNNSPPSS', // 10 
+  'SSBBBBPPSSSSSSPPSS', // 11 
+  'STTTSSKKSSWWWWSPSS', // 12 Tavern(1-3,12-13) Workshop(10-13,12-14)
+  'STTTSSKKSSWWWWSSSS', // 13 
+  'SKKKKKKKSSWWWWSSSS', // 14 Garden park(1-7,14-16)
+  'SKKKKKKKSSOOOSSKKK', // 15 Observatory(10-12,15-16)
+  'SKKKKKKKSSOOOSSKKK', // 16 
+  'GKKKKKKKSSSSSSKKKG', // 17 park edge
 ];
 
 const PLAZA_BUILDINGS: Building[] = [
