@@ -243,7 +243,7 @@ const PLAZA_BUILDINGS: Building[] = [
   { id: 'library', name: 'Library', emoji: '📚', color: 'primary',
     gridX: 2, gridY: 18, width: 6, height: 8,
     description: '지식 아카이브 & 학습 센터',
-    adSlots: ['billboard', 'bus_stop', 'kiosk'],
+    adSlots: ['billboard', 'bus_stop'],
     heightLevel: 2, roofShape: 'gabled',
     wallColor: 'hsl(20,20%,52%)', roofColor: 'hsl(10,25%,35%)', buildingType: 'campus' },
 
