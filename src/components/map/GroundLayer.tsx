@@ -3,6 +3,13 @@ import type { Zone } from '@/data/world';
 import { getTileTypeFromMap, isRoadCenterInZone, getZonePalette } from '@/data/world';
 import { iso, diamond, TILE_W, TILE_H } from './constants';
 
+// Narrower diamond for road rendering (60% width)
+function narrowDiamond(cx: number, cy: number): string {
+  const w = TILE_W * 0.3;  // half of 60%
+  const h = TILE_H * 0.3;
+  return `${cx},${cy - h} ${cx + w},${cy} ${cx},${cy + h} ${cx - w},${cy}`;
+}
+
 // Street furniture positions for Plaza district (36x36 grid)
 const LAMPPOST_POSITIONS = [
   { gx: 2, gy: 16 }, { gx: 10, gy: 16 }, { gx: 24, gy: 16 }, { gx: 32, gy: 16 },
