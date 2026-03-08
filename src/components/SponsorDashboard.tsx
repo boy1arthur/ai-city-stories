@@ -205,6 +205,7 @@ export const SponsorDashboard: React.FC<Props> = ({
         brandStats={brandStats}
         leagueScores={leagueScores}
         agents={allAgents}
+        allAdSlots={allAdSlots}
         worldLog={worldLog}
         worldEvents={worldEvents}
         onAgentClick={(id) => { setSelectedBrand(null); setSelectedAgentId(id); }}
