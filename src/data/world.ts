@@ -206,7 +206,7 @@ const PLAZA_BUILDINGS: Building[] = [
   { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
     gridX: 8, gridY: 10, width: 6, height: 4,
     description: '에이전트 카페 & 미팅 포인트',
-    adSlots: ['kiosk', 'bus_stop', 'wall_wrap'],
+    adSlots: ['kiosk'],
     heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
