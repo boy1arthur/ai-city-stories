@@ -105,5 +105,5 @@ export const PatronTileRenderer = React.memo(React.forwardRef<SVGGElement, Props
       })}
     </g>
   );
-});
+}));
 PatronTileRenderer.displayName = 'PatronTileRenderer';

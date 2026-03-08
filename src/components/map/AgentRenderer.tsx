@@ -304,5 +304,5 @@ export const AgentRenderer = React.memo(React.forwardRef<SVGGElement, Props>(({
       })}
     </g>
   );
-});
+}));
 AgentRenderer.displayName = 'AgentRenderer';
