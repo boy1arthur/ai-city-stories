@@ -28,6 +28,11 @@ export const SlotVisualRenderer: React.FC<Props> = React.memo(({ slots, building
           ? buildings.find(b => b.id === slot.location.buildingId)
           : null;
 
+        // Freestanding tile-based slot (edge kiosk/billboard)
+        if (!building && slot.location.tile) {
+          return <FreestandingSlot key={slot.id} slot={slot} onClick={() => onSlotClick(slot)} />;
+        }
+
         if (!building && slot.location.buildingId) return null;
 
         switch (slot.type) {
