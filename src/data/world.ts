@@ -161,8 +161,8 @@ const PLAZA_TILE_MAP = [
   'SSAAAASSPRFFFSPSS', // 3  
   'SSAAAASSPRFFFPPSS', // 4  Oracle(14-15,3-5)
   'SSAAAASSPLLLSOPPS', // 5  Lab(9-11,5-7) Oracle
-  'SSCCCSSPLLLSSSPPS', // 6  Cafe(2-4,6-7) Plaza paving
-  'SSCCCSPLLLSSSSPPS', // 7  
+  'SSCCCSSPLLLLSSPPS', // 6  Cafe(2-4,6-7) Lab extends
+  'SSCCCSPPLLLLSSPPS', // 7  
   'RRRRRRRRRRRRRRRRRR', // 8  ── main pedestrian boulevard ──
   'SSBBBBPPSSNNNSPPSS', // 9  Library(2-5,9-11) Newsstand(10-12,9-10)
   'SSBBBBPPSSNNNSPPSS', // 10 
