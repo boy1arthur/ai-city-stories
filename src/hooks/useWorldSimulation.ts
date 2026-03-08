@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { AGENTS, BUILDINGS, INITIAL_AD_SLOTS, generateBrandDialogue, type Agent, type AdSlot } from '@/data/world';
+import { AGENTS, BUILDINGS, INITIAL_AD_SLOTS, generateBrandDialogue, type Agent, type AdSlot, type InteractionEvent } from '@/data/world';
 
 const TICK_MS = 3000;
 
@@ -13,13 +13,25 @@ export function useWorldSimulation() {
   const [worldLog, setWorldLog] = useState<string[]>([]);
   const [tick, setTick] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [interactions, setInteractions] = useState<InteractionEvent[]>([]);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const addLog = useCallback((msg: string) => {
     setWorldLog(prev => [msg, ...prev].slice(0, 100));
   }, []);
 
-  // Simulation tick
+  const addInteraction = useCallback((event: InteractionEvent) => {
+    setInteractions(prev => [event, ...prev.filter(e => Date.now() - e.timestamp < 5000)].slice(0, 20));
+  }, []);
+
+  // Clean up old interactions
+  useEffect(() => {
+    const cleanup = setInterval(() => {
+      setInteractions(prev => prev.filter(e => Date.now() - e.timestamp < 5000));
+    }, 1000);
+    return () => clearInterval(cleanup);
+  }, []);
+
   useEffect(() => {
     if (isPaused) {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -30,25 +42,32 @@ export function useWorldSimulation() {
       setTick(t => t + 1);
 
       setAgents(prev => prev.map(agent => {
-        // 30% chance to move
         if (Math.random() < 0.3) {
           const newBuilding = pickRandom(BUILDINGS);
           if (newBuilding.id !== agent.currentBuildingId) {
             addLog(`${agent.avatar} ${agent.name}이(가) ${newBuilding.name}(으)로 이동`);
             
-            // Check for ads at new building and update affinity
             const buildingAds = adSlots.filter(s => s.buildingId === newBuilding.id && s.brand);
             const updatedAffinities = [...agent.brandAffinities];
             
             buildingAds.forEach(ad => {
               if (ad.brand) {
-                // Increase impressions
                 setAdSlots(prev => prev.map(s => s.id === ad.id ? { ...s, impressions: s.impressions + 1 } : s));
                 
-                // Generate dialogue 10% of the time
-                if (Math.random() < 0.1) {
-                  const catAffinity = updatedAffinities.find(a => true); // simplified
-                  const score = catAffinity?.score ?? 0;
+                const catAffinity = updatedAffinities[0];
+                const score = catAffinity?.score ?? 0;
+                
+                // Always create interaction event for visual feedback
+                addInteraction({
+                  id: `${agent.id}_${ad.id}_${Date.now()}`,
+                  agentId: agent.id,
+                  buildingId: newBuilding.id,
+                  brand: ad.brand,
+                  affinity: score,
+                  timestamp: Date.now(),
+                });
+                
+                if (Math.random() < 0.15) {
                   const dialogue = generateBrandDialogue(agent.name, ad.brand, score);
                   addLog(dialogue);
                 }
@@ -59,7 +78,6 @@ export function useWorldSimulation() {
           }
         }
 
-        // 10% chance to change mood
         if (Math.random() < 0.1) {
           const moods = ['happy', 'curious', 'critical', 'neutral', 'excited'] as const;
           return { ...agent, mood: pickRandom([...moods]) };
@@ -72,7 +90,7 @@ export function useWorldSimulation() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isPaused, adSlots, addLog]);
+  }, [isPaused, adSlots, addLog, addInteraction]);
 
   const placeBrandAd = useCallback((slotId: string, brandName: string) => {
     setAdSlots(prev => prev.map(s => s.id === slotId ? { ...s, brand: brandName } : s));
@@ -88,5 +106,6 @@ export function useWorldSimulation() {
     setIsPaused,
     placeBrandAd,
     buildings: BUILDINGS,
+    interactions,
   };
 }

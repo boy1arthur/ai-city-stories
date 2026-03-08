@@ -8,7 +8,7 @@ import { useWorldSimulation } from '@/hooks/useWorldSimulation';
 import type { Building, Agent } from '@/data/world';
 
 const Index = () => {
-  const { agents, adSlots, worldLog, tick, isPaused, setIsPaused, placeBrandAd, buildings } = useWorldSimulation();
+  const { agents, adSlots, worldLog, tick, isPaused, setIsPaused, placeBrandAd, buildings, interactions } = useWorldSimulation();
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [showDashboard, setShowDashboard] = useState(false);
@@ -28,6 +28,7 @@ const Index = () => {
           buildings={buildings}
           agents={agents}
           adSlots={adSlots}
+          interactions={interactions}
           onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
           onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
         />
