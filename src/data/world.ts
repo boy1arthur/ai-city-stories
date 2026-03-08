@@ -214,7 +214,7 @@ const PLAZA_BUILDINGS: Building[] = [
   { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'primary',
     gridX: 18, gridY: 2, width: 8, height: 8,
     description: '소셜 피드 & 트렌드 센터',
-    adSlots: ['billboard', 'kiosk', 'wall_wrap'],
+    adSlots: ['kiosk'],
     heightLevel: 5, roofShape: 'antenna',
     wallColor: 'hsl(210,10%,48%)', roofColor: 'hsl(210,8%,40%)', buildingType: 'tower' },
 
