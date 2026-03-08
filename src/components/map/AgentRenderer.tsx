@@ -98,8 +98,10 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
   // Walk cycle: swing legs and arms
   const walkT = isMoving ? Math.sin((walkPhase / 120) * Math.PI * 2) : 0;
   const breathe = isMoving ? 0 : Math.sin(Date.now() / 1200) * 0.4;
-  // Direction: determine facing based on movement delta
-  const facingRight = visualState ? visualState.toX >= visualState.fromX : true;
+  // Direction: determine facing based on path direction
+  const facingRight = visualState?.isMoving && visualState.path?.length >= 2
+    ? (() => { const elapsed = Date.now() - visualState.moveStartTime; const t = Math.min(1, elapsed / (visualState.moveDuration || 3000)); const dir = getPathDirection(visualState.path, t); return dir.dx >= 0; })()
+    : true;
 
   const avgAffinity = agent.brandAffinities.reduce((s, a) => s + a.score, 0) / Math.max(1, agent.brandAffinities.length);
   const agentBubbles = speechBubbles.filter(b => b.agentId === agent.id);
