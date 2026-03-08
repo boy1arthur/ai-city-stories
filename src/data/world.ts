@@ -201,21 +201,21 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── CORE MIDDLE ───
   { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary',
-    gridX: 9, gridY: 5, width: 3, height: 3,
+    gridX: 9, gridY: 5, width: 3, height: 2,
     description: '실험 & 프로토타입 연구소',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
     heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
 
   { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
-    gridX: 2, gridY: 6, width: 3, height: 2,
+    gridX: 2, gridY: 6, width: 3, height: 1,
     description: '에이전트 카페 & 미팅 포인트',
     adSlots: ['kiosk', 'bus_stop'],
     heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
   { id: 'plaza', name: 'Central Plaza', emoji: '🏛️', color: 'accent',
-    gridX: 13, gridY: 5, width: 3, height: 3,
+    gridX: 13, gridY: 5, width: 3, height: 2,
     description: '중앙 광장 — 모든 에이전트의 교차점',
     adSlots: ['billboard', 'wall_wrap', 'bus_stop', 'kiosk', 'naming_rights'],
     heightLevel: 1, roofShape: 'flat',
