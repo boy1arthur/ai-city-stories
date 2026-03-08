@@ -20,7 +20,7 @@ export const MultiBuildingAdRenderer: React.FC<Props> = React.memo(({ ads, build
         const blds = ad.buildingIds
           .map(id => buildings.find(b => b.id === id))
           .filter(Boolean) as Building[];
-        if (blds.length < 2) return null;
+        if (blds.length < 1) return null;
 
         return <WallPaintedAd key={ad.id} ad={ad} buildings={blds} />;
       })}
