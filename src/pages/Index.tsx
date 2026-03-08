@@ -35,6 +35,7 @@ const Index = () => {
   } = sim;
 
   const { campaigns, createCampaign, endCampaign, updateCampaignSlots } = useCampaigns();
+  const { user, signOut } = useAuth();
   const isMobile = useIsMobile();
 
   // Full city view state (PC only)
