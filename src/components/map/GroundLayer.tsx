@@ -5,40 +5,28 @@ import { iso, diamond, TILE_W, TILE_H } from './constants';
 
 // Street furniture positions for Plaza district (updated for new dense layout)
 const LAMPPOST_POSITIONS = [
-  // Along pedestrian boulevard (row 8)
-  { gx: 1, gy: 8 }, { gx: 4, gy: 8 }, { gx: 7, gy: 8 }, { gx: 12, gy: 8 }, { gx: 15, gy: 8 },
-  // Along vertical spine (col 9)
-  { gx: 9, gy: 1 }, { gx: 9, gy: 4 }, { gx: 9, gy: 6 }, { gx: 9, gy: 11 }, { gx: 9, gy: 14 },
-  // Key building entrances
-  { gx: 6, gy: 3 }, { gx: 14, gy: 3 }, { gx: 6, gy: 10 }, { gx: 14, gy: 10 },
+  { gx: 1, gy: 8 }, { gx: 5, gy: 8 }, { gx: 12, gy: 8 }, { gx: 16, gy: 8 },
+  { gx: 8, gy: 1 }, { gx: 8, gy: 5 }, { gx: 8, gy: 11 }, { gx: 8, gy: 15 },
+  { gx: 6, gy: 3 }, { gx: 6, gy: 10 }, { gx: 13, gy: 8 },
 ];
 
 const BENCH_POSITIONS = [
-  // Near Plaza
-  { gx: 13, gy: 6, dir: 'v' as const }, { gx: 13, gy: 8, dir: 'v' as const },
-  // Along boulevard
-  { gx: 3, gy: 8, dir: 'h' as const }, { gx: 11, gy: 8, dir: 'h' as const },
-  // Near Garden
-  { gx: 4, gy: 14, dir: 'h' as const }, { gx: 6, gy: 15, dir: 'h' as const },
-  // Near Library
+  { gx: 7, gy: 6, dir: 'h' as const },
+  { gx: 13, gy: 7, dir: 'v' as const },
+  { gx: 3, gy: 8, dir: 'h' as const },
+  { gx: 11, gy: 8, dir: 'h' as const },
+  { gx: 4, gy: 14, dir: 'h' as const },
   { gx: 6, gy: 10, dir: 'v' as const },
-  // Near Tavern
-  { gx: 5, gy: 13, dir: 'v' as const },
 ];
 
 const PLANTER_POSITIONS = [
-  // Core area accents
-  { gx: 8, gy: 3 }, { gx: 8, gy: 6 }, { gx: 8, gy: 11 },
-  // Near plaza entrance
-  { gx: 14, gy: 8 }, { gx: 16, gy: 8 },
-  // Garden border
-  { gx: 1, gy: 14 }, { gx: 8, gy: 14 },
+  { gx: 7, gy: 3 }, { gx: 7, gy: 10 },
+  { gx: 14, gy: 9 }, { gx: 1, gy: 14 }, { gx: 8, gy: 14 },
 ];
 
 const TRASHCAN_POSITIONS = [
   { gx: 0, gy: 8 }, { gx: 17, gy: 8 },
-  { gx: 9, gy: 0 }, { gx: 9, gy: 17 },
-  { gx: 6, gy: 6 }, { gx: 14, gy: 14 },
+  { gx: 8, gy: 0 }, { gx: 8, gy: 17 },
 ];
 
 export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
