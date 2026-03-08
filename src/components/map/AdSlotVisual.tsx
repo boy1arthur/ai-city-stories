@@ -195,8 +195,8 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
                 {/* Wall panel background */}
                 <rect x={mx - panelW / 2} y={my - panelH / 2}
                   width={panelW} height={panelH} rx={2}
-                  fill={bv.color} fillOpacity={0.35}
-                  stroke={bv.color} strokeWidth={0.8} strokeOpacity={0.5} />
+                  fill={bv.color}
+                  stroke={bv.color} strokeWidth={0.8} />
 
                 {/* Brand initial — large */}
                 <text x={mx - panelW / 2 + panelH * 0.55} y={my + panelH * 0.15}
