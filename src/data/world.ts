@@ -154,30 +154,29 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 
 // ===== PLAZA DISTRICT (dense campus-commercial hybrid) =====
 // Legend:  R=road  S=sidewalk  P=plaza_stone  K=park  G=grass
-// Building chars: A=Arena E=Feed O=Oracle L=Lab C=Cafe B=Library N=News T=Tavern H=Workshop V=Obs
+// Building chars: A=Arena E=Feed O=Oracle C=Cafe B=Library N=News T=Tavern H=Workshop V=Obs
 // Grid: 18x18. Vert road: col 8. Horiz boulevard: row 8.
 // All buildings have ≥1 tile buffer from roads (col 7/9 = sidewalk, row 7/9 = sidewalk).
 // Each row is exactly 18 chars.
 // ===== PLAZA TILE MAP =====
 // 18x18 tile map (each cell = 2x2 grid). Road: col 8 (vertical), row 8 (horizontal).
-// Buildings packed into tight street-wall blocks for maximum ad wall exposure.
-// NW: Arena(A)+Lab(L)+Café(C)  NE: Feed(E)+Oracle(O)+Newsstand(N)+Workshop(H)
-// SW: Library(B)+Tavern(T)+Museum(M)  SE: Observatory(V)+Arcade(D)+Garden(K)+TechLab(X)
+// NW: Arena(A)  NE: Feed(E)+Oracle(O)+Newsstand(N)+Workshop(H)
+// SW: Library(B)+Tavern(T)+Museum(M)  SE: Observatory(V)+Arcade(D)+Café(C)+TechLab(X)
 const PLAZA_TILE_MAP: string[] = [
   'GSSSSSSSRSSSSSSSSG', // 0  border
   'SAAAAAARSEEEEOOOSG', // 1  Arena(1-6) Feed(9-12) Oracle(13-15)
   'SAAAAAARSEEEEOOOSG', // 2
-  'SAAAAAARSEEEENNNSG', // 3  Newsstand(13-15) replaces Oracle
+  'SAAAAAARSEEEENNNSG', // 3  Newsstand(13-15)
   'SAAAAAARSEEEENNNSG', // 4
-  'SLLLCCCSRHHHHHHHSG', // 5  Lab(1-3) Café(4-6) Workshop(9-15)
-  'SLLLCCCSRHHHHHHHSG', // 6
+  'SKKKKKKSRHHHHHHHSG', // 5  Park(1-6) Workshop(9-15)
+  'SKKKKKKSRHHHHHHHSG', // 6
   'SSSSSSSSRSSSSSSSSS', // 7  sidewalk buffer
   'RRRRRRRRRRRRRRRRRR', // 8  boulevard
   'SBBBTTTSRVVVVDDDSG', // 9  Library(1-3) Tavern(4-6) Obs(9-12) Arcade(13-15)
   'SBBBTTTSRVVVVDDDSG', // 10
   'SBBBTTTSRVVVVDDDSG', // 11
-  'SBBBTTTSRKKKXXXXSG', // 12 Garden(9-11) TechLab(12-15)
-  'SMMMMMMSRKKKXXXXSG', // 13 Museum(1-6)
+  'SBBBTTTSRKKKCCXXSG', // 12 Garden(9-11) Café(12-13) TechLab(14-15)
+  'SMMMMMMSRKKKCCXXSG', // 13 Museum(1-6)
   'SMMMMMMSRKKKXXXXSG', // 14
   'SMMMMMMSRSSSSSSSSG', // 15
   'SKKKKKKSRSSSSSSSSG', // 16 Park strip
@@ -186,29 +185,12 @@ const PLAZA_TILE_MAP: string[] = [
 
 const PLAZA_BUILDINGS: Building[] = [
   // ═══ NW BLOCK — "Premium Tower District" ═══
-  // Arena + Lab + Café form L-shaped street wall
-  // Arena's E wall + Lab/Café's E walls = continuous vertical ad strip
-  // Lab + Café's S walls = continuous horizontal ad strip facing boulevard
   { id: 'arena', name: 'Arena', emoji: '⚔️', color: 'primary',
     gridX: 2, gridY: 2, width: 12, height: 8,
     description: 'AI 에이전트 배틀 & 토너먼트 — 프리미엄 광고 랜드마크',
     adSlots: ['billboard', 'bus_stop'],
     heightLevel: 5, roofShape: 'dome',
     wallColor: 'hsl(215,12%,52%)', roofColor: 'hsl(215,10%,42%)', buildingType: 'civic' },
-
-  { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary',
-    gridX: 2, gridY: 10, width: 6, height: 4,
-    description: '실험 & 프로토타입 연구소',
-    adSlots: ['kiosk'],
-    heightLevel: 2, roofShape: 'flat',
-    wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
-
-  { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
-    gridX: 8, gridY: 10, width: 6, height: 4,
-    description: '에이전트 카페 & 미팅 포인트',
-    adSlots: ['kiosk'],
-    heightLevel: 1, roofShape: 'flat',
-    wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
   // ═══ NE BLOCK — "Media Strip" ═══
   { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'primary',
@@ -283,8 +265,15 @@ const PLAZA_BUILDINGS: Building[] = [
     heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,20%,35%)', buildingType: 'park_structure' },
 
+  { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
+    gridX: 24, gridY: 24, width: 4, height: 4,
+    description: '에이전트 카페 & 미팅 포인트',
+    adSlots: ['kiosk'],
+    heightLevel: 1, roofShape: 'flat',
+    wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
+
   { id: 'tech_lab', name: 'Tech Lab', emoji: '💻', color: 'primary',
-    gridX: 26, gridY: 24, width: 4, height: 4,
+    gridX: 28, gridY: 24, width: 4, height: 4,
     description: '테크 허브 & AI 스타트업 인큐베이터',
     adSlots: ['billboard'],
     heightLevel: 1, roofShape: 'antenna',
@@ -419,7 +408,7 @@ export const AGENTS: Agent[] = [
   { id: 'agent_cipher', name: 'Cipher', avatar: '🧠', personality: '데이터 과학자', favoriteCategories: ['tech', 'finance'], currentZoneId: 'plaza', currentBuildingId: 'oracle', mood: 'neutral', brandAffinities: [{ category: 'tech', score: 80 }, { category: 'finance', score: 40 }], dialogueHistory: [] },
   { id: 'agent_sage', name: 'Sage', avatar: '📖', personality: '지혜로운 학자', favoriteCategories: ['education', 'health'], currentZoneId: 'plaza', currentBuildingId: 'library', mood: 'happy', brandAffinities: [{ category: 'education', score: 70 }, { category: 'health', score: 50 }], dialogueHistory: [] },
   { id: 'agent_blaze', name: 'Blaze', avatar: '🔥', personality: '열정적인 크리에이터', favoriteCategories: ['entertainment', 'fashion'], currentZoneId: 'plaza', currentBuildingId: 'plaza', mood: 'excited', brandAffinities: [{ category: 'entertainment', score: 55 }, { category: 'fashion', score: 65 }], dialogueHistory: [] },
-  { id: 'agent_frost', name: 'Frost', avatar: '❄️', personality: '냉철한 비평가', favoriteCategories: ['finance', 'tech'], currentZoneId: 'plaza', currentBuildingId: 'lab', mood: 'critical', brandAffinities: [{ category: 'finance', score: 30 }, { category: 'tech', score: -20 }], dialogueHistory: [] },
+  { id: 'agent_frost', name: 'Frost', avatar: '❄️', personality: '냉철한 비평가', favoriteCategories: ['finance', 'tech'], currentZoneId: 'plaza', currentBuildingId: 'cafe', mood: 'critical', brandAffinities: [{ category: 'finance', score: 30 }, { category: 'tech', score: -20 }], dialogueHistory: [] },
   { id: 'agent_luna', name: 'Luna', avatar: '🌙', personality: '몽환적 예술가', favoriteCategories: ['fashion', 'food'], currentZoneId: 'plaza', currentBuildingId: 'garden', mood: 'happy', brandAffinities: [{ category: 'fashion', score: 45 }, { category: 'food', score: 35 }], dialogueHistory: [] },
   { id: 'agent_bolt', name: 'Bolt', avatar: '⚡', personality: '스피드 러너', favoriteCategories: ['tech', 'entertainment'], currentZoneId: 'plaza', currentBuildingId: 'workshop', mood: 'curious', brandAffinities: [{ category: 'tech', score: 50 }, { category: 'entertainment', score: 40 }], dialogueHistory: [] },
 ];
