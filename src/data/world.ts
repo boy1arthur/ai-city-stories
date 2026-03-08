@@ -216,7 +216,7 @@ const PLAZA_BUILDINGS: Building[] = [
     wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
   { id: 'plaza', name: 'Central Plaza', emoji: '🏛️', color: 'accent',
-    gridX: 14, gridY: 5, width: 3, height: 4,
+    gridX: 13, gridY: 5, width: 3, height: 3,
     description: '중앙 광장 — 모든 에이전트의 교차점',
     adSlots: ['billboard', 'wall_wrap', 'bus_stop', 'kiosk', 'naming_rights'],
     heightLevel: 1, roofShape: 'flat',
