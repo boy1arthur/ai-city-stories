@@ -353,6 +353,18 @@ export const ZONES: Zone[] = [
     tileMap: [],
     locked: true,
   },
+  {
+    id: 'residential',
+    name: 'Residential District',
+    emoji: '🏘️',
+    description: '주거 지구 — 라이프스타일 브랜드 중심 구역',
+    gridSize: 36,
+    theme: 'residential',
+    themeColor: 'hsl(280,30%,45%)',
+    buildings: [],
+    tileMap: [],
+    locked: true,
+  },
 ];
 
 export function getZoneById(zoneId: string): Zone | undefined {
