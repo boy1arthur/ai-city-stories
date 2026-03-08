@@ -218,8 +218,10 @@ export function useWorldSimulation() {
         const agentZone = getZoneById(agent.currentZoneId);
         if (!agentZone || agentZone.locked) return agent;
 
-        // Agent moves to a new building
-        if (Math.random() < 0.3) {
+        // Agent moves to a new building — only if NOT currently walking
+        const currentVisual = agentVisuals.get(agent.id);
+        const isCurrentlyMoving = currentVisual?.isMoving && (now - currentVisual.moveStartTime < currentVisual.moveDuration);
+        if (!isCurrentlyMoving && Math.random() < 0.3) {
           const zoneBuildings = agentZone.buildings;
           const newBuilding = pickRandom(zoneBuildings);
           if (newBuilding.id !== agent.currentBuildingId) {
