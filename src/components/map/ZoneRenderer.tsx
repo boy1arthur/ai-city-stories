@@ -29,6 +29,7 @@ interface Props {
   onAgentClick: (a: Agent) => void;
   onSlotClick?: (slot: Slot) => void;
   onAdSlotClick?: (adSlot: AdSlot) => void;
+  onZoneClick?: (zoneId: string) => void;
 }
 
 /**
@@ -43,7 +44,7 @@ export const ZoneRenderer: React.FC<Props> = React.memo(({
   agents, adSlots, interactions,
   speechBubbles, adReactions, agentVisuals,
   zoneSlots, patronSlots,
-  onBuildingClick, onAgentClick, onSlotClick, onAdSlotClick,
+  onBuildingClick, onAgentClick, onSlotClick, onAdSlotClick, onZoneClick,
 }) => {
   const buildings = zone.buildings;
 
@@ -72,11 +73,12 @@ export const ZoneRenderer: React.FC<Props> = React.memo(({
     const centerY = (topLeft.y + bottomRight.y) / 2;
 
     return (
-      <g transform={`translate(${offsetX}, ${offsetY})`}>
+      <g transform={`translate(${offsetX}, ${offsetY})`}
+        style={{ cursor: 'pointer' }}
+        onClick={() => onZoneClick?.(zone.id)}>
         <polygon points={points}
           fill={zone.themeColor} fillOpacity={0.08}
           stroke={zone.themeColor} strokeWidth={1.5} strokeOpacity={0.3} />
-        {/* Simplified building silhouettes */}
         {buildings.slice(0, 8).map(b => {
           const bPos = iso(b.gridX, b.gridY);
           const w = 24;

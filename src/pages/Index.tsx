@@ -39,6 +39,7 @@ const Index = () => {
   // Full city view state (PC only)
   const [isFullView, setIsFullView] = useState(!isMobile);
   const [focusedZoneId, setFocusedZoneId] = useState<string | null>(null);
+  const [autoFocusZoneId, setAutoFocusZoneId] = useState<string | null>(null);
 
   // Fetch slots only for the active zone (focused zone in full view, current zone otherwise)
   const activeSlotZone = isFullView ? (focusedZoneId || 'plaza') : currentZoneId;
@@ -162,6 +163,7 @@ const Index = () => {
           setSelectedAgent(null);
           if (isFullView) {
             setFocusedZoneId(id);
+            setAutoFocusZoneId(id);
           }
         }}
         onSponsorDashboard={() => setShowDashboard(true)}
@@ -180,6 +182,7 @@ const Index = () => {
             zoneDataMap={zoneDataMap}
             energyStatus={cityEnergy.status}
             focusedZoneId={focusedZoneId}
+            autoFocusZoneId={autoFocusZoneId}
             onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
             onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
             onSlotClick={onSlotClick}

@@ -45,6 +45,8 @@ interface Props {
   zoneDataMap: Map<string, ZoneData>;
   energyStatus?: CityEnergyStatus;
   focusedZoneId: string | null;
+  /** When this changes, auto-zoom to the zone */
+  autoFocusZoneId?: string | null;
   onBuildingClick: (b: Building) => void;
   onAgentClick: (a: Agent) => void;
   onSlotClick?: (slot: Slot) => void;
@@ -57,7 +59,7 @@ const LOD_FULL_THRESHOLD = 0.45; // Above this zoom, focused zone gets full deta
 
 export const FullCityMap: React.FC<Props> = ({
   zones, zoneDataMap, energyStatus,
-  focusedZoneId,
+  focusedZoneId, autoFocusZoneId,
   onBuildingClick, onAgentClick, onSlotClick, onAdSlotClick,
   onZoneFocus,
 }) => {
@@ -66,6 +68,23 @@ export const FullCityMap: React.FC<Props> = ({
   const [dragging, setDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // Auto-zoom when autoFocusZoneId changes from parent (e.g. TopBar zone click)
+  const [lastAutoFocus, setLastAutoFocus] = useState<string | null>(null);
+  useEffect(() => {
+    if (autoFocusZoneId && autoFocusZoneId !== lastAutoFocus) {
+      setLastAutoFocus(autoFocusZoneId);
+      // Trigger zoom
+      const offset = ZONE_GRID_OFFSETS[autoFocusZoneId];
+      if (!offset) return;
+      const isoOff = getIsoOffset(offset.gx + 18, offset.gy + 18);
+      const targetX = -(500 + isoOff.x) * 0.7 + window.innerWidth / 2;
+      const targetY = -(40 + isoOff.y) * 0.7 + window.innerHeight / 2;
+      setPan({ x: targetX, y: targetY });
+      setZoom(0.7);
+      onZoneFocus(autoFocusZoneId);
+    }
+  }, [autoFocusZoneId]); // eslint-disable-line
 
   // No RAF loop — rendering is driven by tick/state changes from parent
 
@@ -178,6 +197,7 @@ export const FullCityMap: React.FC<Props> = ({
                   onAgentClick={onAgentClick}
                   onSlotClick={onSlotClick}
                   onAdSlotClick={onAdSlotClick}
+                  onZoneClick={zoomToZone}
                 />
               </g>
             );
