@@ -105,5 +105,5 @@ export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots, onSlotCl
       })}
     </g>
   );
-}));
+});
 PatronTileRenderer.displayName = 'PatronTileRenderer';

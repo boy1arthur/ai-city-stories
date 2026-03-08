@@ -304,5 +304,5 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
       })}
     </g>
   );
-}));
+});
 AgentRenderer.displayName = 'AgentRenderer';
