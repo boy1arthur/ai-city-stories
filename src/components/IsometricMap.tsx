@@ -133,7 +133,8 @@ export const IsometricMap: React.FC<Props> = ({
           ))}
         </g>
 
-        
+        {/* Vignette edge fade */}
+        <rect width="1000" height="600" fill="url(#vignette)" pointerEvents="none" />
 
         {/* Energy overlay */}
         {energyStatus && energyStatus !== 'stable' && (
