@@ -1,11 +1,10 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
-import type { Building, Agent, AdSlot, InteractionEvent } from '@/data/world';
-import { getTileType, TILE_COLORS, isRoadCenter } from '@/data/world';
+import type { Building, Agent, AdSlot, InteractionEvent, Zone } from '@/data/world';
+import { getTileTypeFromMap, TILE_COLORS, isRoadCenterInZone } from '@/data/world';
 
 // Isometric constants - 2:1 diamond ratio like Zomboid
 const TILE_W = 48;
 const TILE_H = 24;
-const GRID = 18;
 const WALL_H_UNIT = 18; // pixels per height level
 
 function iso(gx: number, gy: number): { x: number; y: number } {
@@ -27,6 +26,7 @@ const COLOR_MAP: Record<string, string> = {
 };
 
 interface Props {
+  zone: Zone;
   buildings: Building[];
   agents: Agent[];
   adSlots: AdSlot[];
@@ -36,13 +36,14 @@ interface Props {
 }
 
 // ===== GROUND LAYER - Filled diamond tiles =====
-const GroundLayer: React.FC = React.memo(() => {
+const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
   const tiles: React.ReactNode[] = [];
+  const GRID = zone.gridSize;
 
   // Render back-to-front (Y-sort)
   for (let gy = 0; gy < GRID; gy++) {
     for (let gx = 0; gx < GRID; gx++) {
-      const type = getTileType(gx, gy);
+      const type = getTileTypeFromMap(zone.tileMap, gx, gy, GRID);
       const colors = TILE_COLORS[type];
       const pos = iso(gx, gy);
 
@@ -58,7 +59,7 @@ const GroundLayer: React.FC = React.memo(() => {
       );
 
       // Road center markings (dashed yellow line)
-      if (isRoadCenter(gx, gy)) {
+      if (isRoadCenterInZone(zone.tileMap, gx, gy, GRID)) {
         const isVert = (gx === 7 || gx === 13);
         if (isVert) {
           tiles.push(
@@ -487,7 +488,7 @@ const AgentRenderer: React.FC<{
 AgentRenderer.displayName = 'AgentRenderer';
 
 // ===== MAIN MAP =====
-export const IsometricMap: React.FC<Props> = ({ buildings, agents, adSlots, interactions, onBuildingClick, onAgentClick }) => {
+export const IsometricMap: React.FC<Props> = ({ zone, buildings, agents, adSlots, interactions, onBuildingClick, onAgentClick }) => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0.85);
   const [dragging, setDragging] = useState(false);
@@ -552,7 +553,7 @@ export const IsometricMap: React.FC<Props> = ({ buildings, agents, adSlots, inte
         </defs>
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
-          <GroundLayer />
+          <GroundLayer zone={zone} />
 
           {/* Interleave buildings and agents by Y-sort */}
           {sortedBuildings.map(b => (

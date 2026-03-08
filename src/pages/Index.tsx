@@ -8,7 +8,12 @@ import { useWorldSimulation } from '@/hooks/useWorldSimulation';
 import type { Building, Agent } from '@/data/world';
 
 const Index = () => {
-  const { agents, adSlots, worldLog, tick, isPaused, setIsPaused, placeBrandAd, buildings, interactions } = useWorldSimulation();
+  const {
+    agents, allAgents, adSlots, allAdSlots, worldLog, tick,
+    isPaused, setIsPaused, placeBrandAd, buildings, interactions,
+    currentZoneId, setCurrentZoneId, currentZone, zones,
+  } = useWorldSimulation();
+
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [showDashboard, setShowDashboard] = useState(false);
@@ -16,15 +21,36 @@ const Index = () => {
   const activeAds = adSlots.filter(s => s.brand).length;
 
   if (showDashboard) {
-    return <SponsorDashboard adSlots={adSlots} agents={agents} onBack={() => setShowDashboard(false)} />;
+    return (
+      <SponsorDashboard
+        adSlots={adSlots}
+        allAdSlots={allAdSlots}
+        agents={agents}
+        currentZone={currentZone}
+        onBack={() => setShowDashboard(false)}
+      />
+    );
   }
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
-      <TopBar tick={tick} agentCount={agents.length} activeAds={activeAds} onSponsorDashboard={() => setShowDashboard(true)} />
+      <TopBar
+        tick={tick}
+        agentCount={agents.length}
+        activeAds={activeAds}
+        currentZone={currentZone}
+        zones={zones}
+        onZoneChange={(id) => {
+          setCurrentZoneId(id);
+          setSelectedBuilding(null);
+          setSelectedAgent(null);
+        }}
+        onSponsorDashboard={() => setShowDashboard(true)}
+      />
 
       <div className="flex-1 relative overflow-hidden">
         <IsometricMap
+          zone={currentZone}
           buildings={buildings}
           agents={agents}
           adSlots={adSlots}
