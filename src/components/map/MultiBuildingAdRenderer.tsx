@@ -86,9 +86,9 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
     const cx = (tl.x + tr.x) / 2, cy = (tl.y + bl.y) / 2;
     const angle = Math.atan2(se.y - ne.y, se.x - ne.x) * (180 / Math.PI);
     const bH = wallH * 0.3;
-    const fs = Math.max(5, bH * 0.55);
-    const fsN = Math.max(3.5, bH * 0.3);
-    const fsT = Math.max(2.5, bH * 0.18);
+    const fs = Math.max(7, bH * 0.55);
+    const fsN = Math.max(5, bH * 0.3);
+    const fsT = Math.max(3.5, bH * 0.18);
 
     return (
       <g>
