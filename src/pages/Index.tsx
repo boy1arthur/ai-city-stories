@@ -63,6 +63,23 @@ const Index = () => {
     handleSlotInteraction(slot, setSlotModalData);
   };
 
+  const onAdSlotClick = (adSlot: AdSlot) => {
+    const typeLabels: Record<string, string> = {
+      billboard: '빌보드',
+      kiosk: '키오스크',
+      bus_stop: '버스 정류장',
+      naming_rights: '네이밍 라이츠',
+      wall_wrap: '벽면 광고',
+    };
+    const typeName = typeLabels[adSlot.type] || adSlot.type;
+    const emoji = adSlot.type === 'billboard' ? '📋' : adSlot.type === 'kiosk' ? '🏪' : adSlot.type === 'bus_stop' ? '🚏' : adSlot.type === 'naming_rights' ? '🏷️' : '🖼️';
+    const title = adSlot.brand ? `${adSlot.brand} — ${typeName}` : `빈 ${typeName}`;
+    const message = adSlot.brand
+      ? `이 ${typeName}에 ${adSlot.brand} 브랜드 광고가 게시되어 있습니다.\n위치: ${adSlot.buildingId}\n광고 유형: ${typeName}`
+      : `이 ${typeName}은 아직 비어 있습니다.\n스폰서 대시보드에서 광고를 배치할 수 있어요.`;
+    setSlotModalData({ title, message, emoji, slot: { id: adSlot.id, type: 'BRAND_SCREEN', label: title, zone: currentZoneId, ownerType: adSlot.brand ? 'brand' : 'empty', ownerName: adSlot.brand || null, ownerMessage: null, ownerId: null, location: { buildingId: adSlot.buildingId }, displayConfig: {}, triggerType: 'click', aiHookId: null } as Slot });
+  };
+
   if (showDashboard) {
     return (
       <SponsorDashboard
