@@ -45,6 +45,8 @@ interface Props {
   zoneDataMap: Map<string, ZoneData>;
   energyStatus?: CityEnergyStatus;
   focusedZoneId: string | null;
+  /** When this changes, auto-zoom to the zone */
+  autoFocusZoneId?: string | null;
   onBuildingClick: (b: Building) => void;
   onAgentClick: (a: Agent) => void;
   onSlotClick?: (slot: Slot) => void;
