@@ -171,7 +171,7 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
           <line key={`rm_${gx}_${gy}`}
             x1={isVert ? pos.x : pos.x - 6} y1={isVert ? pos.y - 3 : pos.y}
             x2={isVert ? pos.x : pos.x + 6} y2={isVert ? pos.y + 3 : pos.y}
-            stroke="hsl(45,80%,75%)" strokeWidth={0.8} strokeOpacity={0.4} strokeDasharray="2 3" />
+            stroke={isResidential ? 'hsl(0,0%,70%)' : 'hsl(45,80%,75%)'} strokeWidth={0.8} strokeOpacity={0.4} strokeDasharray="2 3" />
         );
       }
 
