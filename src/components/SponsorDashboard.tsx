@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { AdSlot, Agent, Zone } from '@/data/world';
 import { SPONSOR_TIERS, ZONES, type SponsorTier } from '@/data/world';
 import type { BrandStats } from '@/lib/esv';
