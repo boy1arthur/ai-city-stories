@@ -94,8 +94,8 @@ const BrandBuildingSlot: React.FC<{ slot: Slot; building: Building; onClick: () 
             {/* Crown icon */}
             <text x={bx - w / 2 + 7} y={by + h / 2 + 2.5} textAnchor="middle" fontSize={7}>👑</text>
             {/* Brand name */}
-            <text x={bx + 3} y={by + h / 2 + 2} textAnchor="middle" fontSize={5.5}
-              fill="hsl(38,70%,72%)" fontFamily="Inter" fontWeight={800}>
+            <text x={bx + 3} y={by + h / 2 + 2.5} textAnchor="middle" fontSize={7}
+              fill="hsl(38,70%,80%)" fontFamily="Inter" fontWeight={800}>
               {fit(label, 10)}
             </text>
             {/* PREMIUM badge */}
