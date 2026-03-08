@@ -155,7 +155,7 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
       }
 
       // Crosswalk
-      if (type === 'road' && isRoadCenterInZone(zone.tileMap, gx, gy, GRID) && gy === 8 && gx === 8) {
+      if (type === 'road' && isRoadCenterInZone(zone.tileMap, gx, gy, GRID) && (gy === 16 || gy === 17) && (gx === 16 || gx === 17)) {
         tiles.push(
           <g key={`cw_${gx}_${gy}`}>
             {[-4, -2, 0, 2, 4].map(off => (
