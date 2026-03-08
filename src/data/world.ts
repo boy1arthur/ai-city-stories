@@ -116,15 +116,15 @@ const INDUSTRIAL_PALETTE: TilePalette = {
 };
 
 const RESIDENTIAL_PALETTE: TilePalette = {
-  grass:       { fill: 'hsl(130,12%,78%)', stroke: 'hsl(130,10%,72%)' },
-  road:        { fill: 'hsl(0,0%,88%)',    stroke: 'hsl(0,0%,82%)' },
-  sidewalk:    { fill: 'hsl(0,0%,92%)',    stroke: 'hsl(0,0%,86%)' },
-  plaza_stone: { fill: 'hsl(40,8%,90%)',   stroke: 'hsl(40,6%,84%)' },
-  park:        { fill: 'hsl(135,18%,72%)', stroke: 'hsl(135,14%,66%)' },
-  dirt:        { fill: 'hsl(35,12%,82%)',  stroke: 'hsl(35,10%,76%)' },
-  water:       { fill: 'hsl(200,25%,78%)', stroke: 'hsl(200,20%,72%)' },
-  parking:     { fill: 'hsl(0,0%,90%)',    stroke: 'hsl(0,0%,84%)' },
-  field:       { fill: 'hsl(130,14%,80%)', stroke: 'hsl(130,10%,74%)' },
+  grass:       { fill: 'hsl(145,18%,38%)', stroke: 'hsl(145,15%,32%)' },
+  road:        { fill: 'hsl(30,8%,42%)',   stroke: 'hsl(30,6%,36%)' },
+  sidewalk:    { fill: 'hsl(35,12%,52%)',  stroke: 'hsl(35,10%,46%)' },
+  plaza_stone: { fill: 'hsl(28,14%,48%)',  stroke: 'hsl(28,12%,42%)' },
+  park:        { fill: 'hsl(140,22%,34%)', stroke: 'hsl(140,18%,28%)' },
+  dirt:        { fill: 'hsl(25,18%,44%)',  stroke: 'hsl(25,14%,38%)' },
+  water:       { fill: 'hsl(195,28%,38%)', stroke: 'hsl(195,24%,32%)' },
+  parking:     { fill: 'hsl(30,6%,46%)',   stroke: 'hsl(30,5%,40%)' },
+  field:       { fill: 'hsl(140,16%,36%)', stroke: 'hsl(140,12%,30%)' },
 };
 
 export const ZONE_PALETTES: Record<string, TilePalette> = {
