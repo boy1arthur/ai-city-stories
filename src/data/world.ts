@@ -217,13 +217,7 @@ const PLAZA_BUILDINGS: Building[] = [
     heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
 
-  // ─── CENTER: Clock Tower & Plaza ───
-  { id: 'clock_tower', name: 'Clock Tower', emoji: '🕰️', color: 'accent',
-    gridX: 15, gridY: 15, width: 4, height: 4,
-    description: '중앙 시계탑 — 도시의 심장, 프리미엄 광고 랜드마크',
-    adSlots: ['naming_rights', 'billboard', 'wall_wrap', 'kiosk'],
-    heightLevel: 3, roofShape: 'spire',
-    wallColor: 'hsl(38,25%,52%)', roofColor: 'hsl(38,20%,40%)', buildingType: 'civic' },
+  // ─── CENTER: (fountain/monument rendered as ground decoration, not a building) ───
 
   // ─── SW QUADRANT ───
   { id: 'library', name: 'Library', emoji: '📚', color: 'primary',
