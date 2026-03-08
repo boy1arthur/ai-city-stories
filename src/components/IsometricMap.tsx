@@ -30,6 +30,7 @@ interface Props {
   onBuildingClick: (b: Building) => void;
   onAgentClick: (a: Agent) => void;
   onSlotClick?: (slot: Slot) => void;
+  onAdSlotClick?: (adSlot: AdSlot) => void;
 }
 
 export const IsometricMap: React.FC<Props> = ({
