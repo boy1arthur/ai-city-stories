@@ -11,7 +11,7 @@ import { LockedZoneGhost } from './map/LockedZoneGhost';
 import { MultiBuildingAdRenderer } from './map/MultiBuildingAdRenderer';
 import { PatronTileRenderer } from './map/PatronTileRenderer';
 import { SlotVisualRenderer } from './map/SlotVisualRenderer';
-import { GuideNPC } from './map/GuideNPC';
+import { GuideNPC, GUIDE_SLOT } from './map/GuideNPC';
 import { DEMO_MULTI_BUILDING_ADS } from '@/lib/multiBuildingAd';
 
 interface Props {
@@ -143,8 +143,7 @@ export const IsometricMap: React.FC<Props> = ({
             <PatronTileRenderer slots={patronSlots} onSlotClick={handleSlotClick} />
           )}
 
-          {/* Layer 3.8: Guide NPC */}
-          {zone.id === 'plaza' && <GuideNPC onGuideClick={handleSlotClick} />}
+          {/* Layer 3.8: Guide NPC — rendered in HTML overlay instead */}
 
           {/* Layer 4: Agents */}
           {sortedAgents.map(({ agent, index }) => (
@@ -182,15 +181,16 @@ export const IsometricMap: React.FC<Props> = ({
         <button onClick={() => setZoom(z => Math.max(0.25, z - 0.15))} className="w-8 h-8 rounded bg-card border border-border flex items-center justify-center text-foreground hover:border-primary transition-colors text-sm">−</button>
       </div>
 
-      {/* Legend */}
-      <div className="absolute top-3 left-3 bg-card/90 backdrop-blur-sm rounded-lg border border-border px-3 py-2 text-xs space-y-1">
-        <div className="text-muted-foreground font-semibold mb-1.5 font-mono text-[10px] uppercase tracking-wider">Map Legend</div>
-        <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded-sm" style={{ background: 'hsl(220,6%,28%)' }} /> <span className="text-muted-foreground">도로</span></div>
-        <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded-sm" style={{ background: 'hsl(35,12%,48%)' }} /> <span className="text-muted-foreground">광장</span></div>
-        <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded-sm" style={{ background: 'hsl(120,22%,32%)' }} /> <span className="text-muted-foreground">초지</span></div>
-        <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full" style={{ background: 'hsl(38,75%,50%)' }} /> <span className="text-muted-foreground">광고</span></div>
-        <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full" style={{ background: 'hsl(210,50%,55%)' }} /> <span className="text-muted-foreground">가이드</span></div>
-      </div>
+      {/* Guide NPC button — top left where legend was */}
+      {zone.id === 'plaza' && (
+        <button
+          onClick={() => handleSlotClick(GUIDE_SLOT)}
+          className="absolute top-3 left-3 bg-card/90 backdrop-blur-sm rounded-xl border border-border px-3 py-2.5 flex items-center gap-2 hover:border-primary transition-colors cursor-pointer"
+        >
+          <span className="text-base">🤖</span>
+          <span className="text-xs font-semibold text-muted-foreground">Guide AI</span>
+        </button>
+      )}
     </div>
   );
 };
