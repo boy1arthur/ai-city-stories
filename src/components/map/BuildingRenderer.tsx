@@ -2,14 +2,20 @@ import React from 'react';
 import type { Building } from '@/data/world';
 import { iso, TILE_W, TILE_H, WALL_H_UNIT } from './constants';
 
+interface BrandSkin {
+  name: string;
+  color: string; // hsl string
+}
+
 interface Props {
   b: Building;
   namingBrand: string | null;
   wallWrapBrand: string | null;
+  brandSkin: BrandSkin | null;
   onClick: () => void;
 }
 
-export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, wallWrapBrand, onClick }) => {
+export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, wallWrapBrand, brandSkin, onClick }) => {
   const wallHeight = WALL_H_UNIT * b.heightLevel;
   const nw = iso(b.gridX, b.gridY);
   const ne = iso(b.gridX + b.width, b.gridY);
@@ -17,10 +23,18 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
   const sw = iso(b.gridX, b.gridY + b.height);
   const center = iso(b.gridX + b.width / 2, b.gridY + b.height / 2);
 
-  const wColor = wallWrapBrand ? 'hsl(38,50%,45%)' : b.wallColor;
-  const wColorDark = b.wallColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.max(0, parseInt(n) - 8)}%)`);
-  const wColorLight = b.wallColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.min(95, parseInt(n) + 6)}%)`);
-  const rColor = b.roofColor;
+  // If brand skin is active, override wall/roof colors
+  const hasSkin = !!brandSkin;
+  const skinColor = brandSkin?.color || '';
+  const skinDark = hasSkin ? skinColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.max(0, parseInt(n) - 15)}%)`) : '';
+  const skinLight = hasSkin ? skinColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.min(95, parseInt(n) + 10)}%)`) : '';
+
+  const wColor = hasSkin ? skinDark : (wallWrapBrand ? 'hsl(38,50%,45%)' : b.wallColor);
+  const wColorDark = hasSkin
+    ? skinColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.max(0, parseInt(n) - 22)}%)`)
+    : b.wallColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.max(0, parseInt(n) - 8)}%)`);
+  const wColorLight = hasSkin ? skinLight : b.wallColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.min(95, parseInt(n) + 6)}%)`);
+  const rColor = hasSkin ? skinColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.max(0, parseInt(n) - 18)}%)`) : b.roofColor;
   const displayName = namingBrand ? `${namingBrand} ${b.name}` : b.name;
   const winStyle = getWindowStyle(b.buildingType);
   const seed = b.gridX * 17 + b.gridY * 31;
