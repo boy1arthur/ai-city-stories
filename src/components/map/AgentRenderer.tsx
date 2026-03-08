@@ -116,7 +116,7 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
   const s = 1;
 
   return (
-    <g onClick={onClick} style={{ cursor: 'pointer' }}>
+    <g onClick={onClick} style={{ cursor: 'pointer' }} opacity={isInside ? 0 : 1}>
       {/* Interaction lines */}
       {agentInteractions.map(event => {
         const targetB = allBuildings.find(b => b.id === event.buildingId);
