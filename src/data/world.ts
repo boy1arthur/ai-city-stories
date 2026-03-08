@@ -257,7 +257,7 @@ const PLAZA_BUILDINGS: Building[] = [
   { id: 'museum', name: 'Museum', emoji: '🏛️', color: 'secondary',
     gridX: 2, gridY: 26, width: 12, height: 6,
     description: '브랜드 역사관 — 대형 벽면 광고 가능',
-    adSlots: ['naming_rights', 'wall_wrap', 'billboard'],
+    adSlots: ['naming_rights', 'billboard'],
     heightLevel: 1, roofShape: 'dome',
     wallColor: 'hsl(30,15%,55%)', roofColor: 'hsl(25,12%,42%)', buildingType: 'civic' },
 
