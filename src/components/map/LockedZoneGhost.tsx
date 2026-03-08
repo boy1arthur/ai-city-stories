@@ -260,50 +260,32 @@ const ZONE_LANDMARKS: Record<string, Landmark[]> = {
 };
 
 // Road connection points: from plaza edge toward each locked zone
-// Plaza grid is 0-36, road spines at ~17-18
+// Plaza grid is 0-36, road spine at grid 16-17 (tile col/row 8, doubled)
 function renderConnectingRoad(zoneId: string, offset: { dx: number; dy: number }, color: string): React.ReactNode {
   const roadColor = 'hsl(220,6%,35%)';
   const dashArray = '4,6';
-
-  // Road segments: from plaza border to ghost zone border
-  // Plaza road spine is around grid 17-18
   const segments: { x1: number; y1: number; x2: number; y2: number }[] = [];
 
+  // Two lanes: grid 16 and 17
   switch (zoneId) {
-    case 'campus': { // north — road goes from plaza top edge upward
-      const start = iso(17, 0);
-      const end = iso(offset.dx + 17, offset.dy + 36);
-      segments.push({ x1: start.x, y1: start.y, x2: end.x, y2: end.y });
-      const start2 = iso(19, 0);
-      const end2 = iso(offset.dx + 19, offset.dy + 36);
-      segments.push({ x1: start2.x, y1: start2.y, x2: end2.x, y2: end2.y });
+    case 'campus': { // north
+      segments.push({ ...pts(iso(16, 0), iso(offset.dx + 16, offset.dy + 36)) });
+      segments.push({ ...pts(iso(17, 0), iso(offset.dx + 17, offset.dy + 36)) });
       break;
     }
-    case 'harbor': { // east — road goes from plaza right edge rightward
-      const start = iso(36, 17);
-      const end = iso(offset.dx, offset.dy + 17);
-      segments.push({ x1: start.x, y1: start.y, x2: end.x, y2: end.y });
-      const start2 = iso(36, 19);
-      const end2 = iso(offset.dx, offset.dy + 19);
-      segments.push({ x1: start2.x, y1: start2.y, x2: end2.x, y2: end2.y });
+    case 'harbor': { // east
+      segments.push({ ...pts(iso(36, 16), iso(offset.dx, offset.dy + 16)) });
+      segments.push({ ...pts(iso(36, 17), iso(offset.dx, offset.dy + 17)) });
       break;
     }
-    case 'industrial': { // south — road goes from plaza bottom edge downward
-      const start = iso(17, 36);
-      const end = iso(offset.dx + 17, offset.dy);
-      segments.push({ x1: start.x, y1: start.y, x2: end.x, y2: end.y });
-      const start2 = iso(19, 36);
-      const end2 = iso(offset.dx + 19, offset.dy);
-      segments.push({ x1: start2.x, y1: start2.y, x2: end2.x, y2: end2.y });
+    case 'industrial': { // south
+      segments.push({ ...pts(iso(16, 36), iso(offset.dx + 16, offset.dy)) });
+      segments.push({ ...pts(iso(17, 36), iso(offset.dx + 17, offset.dy)) });
       break;
     }
-    case 'residential': { // west — road goes from plaza left edge leftward
-      const start = iso(0, 17);
-      const end = iso(offset.dx + 36, offset.dy + 17);
-      segments.push({ x1: start.x, y1: start.y, x2: end.x, y2: end.y });
-      const start2 = iso(0, 19);
-      const end2 = iso(offset.dx + 36, offset.dy + 19);
-      segments.push({ x1: start2.x, y1: start2.y, x2: end2.x, y2: end2.y });
+    case 'residential': { // west
+      segments.push({ ...pts(iso(0, 16), iso(offset.dx + 36, offset.dy + 16)) });
+      segments.push({ ...pts(iso(0, 17), iso(offset.dx + 36, offset.dy + 17)) });
       break;
     }
   }
