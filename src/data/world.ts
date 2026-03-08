@@ -330,7 +330,8 @@ const CAMPUS_BUILDINGS: Building[] = [
     description: '시계탑 — 캠퍼스 랜드마크, 프리미엄 배너 위치',
     adSlots: ['billboard', 'naming_rights'],
     heightLevel: 7, roofShape: 'spire',
-    wallColor: 'hsl(10,30%,40%)', roofColor: 'hsl(5,25%,30%)', buildingType: 'tower' },
+    wallColor: 'hsl(10,30%,40%)', roofColor: 'hsl(5,25%,30%)', buildingType: 'tower',
+    isLandmark: true, landmarkType: 'clock_tower' },
 
   // NE: Tech & Innovation
   { id: 'tech_incubator', name: 'Tech Incubator', emoji: '🚀', color: 'primary',
