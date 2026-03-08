@@ -1,0 +1,51 @@
+// ===== DEMO SEED DATA =====
+// Pre-configured brands and ad placements for demo/showcase mode
+
+import type { AdSlot } from '@/data/world';
+
+export interface VirtualBrand {
+  name: string;
+  category: string;
+  color: string;
+  tagline: string;
+}
+
+export const VIRTUAL_BRANDS: VirtualBrand[] = [
+  { name: 'NovaTech', category: 'tech', color: 'hsl(210,60%,55%)', tagline: 'Future, simplified.' },
+  { name: 'BrewBean', category: 'food', color: 'hsl(25,55%,45%)', tagline: '매일의 커피, 매일의 영감' },
+  { name: 'Lumière', category: 'fashion', color: 'hsl(320,40%,55%)', tagline: 'Wear the light.' },
+  { name: 'EduSpark', category: 'education', color: 'hsl(145,40%,45%)', tagline: '배움에 불꽃을' },
+  { name: 'FinFlow', category: 'finance', color: 'hsl(215,45%,50%)', tagline: 'Smart money moves.' },
+];
+
+/** Apply demo ad placements to a set of ad slots */
+export function applyDemoSeed(slots: AdSlot[]): AdSlot[] {
+  // Map of slotId patterns to brand assignments
+  const assignments: Array<{ buildingId: string; type: string; brand: string; impressions: number }> = [
+    // NovaTech — Arena naming rights + billboard
+    { buildingId: 'arena', type: 'naming_rights', brand: 'NovaTech', impressions: 342 },
+    { buildingId: 'arena', type: 'billboard', brand: 'NovaTech', impressions: 187 },
+    // BrewBean — Tavern billboard + Garden kiosk
+    { buildingId: 'tavern', type: 'billboard', brand: 'BrewBean', impressions: 156 },
+    { buildingId: 'garden', type: 'kiosk', brand: 'BrewBean', impressions: 98 },
+    // Lumière — Central Plaza wall wrap + bus stop
+    { buildingId: 'plaza', type: 'wall_wrap', brand: 'Lumière', impressions: 264 },
+    { buildingId: 'plaza', type: 'bus_stop', brand: 'Lumière', impressions: 112 },
+    // EduSpark — Library billboard + bus stop
+    { buildingId: 'library', type: 'billboard', brand: 'EduSpark', impressions: 203 },
+    { buildingId: 'library', type: 'bus_stop', brand: 'EduSpark', impressions: 77 },
+    // FinFlow — Oracle kiosk + wall wrap
+    { buildingId: 'oracle', type: 'kiosk', brand: 'FinFlow', impressions: 91 },
+    { buildingId: 'oracle', type: 'wall_wrap', brand: 'FinFlow', impressions: 145 },
+  ];
+
+  return slots.map(slot => {
+    const match = assignments.find(
+      a => slot.buildingId === a.buildingId && slot.type === a.type && !slot.brand
+    );
+    if (match) {
+      return { ...slot, brand: match.brand, impressions: match.impressions };
+    }
+    return slot;
+  });
+}
