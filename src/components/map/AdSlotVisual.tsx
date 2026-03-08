@@ -26,7 +26,7 @@ function fitText(text: string, maxChars: number): string {
   return text.slice(0, maxChars - 1) + '…';
 }
 
-export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots }) => {
+export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots, onAdSlotClick }) => {
   const wallHeight = WALL_H_UNIT * b.heightLevel;
   const center = iso(b.gridX + b.width / 2, b.gridY + b.height / 2);
 
