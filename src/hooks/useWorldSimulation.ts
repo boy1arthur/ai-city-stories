@@ -512,6 +512,32 @@ export function useWorldSimulation() {
     prevLeaderRef.current = leader;
   }, [leagueScores, tick, addLog]);
 
+  // Per-zone data for full city view
+  const getZoneData = useCallback((zoneId: string) => {
+    const z = getZoneById(zoneId);
+    if (!z) return null;
+    const za = agents.filter(a => a.currentZoneId === zoneId);
+    const zas = adSlots.filter(s => s.zoneId === zoneId);
+    const zi = interactions.filter(i => i.zoneId === zoneId);
+    const zb = speechBubbles.filter(b => {
+      const agent = agents.find(a => a.id === b.agentId);
+      return agent?.currentZoneId === zoneId;
+    });
+    const zr = adReactions.filter(r => {
+      const agent = agents.find(a => a.id === r.agentId);
+      return agent?.currentZoneId === zoneId;
+    });
+    return {
+      zone: z,
+      agents: za,
+      adSlots: zas,
+      interactions: zi,
+      speechBubbles: zb,
+      adReactions: zr,
+      agentVisuals,
+    };
+  }, [agents, adSlots, interactions, speechBubbles, adReactions, agentVisuals]);
+
   return {
     agents: zoneAgents,
     allAgents: agents,
@@ -538,5 +564,6 @@ export function useWorldSimulation() {
     leagueSeason,
     leagueScores,
     worldEvents,
+    getZoneData,
   };
 }
