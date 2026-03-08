@@ -80,7 +80,25 @@ export const IsometricMap: React.FC<Props> = ({
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
         onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
         onWheel={onWheel}>
-        
+
+        <defs>
+          {/* Radial gradient for ground fade */}
+          <radialGradient id="groundFade" cx="50%" cy="45%" rx="55%" ry="55%">
+            <stop offset="0%" stopColor="hsl(120,18%,18%)" />
+            <stop offset="60%" stopColor="hsl(120,14%,14%)" />
+            <stop offset="85%" stopColor="hsl(220,10%,8%)" />
+            <stop offset="100%" stopColor="hsl(220,8%,5%)" />
+          </radialGradient>
+          {/* Vignette overlay */}
+          <radialGradient id="vignette" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="hsl(0,0%,0%)" stopOpacity="0" />
+            <stop offset="70%" stopColor="hsl(0,0%,0%)" stopOpacity="0" />
+            <stop offset="100%" stopColor="hsl(0,0%,0%)" stopOpacity="0.6" />
+          </radialGradient>
+        </defs>
+
+        {/* Full background fill */}
+        <rect width="1000" height="600" fill="url(#groundFade)" />
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
           {/* Layer 1: Ground tiles */}
