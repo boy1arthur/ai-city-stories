@@ -98,9 +98,9 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
   if (!building || !animPos) return null;
   const pos = animPos;
 
-  // Walk cycle: swing legs and arms
-  const walkT = isMoving ? Math.sin((walkPhase / 120) * Math.PI * 2) : 0;
-  const breathe = isMoving ? 0 : Math.sin(Date.now() / 1200) * 0.4;
+  // Walk cycle: gentle swing for legs and arms (~1 step per 600ms)
+  const walkT = isMoving ? Math.sin((walkPhase / 600) * Math.PI * 2) : 0;
+  const breathe = isMoving ? 0 : Math.sin(Date.now() / 2000) * 0.3;
   // Direction: determine facing based on path direction
   const facingRight = visualState?.isMoving && visualState.path?.length >= 2
     ? (() => { const elapsed = Date.now() - visualState.moveStartTime; const t = Math.min(1, elapsed / (visualState.moveDuration || 3000)); const dir = getPathDirection(visualState.path, t); return dir.dx >= 0; })()
@@ -134,24 +134,24 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
       {/* Ground shadow */}
       <ellipse cx={pos.x} cy={pos.y + 1} rx={isMoving ? 5 : 4.5} ry={isMoving ? 2 : 2.2}
         fill="hsl(0,0%,0%)" fillOpacity={0.2}>
-        {isMoving && <animate attributeName="rx" values="4;5.5;4" dur="0.4s" repeatCount="indefinite" />}
+        {isMoving && <animate attributeName="rx" values="4.5;5;4.5" dur="1.2s" repeatCount="indefinite" />}
       </ellipse>
 
       {/* Character body group */}
       <g transform={`translate(${pos.x}, ${pos.y - 4 + breathe})`}>
         {/* Legs */}
         <g>
-          {/* Left leg */}
-          <line x1={-1.8 * s} y1={3 * s} x2={-1.8 * s + walkT * 2} y2={7 * s}
+          {/* Left leg — gentle stride */}
+          <line x1={-1.8 * s} y1={3 * s} x2={-1.8 * s + walkT * 1.2} y2={7 * s}
             stroke={palette.pants} strokeWidth={2.2} strokeLinecap="round" />
           {/* Left foot */}
-          <ellipse cx={-1.8 * s + walkT * 2} cy={7.2 * s} rx={1.5} ry={0.8}
+          <ellipse cx={-1.8 * s + walkT * 1.2} cy={7.2 * s} rx={1.5} ry={0.8}
             fill="hsl(30,10%,25%)" />
-          {/* Right leg */}
-          <line x1={1.8 * s} y1={3 * s} x2={1.8 * s - walkT * 2} y2={7 * s}
+          {/* Right leg — opposite phase */}
+          <line x1={1.8 * s} y1={3 * s} x2={1.8 * s - walkT * 1.2} y2={7 * s}
             stroke={palette.pants} strokeWidth={2.2} strokeLinecap="round" />
           {/* Right foot */}
-          <ellipse cx={1.8 * s - walkT * 2} cy={7.2 * s} rx={1.5} ry={0.8}
+          <ellipse cx={1.8 * s - walkT * 1.2} cy={7.2 * s} rx={1.5} ry={0.8}
             fill="hsl(30,10%,25%)" />
         </g>
 
@@ -164,17 +164,17 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
 
         {/* Arms */}
         <g>
-          {/* Left arm */}
-          <line x1={-3.5 * s} y1={-2 * s} x2={-5.5 * s + (isMoving ? -walkT * 1.5 : 0)} y2={2.5 * s + (isMoving ? walkT * 1 : Math.sin(Date.now() / 2000) * 0.5)}
+          {/* Left arm — gentle opposite swing to legs */}
+          <line x1={-3.5 * s} y1={-2 * s} x2={-5.5 * s + (isMoving ? -walkT * 0.8 : 0)} y2={2.5 * s + (isMoving ? walkT * 0.6 : Math.sin(Date.now() / 3000) * 0.3)}
             stroke={palette.shirt} strokeWidth={2} strokeLinecap="round" />
           {/* Left hand */}
-          <circle cx={-5.5 * s + (isMoving ? -walkT * 1.5 : 0)} cy={2.8 * s + (isMoving ? walkT * 1 : Math.sin(Date.now() / 2000) * 0.5)} r={1.2}
+          <circle cx={-5.5 * s + (isMoving ? -walkT * 0.8 : 0)} cy={2.8 * s + (isMoving ? walkT * 0.6 : Math.sin(Date.now() / 3000) * 0.3)} r={1.2}
             fill={palette.body} />
           {/* Right arm */}
-          <line x1={3.5 * s} y1={-2 * s} x2={5.5 * s + (isMoving ? walkT * 1.5 : 0)} y2={2.5 * s + (isMoving ? -walkT * 1 : Math.sin(Date.now() / 2000 + 1) * 0.5)}
+          <line x1={3.5 * s} y1={-2 * s} x2={5.5 * s + (isMoving ? walkT * 0.8 : 0)} y2={2.5 * s + (isMoving ? -walkT * 0.6 : Math.sin(Date.now() / 3000 + 1) * 0.3)}
             stroke={palette.shirt} strokeWidth={2} strokeLinecap="round" />
           {/* Right hand */}
-          <circle cx={5.5 * s + (isMoving ? walkT * 1.5 : 0)} cy={2.8 * s + (isMoving ? -walkT * 1 : Math.sin(Date.now() / 2000 + 1) * 0.5)} r={1.2}
+          <circle cx={5.5 * s + (isMoving ? walkT * 0.8 : 0)} cy={2.8 * s + (isMoving ? -walkT * 0.6 : Math.sin(Date.now() / 3000 + 1) * 0.3)} r={1.2}
             fill={palette.body} />
         </g>
 
