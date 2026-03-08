@@ -1,13 +1,17 @@
 import React from 'react';
+import type { Zone } from '@/data/world';
 
 interface Props {
   tick: number;
   agentCount: number;
   activeAds: number;
+  currentZone: Zone;
+  zones: Zone[];
+  onZoneChange: (zoneId: string) => void;
   onSponsorDashboard: () => void;
 }
 
-export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, onSponsorDashboard }) => {
+export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard }) => {
   return (
     <header className="h-12 bg-card/80 backdrop-blur-md border-b border-border flex items-center justify-between px-4 z-30">
       <div className="flex items-center gap-3">
@@ -17,7 +21,30 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, onSponsor
           <span className="text-secondary">World</span>
         </h1>
         <div className="h-4 w-px bg-border" />
-        <span className="text-xs text-muted-foreground font-mono">Tick #{tick}</span>
+
+        {/* Zone selector */}
+        <div className="flex items-center gap-1">
+          {zones.map(zone => (
+            <button
+              key={zone.id}
+              onClick={() => !zone.locked && onZoneChange(zone.id)}
+              className={`text-xs font-mono px-2 py-0.5 rounded transition-colors ${
+                zone.id === currentZone.id
+                  ? 'bg-primary/15 text-primary border border-primary/30'
+                  : zone.locked
+                  ? 'text-muted-foreground/40 cursor-not-allowed'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+              title={zone.locked ? `${zone.name} — Coming Soon` : zone.name}
+            >
+              {zone.emoji} {zone.locked && '🔒'}
+            </button>
+          ))}
+        </div>
+
+        <div className="h-4 w-px bg-border" />
+        <span className="text-xs text-muted-foreground font-mono">{currentZone.emoji} {currentZone.name}</span>
+        <span className="text-xs text-muted-foreground/60 font-mono">T#{tick}</span>
       </div>
       <div className="flex items-center gap-4">
         <Stat label="Agents" value={agentCount} color="text-primary" />

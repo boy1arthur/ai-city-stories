@@ -488,7 +488,7 @@ const AgentRenderer: React.FC<{
 AgentRenderer.displayName = 'AgentRenderer';
 
 // ===== MAIN MAP =====
-export const IsometricMap: React.FC<Props> = ({ buildings, agents, adSlots, interactions, onBuildingClick, onAgentClick }) => {
+export const IsometricMap: React.FC<Props> = ({ zone, buildings, agents, adSlots, interactions, onBuildingClick, onAgentClick }) => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0.85);
   const [dragging, setDragging] = useState(false);
