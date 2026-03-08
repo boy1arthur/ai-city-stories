@@ -44,6 +44,7 @@ export function useSlots(zone?: string) {
       if (error) throw error;
       return (data as DbSlot[]).map(dbToSlot);
     },
+    staleTime: 0,
   });
 }
 
