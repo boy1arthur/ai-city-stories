@@ -3,41 +3,30 @@ import type { Zone } from '@/data/world';
 import { getTileTypeFromMap, isRoadCenterInZone, getZonePalette } from '@/data/world';
 import { iso, diamond, TILE_W, TILE_H } from './constants';
 
-// Street furniture positions (grid coords) for Plaza district
+// Street furniture positions for Plaza district (updated for new dense layout)
 const LAMPPOST_POSITIONS = [
-  // Along north road (row 5) at key spots
-  { gx: 0, gy: 5 }, { gx: 5, gy: 5 }, { gx: 8, gy: 5 }, { gx: 11, gy: 5 }, { gx: 16, gy: 5 },
-  // Along south road (row 10)
-  { gx: 0, gy: 10 }, { gx: 5, gy: 10 }, { gx: 8, gy: 10 }, { gx: 11, gy: 10 }, { gx: 16, gy: 10 },
-  // Along west road (col 6) between intersections
-  { gx: 6, gy: 2 }, { gx: 6, gy: 8 }, { gx: 6, gy: 13 }, { gx: 6, gy: 16 },
-  // Along east road (col 13)
-  { gx: 13, gy: 2 }, { gx: 13, gy: 8 }, { gx: 13, gy: 13 }, { gx: 13, gy: 16 },
+  { gx: 1, gy: 8 }, { gx: 5, gy: 8 }, { gx: 12, gy: 8 }, { gx: 16, gy: 8 },
+  { gx: 8, gy: 1 }, { gx: 8, gy: 5 }, { gx: 8, gy: 11 }, { gx: 8, gy: 15 },
+  { gx: 6, gy: 3 }, { gx: 6, gy: 10 }, { gx: 13, gy: 8 },
 ];
 
 const BENCH_POSITIONS = [
-  // Near Plaza
-  { gx: 8, gy: 5, dir: 'h' as const }, { gx: 11, gy: 10, dir: 'h' as const },
-  // Near Garden
-  { gx: 8, gy: 11, dir: 'h' as const }, { gx: 11, gy: 11, dir: 'h' as const },
-  // Near Library
-  { gx: 5, gy: 7, dir: 'v' as const },
-  // Near Arena
-  { gx: 5, gy: 2, dir: 'v' as const },
-  // Near Tavern
-  { gx: 4, gy: 12, dir: 'v' as const },
+  { gx: 7, gy: 6, dir: 'h' as const },
+  { gx: 13, gy: 7, dir: 'v' as const },
+  { gx: 3, gy: 8, dir: 'h' as const },
+  { gx: 11, gy: 8, dir: 'h' as const },
+  { gx: 4, gy: 14, dir: 'h' as const },
+  { gx: 6, gy: 10, dir: 'v' as const },
 ];
 
 const PLANTER_POSITIONS = [
-  // Plaza perimeter
-  { gx: 8, gy: 6 }, { gx: 11, gy: 6 }, { gx: 8, gy: 9 }, { gx: 11, gy: 9 },
-  // Road corners
-  { gx: 5, gy: 4 }, { gx: 5, gy: 11 }, { gx: 16, gy: 4 }, { gx: 16, gy: 11 },
+  { gx: 7, gy: 3 }, { gx: 7, gy: 10 },
+  { gx: 14, gy: 9 }, { gx: 1, gy: 14 }, { gx: 8, gy: 14 },
 ];
 
 const TRASHCAN_POSITIONS = [
-  { gx: 0, gy: 5 }, { gx: 17, gy: 5 }, { gx: 0, gy: 10 }, { gx: 17, gy: 10 },
-  { gx: 5, gy: 0 }, { gx: 16, gy: 0 }, { gx: 5, gy: 17 },
+  { gx: 0, gy: 8 }, { gx: 17, gy: 8 },
+  { gx: 8, gy: 0 }, { gx: 8, gy: 17 },
 ];
 
 export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
@@ -60,7 +49,7 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
 
       // Road center line
       if (isRoadCenterInZone(zone.tileMap, gx, gy, GRID)) {
-        const isVert = (gx === 7 || gx === 13);
+        const isVert = (gx === 8);
         tiles.push(
           <line key={`rm_${gx}_${gy}`}
             x1={isVert ? pos.x : pos.x - 6} y1={isVert ? pos.y - 3 : pos.y}
@@ -73,7 +62,7 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
       if (type === 'road') {
         const isIntersection =
           isRoadCenterInZone(zone.tileMap, gx, gy, GRID) &&
-          (gy === 5 || gy === 10) && (gx === 7 || gx === 13);
+          (gy === 8) && (gx === 8);
         if (isIntersection) {
           tiles.push(
             <g key={`cw_${gx}_${gy}`}>
