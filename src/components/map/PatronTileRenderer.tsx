@@ -19,7 +19,7 @@ export const PatronTileRenderer: React.FC<Props> = React.memo(({ slots, onSlotCl
 
         if (isOwned) {
           return (
-            <g key={slot.id}>
+            <g key={slot.id} style={{ cursor: 'pointer' }} onClick={() => onSlotClick?.(slot)}>
               {/* Ground highlight — subtle golden tile */}
               <polygon
                 points={`${pos.x},${pos.y - TILE_H / 2} ${pos.x + TILE_W / 2},${pos.y} ${pos.x},${pos.y + TILE_H / 2} ${pos.x - TILE_W / 2},${pos.y}`}
