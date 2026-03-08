@@ -112,11 +112,24 @@ const INDUSTRIAL_PALETTE: TilePalette = {
   field:       { fill: 'hsl(110,12%,30%)', stroke: 'hsl(110,10%,34%)' },
 };
 
+const RESIDENTIAL_PALETTE: TilePalette = {
+  grass:       { fill: 'hsl(130,24%,34%)', stroke: 'hsl(130,20%,38%)' },
+  road:        { fill: 'hsl(220,5%,28%)',  stroke: 'hsl(220,6%,32%)' },
+  sidewalk:    { fill: 'hsl(28,14%,52%)',  stroke: 'hsl(28,16%,56%)' },
+  plaza_stone: { fill: 'hsl(30,16%,48%)',  stroke: 'hsl(30,18%,52%)' },
+  park:        { fill: 'hsl(140,30%,32%)', stroke: 'hsl(140,26%,36%)' },
+  dirt:        { fill: 'hsl(28,18%,34%)',  stroke: 'hsl(28,16%,38%)' },
+  water:       { fill: 'hsl(200,42%,36%)', stroke: 'hsl(200,38%,40%)' },
+  parking:     { fill: 'hsl(220,4%,32%)',  stroke: 'hsl(220,5%,36%)' },
+  field:       { fill: 'hsl(125,22%,34%)', stroke: 'hsl(125,18%,38%)' },
+};
+
 export const ZONE_PALETTES: Record<string, TilePalette> = {
   plaza: PLAZA_PALETTE,
   campus: CAMPUS_PALETTE,
   harbor: HARBOR_PALETTE,
   industrial: INDUSTRIAL_PALETTE,
+  residential: RESIDENTIAL_PALETTE,
 };
 
 export function getZonePalette(zoneId: string): TilePalette {
@@ -308,6 +321,119 @@ const CAMPUS_BUILDINGS: Building[] = [
   { id: 'auditorium', name: 'Auditorium', emoji: '🎭', color: 'accent', gridX: 18, gridY: 26, width: 6, height: 6, description: '공연장 & 컨퍼런스', adSlots: ['naming_rights', 'billboard', 'wall_wrap'], heightLevel: 3, roofShape: 'dome', wallColor: 'hsl(25,15%,48%)', roofColor: 'hsl(20,18%,38%)', buildingType: 'civic' },
 ];
 
+// ===== HARBOR DISTRICT — PPL Village (자연스러운 제품 노출) =====
+const HARBOR_TILE_MAP = [
+  'WWWWWWWWRSGGGGGGGG', // 0
+  'WWWWWWSSRSSSSSSSSG', // 1  dock area + market
+  'WWWWSSSSRSSSSSSSSG', // 2
+  'WSSSSSSSRSSSSSSSSG', // 3
+  'SSSSSSSSRSSSSSSSSG', // 4  fish market + warehouse
+  'SSSSSSSSRSSSSSSSSG', // 5
+  'SSSSSSSSRSSSSSSSSG', // 6
+  'SSSSSSSSRSSSSSSSSS', // 7
+  'RRRRRRRRRRRRRRRRRR', // 8  main boulevard
+  'SSSSSSSSRSSSSSSSSG', // 9  shops + cafe
+  'SSSSSSSSRSSSSSSSSG', // 10
+  'SSSSSSSSRSSSSSSSSG', // 11
+  'SSSSSSSSRSSSKKSSSG', // 12
+  'SSSSSSSSRSSKKKSSGK', // 13
+  'SSSSSSSSRSSKKKSSGK', // 14
+  'SSSSSSSGRSSSSSSSGK', // 15
+  'GGGGGGGGRSSGGGGGGG', // 16
+  'GGGGGGGGRSGGGGGGGG', // 17
+];
+
+const HARBOR_BUILDINGS: Building[] = [
+  // NW: Dock & Warehouse area
+  { id: 'fish_market', name: 'Fish Market', emoji: '🐟', color: 'accent', gridX: 2, gridY: 2, width: 8, height: 6, description: '해산물 시장 — 식품 브랜드 PPL 최적 장소', adSlots: ['kiosk', 'bus_stop'], heightLevel: 1, roofShape: 'gabled', wallColor: 'hsl(200,15%,48%)', roofColor: 'hsl(200,12%,38%)', buildingType: 'shop' },
+  { id: 'warehouse', name: 'Warehouse', emoji: '📦', color: 'primary', gridX: 2, gridY: 8, width: 10, height: 6, description: '물류 창고 — 대형 제품 디스플레이', adSlots: ['billboard', 'wall_wrap'], heightLevel: 2, roofShape: 'flat', wallColor: 'hsl(210,8%,45%)', roofColor: 'hsl(210,6%,38%)', buildingType: 'warehouse' },
+  // NE: Souvenir & lifestyle
+  { id: 'souvenir_shop', name: 'Souvenir Shop', emoji: '🎁', color: 'accent', gridX: 18, gridY: 2, width: 8, height: 6, description: '기념품 가게 — 굿즈 & 제품 PPL', adSlots: ['kiosk', 'billboard'], heightLevel: 1, roofShape: 'gabled', wallColor: 'hsl(30,20%,50%)', roofColor: 'hsl(25,18%,40%)', buildingType: 'shop' },
+  { id: 'harbor_cafe', name: 'Harbor Café', emoji: '☕', color: 'secondary', gridX: 26, gridY: 2, width: 6, height: 6, description: '항구 카페 — 음료 브랜드 자연스러운 노출', adSlots: ['kiosk'], heightLevel: 1, roofShape: 'flat', wallColor: 'hsl(28,22%,48%)', roofColor: 'hsl(28,18%,40%)', buildingType: 'shop' },
+  // SW: Craft & artisan
+  { id: 'craft_workshop', name: 'Craft Workshop', emoji: '🔨', color: 'primary', gridX: 2, gridY: 18, width: 8, height: 6, description: '수공예 작업장 — 공구/DIY 브랜드 PPL', adSlots: ['wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'gabled', wallColor: 'hsl(20,18%,45%)', roofColor: 'hsl(15,22%,35%)', buildingType: 'shop' },
+  { id: 'spice_store', name: 'Spice Store', emoji: '🌶️', color: 'accent', gridX: 2, gridY: 24, width: 6, height: 6, description: '향신료 가게 — 식재료 브랜드 노출', adSlots: ['kiosk', 'bus_stop'], heightLevel: 1, roofShape: 'hip', wallColor: 'hsl(15,28%,45%)', roofColor: 'hsl(10,25%,35%)', buildingType: 'shop' },
+  // SE: Lifestyle
+  { id: 'boutique', name: 'Boutique', emoji: '👗', color: 'secondary', gridX: 18, gridY: 18, width: 6, height: 6, description: '부티크 — 패션 브랜드 자연 노출', adSlots: ['wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'hip', wallColor: 'hsl(320,12%,48%)', roofColor: 'hsl(320,10%,38%)', buildingType: 'shop' },
+  { id: 'bakery', name: 'Bakery', emoji: '🥐', color: 'accent', gridX: 24, gridY: 18, width: 4, height: 4, description: '베이커리 — 식품 PPL', adSlots: ['kiosk'], heightLevel: 1, roofShape: 'gabled', wallColor: 'hsl(35,25%,52%)', roofColor: 'hsl(30,20%,40%)', buildingType: 'shop' },
+  { id: 'perfume_lab', name: 'Perfume Lab', emoji: '🧴', color: 'primary', gridX: 28, gridY: 18, width: 4, height: 4, description: '향수 연구소 — 뷰티 제품 PPL', adSlots: ['kiosk', 'wall_wrap'], heightLevel: 1, roofShape: 'flat', wallColor: 'hsl(280,10%,50%)', roofColor: 'hsl(280,8%,42%)', buildingType: 'shop' },
+];
+
+// ===== INDUSTRIAL DISTRICT — Times Square (네온 배너 & 디지털 스크린) =====
+const INDUSTRIAL_TILE_MAP = [
+  'SSSSSSSSRSSSSSSSSS', // 0  all paved, urban jungle
+  'SSSSSSSSRSSSSSSSSS', // 1
+  'SSSSSSSSRSSSSSSSSS', // 2
+  'SSSSSSSSRSSSSSSSSS', // 3
+  'SSSSSSSSRSSSSSSSSS', // 4
+  'SSSSSSSSRSSSSSSSSS', // 5
+  'SSSSSSSSRSSSSSSSSS', // 6
+  'SSSSSSSSRSSSSSSSSS', // 7
+  'RRRRRRRRRRRRRRRRRR', // 8  boulevard
+  'SSSSSSSSRSSSSSSSSS', // 9
+  'SSSSSSSSRSSSSSSSSS', // 10
+  'SSSSSSSSRSSSSSSSSS', // 11
+  'SSSSSSSSRSSSSSSSSS', // 12
+  'SSSSSSSSRSSSSSSSSS', // 13
+  'SSSSSSSSRSSSSSSSSS', // 14
+  'SSSSSSSSRSSSSSSSSS', // 15
+  'SSSSSSSSRSSSSSSSSS', // 16
+  'SSSSSSSSRSSSSSSSSS', // 17
+];
+
+const INDUSTRIAL_BUILDINGS: Building[] = [
+  // NW: Giant screens
+  { id: 'neon_tower', name: 'Neon Tower', emoji: '🌆', color: 'primary', gridX: 2, gridY: 2, width: 6, height: 8, description: '초대형 네온 타워 — 360도 디지털 스크린', adSlots: ['billboard', 'wall_wrap', 'naming_rights'], heightLevel: 8, roofShape: 'antenna', wallColor: 'hsl(240,10%,35%)', roofColor: 'hsl(240,8%,28%)', buildingType: 'tower' },
+  { id: 'led_wall', name: 'LED Wall', emoji: '📺', color: 'accent', gridX: 8, gridY: 2, width: 6, height: 6, description: '대형 LED 월 — 영상 광고 전용', adSlots: ['billboard', 'wall_wrap'], heightLevel: 5, roofShape: 'flat', wallColor: 'hsl(220,8%,32%)', roofColor: 'hsl(220,6%,26%)', buildingType: 'office' },
+  // NE: Ad towers
+  { id: 'banner_plaza', name: 'Banner Plaza', emoji: '🏳️', color: 'secondary', gridX: 18, gridY: 2, width: 8, height: 6, description: '배너 플라자 — 양면 대형 배너 밀집 구역', adSlots: ['billboard', 'billboard', 'wall_wrap'], heightLevel: 4, roofShape: 'flat', wallColor: 'hsl(0,0%,38%)', roofColor: 'hsl(0,0%,30%)', buildingType: 'office' },
+  { id: 'hologram_stage', name: 'Hologram Stage', emoji: '✨', color: 'primary', gridX: 26, gridY: 2, width: 6, height: 6, description: '홀로그램 무대 — 인터랙티브 광고 경험', adSlots: ['naming_rights', 'billboard'], heightLevel: 3, roofShape: 'dome', wallColor: 'hsl(260,12%,40%)', roofColor: 'hsl(260,10%,32%)', buildingType: 'civic' },
+  // SW: Digital media
+  { id: 'media_hub', name: 'Media Hub', emoji: '📡', color: 'primary', gridX: 2, gridY: 18, width: 8, height: 6, description: '미디어 허브 — 실시간 광고 송출 센터', adSlots: ['naming_rights', 'wall_wrap', 'billboard'], heightLevel: 6, roofShape: 'dish', wallColor: 'hsl(215,10%,42%)', roofColor: 'hsl(215,8%,35%)', buildingType: 'tower' },
+  { id: 'popup_store', name: 'Pop-up Store', emoji: '🎪', color: 'accent', gridX: 10, gridY: 18, width: 4, height: 4, description: '팝업 스토어 — 기간 한정 브랜드 체험', adSlots: ['kiosk', 'billboard'], heightLevel: 1, roofShape: 'flat', wallColor: 'hsl(350,15%,48%)', roofColor: 'hsl(350,12%,40%)', buildingType: 'shop' },
+  // SE: More screens
+  { id: 'ad_colosseum', name: 'Ad Colosseum', emoji: '🏟️', color: 'secondary', gridX: 18, gridY: 18, width: 8, height: 8, description: '광고 콜로세움 — 원형 스크린 & 브랜드 배틀', adSlots: ['naming_rights', 'billboard', 'wall_wrap', 'billboard'], heightLevel: 4, roofShape: 'dome', wallColor: 'hsl(0,0%,35%)', roofColor: 'hsl(0,0%,28%)', buildingType: 'civic' },
+  { id: 'ticker_board', name: 'Ticker Board', emoji: '📊', color: 'primary', gridX: 26, gridY: 18, width: 6, height: 6, description: '전광판 — 실시간 브랜드 랭킹 & 티커', adSlots: ['billboard', 'wall_wrap'], heightLevel: 5, roofShape: 'antenna', wallColor: 'hsl(210,6%,38%)', roofColor: 'hsl(210,5%,30%)', buildingType: 'tower' },
+  { id: 'jumbotron', name: 'Jumbotron', emoji: '🖥️', color: 'accent', gridX: 10, gridY: 24, width: 6, height: 6, description: '점보트론 — 초대형 스크린 광고', adSlots: ['billboard', 'naming_rights'], heightLevel: 7, roofShape: 'flat', wallColor: 'hsl(230,8%,34%)', roofColor: 'hsl(230,6%,28%)', buildingType: 'tower' },
+];
+
+// ===== RESIDENTIAL DISTRICT — Brand Village (브랜드 전용 빌딩) =====
+const RESIDENTIAL_TILE_MAP = [
+  'GKKKKKKSRSKKKKKKKG', // 0  park borders
+  'KSSSSSSKRSSSSSSSKK', // 1
+  'KSSSSSSKRSSSSSSSKK', // 2
+  'KSSSSSSKRSSSSSSSKK', // 3
+  'KSSSSSSKRSSSSSSSKK', // 4
+  'KSSSSGSKRSGSSSSSKK', // 5
+  'KSSSSGSKRSGSSSSSKK', // 6
+  'SSSSSSSSRSSSSSSSSS', // 7
+  'RRRRRRRRRRRRRRRRRR', // 8  boulevard
+  'SSSSSSSSRSSSSSSSSS', // 9
+  'KSSSSSSKRSSSSSSSKK', // 10
+  'KSSSSSSKRSSSSSSSKK', // 11
+  'KSSSSSSKRSSSSSSSKK', // 12
+  'KSSSSSSKRSSSSSSSKK', // 13
+  'KSSSSGSKRSGSSSSSKK', // 14
+  'KSSSSGSKRSGSSSSSKK', // 15
+  'KKKKKKKGRSGKKKKKKK', // 16
+  'GKKKKKKGRSGKKKKKKK', // 17
+];
+
+const RESIDENTIAL_BUILDINGS: Building[] = [
+  // NW: Brand houses
+  { id: 'brand_house_a', name: 'Brand House A', emoji: '🏠', color: 'primary', gridX: 2, gridY: 2, width: 6, height: 6, description: '프리미엄 브랜드 하우스 A — 네이밍 라이츠 전용', adSlots: ['naming_rights', 'wall_wrap'], heightLevel: 2, roofShape: 'hip', wallColor: 'hsl(210,12%,52%)', roofColor: 'hsl(210,10%,42%)', buildingType: 'house' },
+  { id: 'brand_house_b', name: 'Brand House B', emoji: '🏡', color: 'secondary', gridX: 8, gridY: 2, width: 6, height: 6, description: '프리미엄 브랜드 하우스 B — 벽면 래핑 가능', adSlots: ['naming_rights', 'wall_wrap'], heightLevel: 2, roofShape: 'gabled', wallColor: 'hsl(25,18%,50%)', roofColor: 'hsl(20,22%,38%)', buildingType: 'house' },
+  // NE: Brand pavilions
+  { id: 'brand_pavilion', name: 'Brand Pavilion', emoji: '🏛️', color: 'primary', gridX: 18, gridY: 2, width: 8, height: 8, description: '브랜드 파빌리온 — 대형 체험관 & 전시', adSlots: ['naming_rights', 'billboard', 'wall_wrap', 'kiosk'], heightLevel: 3, roofShape: 'dome', wallColor: 'hsl(30,15%,50%)', roofColor: 'hsl(25,12%,40%)', buildingType: 'civic' },
+  { id: 'flagship_store', name: 'Flagship Store', emoji: '⭐', color: 'accent', gridX: 26, gridY: 2, width: 6, height: 6, description: '플래그십 스토어 — 브랜드 쇼룸', adSlots: ['naming_rights', 'wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'flat', wallColor: 'hsl(0,0%,48%)', roofColor: 'hsl(0,0%,38%)', buildingType: 'shop' },
+  // SW: More brand houses
+  { id: 'brand_house_c', name: 'Brand House C', emoji: '🏘️', color: 'accent', gridX: 2, gridY: 20, width: 6, height: 6, description: '라이프스타일 브랜드 하우스', adSlots: ['naming_rights', 'wall_wrap'], heightLevel: 2, roofShape: 'hip', wallColor: 'hsl(350,12%,48%)', roofColor: 'hsl(350,10%,38%)', buildingType: 'house' },
+  { id: 'brand_house_d', name: 'Brand House D', emoji: '🏠', color: 'primary', gridX: 8, gridY: 20, width: 6, height: 6, description: '테크 브랜드 하우스', adSlots: ['naming_rights', 'wall_wrap', 'billboard'], heightLevel: 2, roofShape: 'gabled', wallColor: 'hsl(200,10%,50%)', roofColor: 'hsl(200,8%,40%)', buildingType: 'house' },
+  // SE: Community + brand space
+  { id: 'brand_gallery', name: 'Brand Gallery', emoji: '🖼️', color: 'secondary', gridX: 18, gridY: 20, width: 8, height: 6, description: '브랜드 갤러리 — 아트 & 캠페인 전시', adSlots: ['naming_rights', 'billboard', 'wall_wrap'], heightLevel: 2, roofShape: 'flat', wallColor: 'hsl(0,0%,52%)', roofColor: 'hsl(0,0%,42%)', buildingType: 'civic' },
+  { id: 'community_hall', name: 'Community Hall', emoji: '🤝', color: 'accent', gridX: 26, gridY: 20, width: 6, height: 6, description: '커뮤니티 홀 — 브랜드 팬 모임 공간', adSlots: ['naming_rights', 'kiosk'], heightLevel: 2, roofShape: 'dome', wallColor: 'hsl(280,10%,48%)', roofColor: 'hsl(280,8%,38%)', buildingType: 'civic' },
+];
+
 // ===== ALL ZONES =====
 export const ZONES: Zone[] = [
   {
@@ -338,36 +464,36 @@ export const ZONES: Zone[] = [
     id: 'harbor',
     name: 'Harbor District',
     emoji: '⚓',
-    description: '항구 & 물류 지구 — 글로벌 브랜드 노출 극대화',
+    description: '항구 & PPL 지구 — 자연스러운 제품 노출 특화 구역',
     gridSize: 36,
     theme: 'harbor',
     themeColor: 'hsl(205,50%,45%)',
-    buildings: [],
-    tileMap: [],
+    buildings: HARBOR_BUILDINGS,
+    tileMap: HARBOR_TILE_MAP,
     locked: false,
   },
   {
     id: 'industrial',
     name: 'Industrial District',
     emoji: '🏭',
-    description: '산업 지구 — 제조/테크 브랜드 특화 구역',
+    description: '타임스퀘어 — 네온 배너와 디지털 스크린이 가득한 광고 특화 구역',
     gridSize: 36,
     theme: 'industrial',
     themeColor: 'hsl(220,5%,45%)',
-    buildings: [],
-    tileMap: [],
+    buildings: INDUSTRIAL_BUILDINGS,
+    tileMap: INDUSTRIAL_TILE_MAP,
     locked: false,
   },
   {
     id: 'residential',
     name: 'Residential District',
     emoji: '🏘️',
-    description: '주거 지구 — 라이프스타일 브랜드 중심 구역',
+    description: '브랜드 마을 — 각 건물이 하나의 브랜드를 대표하는 프리미엄 구역',
     gridSize: 36,
     theme: 'residential',
     themeColor: 'hsl(280,30%,45%)',
-    buildings: [],
-    tileMap: [],
+    buildings: RESIDENTIAL_BUILDINGS,
+    tileMap: RESIDENTIAL_TILE_MAP,
     locked: false,
   },
 ];
