@@ -105,10 +105,16 @@ const BrandBuildingSlot: React.FC<{ slot: Slot; building: Building; onClick: () 
             </text>
           </>
         ) : (
-          <text x={bx} y={by + h / 2 + 2} textAnchor="middle" fontSize={4}
-            fill="hsl(215,15%,55%)" fontFamily="Inter" fontWeight={500}>
-            🏢 BRAND SLOT — {fit(slot.label, 12)}
-          </text>
+          <>
+            <text x={bx} y={by + h / 2 + 0.5} textAnchor="middle" fontSize={5}
+              fill="hsl(215,20%,65%)" fontFamily="Inter" fontWeight={600}>
+              🏢 BRAND SLOT
+            </text>
+            <text x={bx} y={by + h / 2 + 5.5} textAnchor="middle" fontSize={3.5}
+              fill="hsl(215,15%,50%)" fontFamily="Inter" fontWeight={500}>
+              {fit(slot.label, 16)}
+            </text>
+          </>
         )}
       </g>
     );
