@@ -61,4 +61,4 @@ export const SLOT_PRICING: SlotPricing[] = [
 ];
 
 // External form URL for sponsor applications
-export const SPONSOR_FORM_URL = 'https://forms.gle/placeholder';
+export const SPONSOR_FORM_URL = 'https://forms.gle/s2RR7SEzDmEgihNo9';
