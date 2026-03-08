@@ -82,24 +82,8 @@ export const IsometricMap: React.FC<Props> = ({
         onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
         onWheel={onWheel}>
 
-        <defs>
-          {/* Radial gradient for ground fade */}
-          <radialGradient id="groundFade" cx="50%" cy="45%" rx="55%" ry="55%">
-            <stop offset="0%" stopColor="hsl(120,18%,18%)" />
-            <stop offset="60%" stopColor="hsl(120,14%,14%)" />
-            <stop offset="85%" stopColor="hsl(220,10%,8%)" />
-            <stop offset="100%" stopColor="hsl(220,8%,5%)" />
-          </radialGradient>
-          {/* Vignette overlay */}
-          <radialGradient id="vignette" cx="50%" cy="50%" r="60%">
-            <stop offset="0%" stopColor="hsl(0,0%,0%)" stopOpacity="0" />
-            <stop offset="70%" stopColor="hsl(0,0%,0%)" stopOpacity="0" />
-            <stop offset="100%" stopColor="hsl(0,0%,0%)" stopOpacity="0.6" />
-          </radialGradient>
-        </defs>
-
-        {/* Full background fill */}
-        <rect x="-200" y="-100" width="1400" height="900" fill="url(#groundFade)" />
+        {/* Simple dark background */}
+        <rect x="-200" y="-100" width="1400" height="900" fill="hsl(220,10%,6%)" />
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
           {/* Layer 0: Locked zone ghost previews */}
@@ -137,8 +121,6 @@ export const IsometricMap: React.FC<Props> = ({
           ))}
         </g>
 
-        {/* Vignette edge fade */}
-        <rect x="-200" y="-100" width="1400" height="900" fill="url(#vignette)" pointerEvents="none" />
 
         {/* Energy overlay */}
         {energyStatus && energyStatus !== 'stable' && (

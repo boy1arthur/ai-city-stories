@@ -5,9 +5,10 @@ import { iso, TILE_W, TILE_H } from './constants';
 // Locked zone ghost previews positioned around the active zone
 // Layout: Plaza=center, Campus=east, Harbor=south, Industrial=southeast
 const ZONE_OFFSETS: Record<string, { dx: number; dy: number }> = {
-  campus:     { dx: 38, dy: 0 },    // east of plaza
-  harbor:     { dx: 0, dy: 38 },    // south of plaza
-  industrial: { dx: 38, dy: 38 },   // southeast of plaza
+  campus:      { dx: 0, dy: -38 },    // north of plaza
+  harbor:      { dx: 38, dy: 0 },     // east of plaza
+  industrial:  { dx: 0, dy: 38 },     // south of plaza
+  residential: { dx: -38, dy: 0 },    // west of plaza
 };
 
 interface Props {
