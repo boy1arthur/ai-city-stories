@@ -26,15 +26,18 @@ export interface SpeechBubble {
   type: 'dialogue' | 'reaction' | 'thought';
 }
 
-// Agent animated position for smooth movement
+// Agent animated position for smooth movement along road paths
 export interface AgentVisualState {
   agentId: string;
+  path: Waypoint[];           // full waypoint path
+  moveStartTime: number;
+  moveDuration: number;       // total ms for this journey
+  isMoving: boolean;
+  // Legacy compat for direction
   fromX: number;
   fromY: number;
   toX: number;
   toY: number;
-  moveStartTime: number;
-  isMoving: boolean;
 }
 
 // Ad reaction particle
