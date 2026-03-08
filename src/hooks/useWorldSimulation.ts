@@ -5,10 +5,12 @@ import { aggregateBrandStats, type BrandStats, type SlotStats } from '@/lib/esv'
 import { initCityEnergy, tickCityEnergy, type CityEnergyState } from '@/lib/cityEnergy';
 import { calcLeagueScores, isSeasonActive, type BrandLeagueScore } from '@/lib/brandLeague';
 import { DEMO_SEASON } from '@/data/leagueSeason';
+import { findPath, pathLength, type Waypoint } from '@/lib/pathfinding';
 import type { Highlight } from '@/components/sponsor/TodayHighlights';
 import type { WorldEvent } from '@/components/WorldEventBanner';
 
 const TICK_MS = 2500;
+const WALK_SPEED = 3.0; // grid units per second — natural walking pace
 
 function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
