@@ -40,32 +40,38 @@ const Index = () => {
   const [isFullView, setIsFullView] = useState(!isMobile);
   const [focusedZoneId, setFocusedZoneId] = useState<string | null>(null);
 
-  // Fetch slots from Cloud DB
-  const { data: dbSlots, isLoading: slotsLoading } = useSlots(isFullView ? undefined : currentZoneId);
+  // Fetch slots only for the active zone (focused zone in full view, current zone otherwise)
+  const activeSlotZone = isFullView ? (focusedZoneId || 'plaza') : currentZoneId;
+  const { data: dbSlots, isLoading: slotsLoading } = useSlots(activeSlotZone);
 
   const zoneSlots = useMemo(() => dbSlots ?? [], [dbSlots]);
   const patronSlots = useMemo(() => filterPatronTiles(zoneSlots), [zoneSlots]);
 
-  // Build zone data map for full city view
+  // Build zone data map for full city view — only focused zone gets real data
   const zoneDataMap = useMemo(() => {
     const map = new Map<string, any>();
     if (!isFullView) return map;
     const activeZones = ZONES.filter(z => !z.locked);
     for (const zone of activeZones) {
       const data = getZoneData(zone.id);
+      const isFocused = focusedZoneId === zone.id;
       if (data) {
-        // Filter slots for this zone
-        const zSlots = zoneSlots.filter(s => s.zone === zone.id);
-        const pSlots = filterPatronTiles(zSlots);
         map.set(zone.id, {
           ...data,
-          zoneSlots: zSlots,
-          patronSlots: pSlots,
+          // Only pass slots/agents for focused zone to avoid unnecessary rendering
+          zoneSlots: isFocused ? zoneSlots : [],
+          patronSlots: isFocused ? patronSlots : [],
+          agents: isFocused ? data.agents : [],
+          adSlots: isFocused ? data.adSlots : [],
+          interactions: isFocused ? data.interactions : [],
+          speechBubbles: isFocused ? data.speechBubbles : [],
+          adReactions: isFocused ? data.adReactions : [],
+          agentVisuals: isFocused ? data.agentVisuals : new Map(),
         });
       }
     }
     return map;
-  }, [isFullView, getZoneData, zoneSlots]);
+  }, [isFullView, getZoneData, zoneSlots, patronSlots, focusedZoneId]);
 
   const [searchParams] = useSearchParams();
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);

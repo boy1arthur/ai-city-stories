@@ -52,7 +52,8 @@ interface Props {
   onZoneFocus: (zoneId: string) => void;
 }
 
-const LOD_THRESHOLD = 0.45; // Below this zoom, use simplified rendering
+const LOD_SIMPLIFIED_THRESHOLD = 0.55; // Below this zoom, focused zone gets simplified
+const LOD_FULL_THRESHOLD = 0.45; // Above this zoom, focused zone gets full detail
 
 export const FullCityMap: React.FC<Props> = ({
   zones, zoneDataMap, energyStatus,
@@ -109,12 +110,15 @@ export const FullCityMap: React.FC<Props> = ({
     onZoneFocus('');
   }, [onZoneFocus]);
 
-  // Determine LOD per zone
-  const getLod = useCallback((zoneId: string): 'full' | 'simplified' => {
-    if (zoom >= LOD_THRESHOLD) return 'full';
-    // In simplified mode, only focused zone gets full detail
-    if (focusedZoneId === zoneId) return 'full';
-    return 'simplified';
+  // Determine LOD per zone: only focused zone loads detail, others are silhouettes
+  const getLod = useCallback((zoneId: string): 'full' | 'simplified' | 'silhouette' => {
+    const isFocused = focusedZoneId === zoneId;
+    if (isFocused) {
+      // Focused zone: full detail when zoomed in, simplified when zoomed out
+      return zoom >= LOD_FULL_THRESHOLD ? 'full' : 'simplified';
+    }
+    // Non-focused zones: always silhouette (minimal rendering)
+    return 'silhouette';
   }, [zoom, focusedZoneId]);
 
   // Compute total bounds for minimap
@@ -157,18 +161,6 @@ export const FullCityMap: React.FC<Props> = ({
 
             return (
               <g key={zone.id}>
-                {/* Zone ground tint for visual distinction */}
-                {lod === 'simplified' && (
-                  <g transform={`translate(${isoOff.x}, ${isoOff.y})`} opacity={0.6}>
-                    {/* Zone label when zoomed out */}
-                    {zoom < LOD_THRESHOLD && (
-                      <text x={500} y={250} textAnchor="middle" fontSize={28 / zoom}
-                        fill={zone.themeColor} fillOpacity={0.5} fontFamily="Inter" fontWeight={700}>
-                        {zone.emoji} {zone.name}
-                      </text>
-                    )}
-                  </g>
-                )}
                 <ZoneRenderer
                   zone={zone}
                   offsetX={isoOff.x}
