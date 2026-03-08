@@ -153,32 +153,29 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 // Legend:  R=road(ped spine)  S=sidewalk  P=plaza_stone  K=park  G=grass  D=dirt
 // Buildings occupy sidewalk tiles. Single-tile pedestrian spines: col 9 (vert), row 8 (horiz).
 // Core: rows 2-13, cols 1-16  |  Outskirts: row 0-1, 14-17 & col 0, 17
-const PLAZA_TILE_MAP: string[] = (() => {
-  // A=Arena E=Feed O=Oracle L=Lab C=Cafe B=Library N=News T=Tavern H=Workshop V=Obs
-  // Grid: 18x18. Vert spine col 8. Horiz boulevard row 8.
-  const rows = [
-    'KKGSSSSSRSSSSGKKKK', // 0
-    'KGSSSSSSRSSSSSKKSS', // 1
-    'SSAAAASSREEESOOSSKK', // 2  Arena(2-5,2-5) Feed(9-11,2-4) Oracle(13-14,2-4)
-    'SSAAAASSREEESOOSSKK', // 3
-    'SSAAAASSREEESOOSSKK', // 4
-    'SSAAAASRSLLLSSPPSKK', // 5  Lab(9-11,5-7)
-    'SSCCCSSRSLLLSSPPSKK', // 6  Cafe(2-4,6-7)
-    'SSCCCSSRSLLLSSPPSKK', // 7
-    'RRRRRRRRRRRRRRRRRR',  // 8  boulevard
-    'SSBBBBSRSNNNSPPSSS',  // 9  Library(2-5,9-11) News(9-11,9-10)
-    'SSBBBBSRSNNNSPPSSS',  // 10
-    'SSBBBBSRSSSSPPSKKS',  // 11
-    'STTTSSKKSHHHSPSSSSK', // 12 Tavern(1-3,12-13) Workshop(9-11,12-14)
-    'STTTSSKKSHHHSSSSSSK', // 13
-    'SKKKKKKKSHHSSSSSSSK', // 14 Garden(1-7,14-16)
-    'SKKKKKKKSVVSSSKKKKK', // 15 Observatory(9-10,15-16)
-    'SKKKKKKKSVVSSSKKKKK', // 16
-    'GKKKKKKKSSSSSSKKKG',  // 17
-  ];
-  // Ensure exactly 18 chars per row
-  return rows.map(r => r.slice(0, 18).padEnd(18, 'G'));
-})();
+// A=Arena E=Feed O=Oracle L=Lab C=Cafe B=Library N=News T=Tavern H=Workshop V=Obs
+// Grid: 18x18. Vert spine: col 8 = R always. Horiz boulevard: row 8 = all R.
+// Each row is exactly 18 chars.
+const PLAZA_TILE_MAP: string[] = [
+  'KKGSSSSSRSSSSGKKKK', // 0  outskirt north
+  'KGSSSSSSRSSSSSKKSS', // 1
+  'SSAAAASSREEESOOSSK', // 2  Arena(2-5,2-5) Feed(9-11,2-4) Oracle(13-14,2-4)
+  'SSAAAASSREEESOOSSK', // 3
+  'SSAAAASSREEESOOSSK', // 4
+  'SSAAAASSRLLLSPPPSK', // 5  Arena(2-5) Lab(9-11,5-7) PlazaStone(13-15)
+  'SSCCCSSSRLLLSPPPSK', // 6  Café(2-4,6-7) Lab(9-11)
+  'SSCCCSSSRLLLSPPPSK', // 7
+  'RRRRRRRRRRRRRRRRRR', // 8  boulevard
+  'SSBBBBSSRNNNSPPSSS', // 9  Library(2-5,9-11) News(9-11,9-10)
+  'SSBBBBSSRNNNSPPSSS', // 10
+  'SSBBBBSSRSSSSPPSKS', // 11
+  'STTTSSKKREHHHSSSSK', // 12 Tavern(1-3,12-13) Workshop(10-12,12-14)
+  'STTTSSKKREHHHSSSSK', // 13
+  'SKKKKKKKREHHHSSSSK', // 14 Garden(1-7,14-16) Workshop row14
+  'SKKKKKKKREVVSKKKKK', // 15 Observatory(10-11,15-16)
+  'SKKKKKKKREVVSKKKKK', // 16
+  'GKKKKKKKRSSSSKKKKG', // 17
+];
 
 const PLAZA_BUILDINGS: Building[] = [
   // ─── CORE NORTH ───
@@ -219,7 +216,7 @@ const PLAZA_BUILDINGS: Building[] = [
     wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
   { id: 'plaza', name: 'Central Plaza', emoji: '🏛️', color: 'accent',
-    gridX: 14, gridY: 5, width: 3, height: 4,
+    gridX: 13, gridY: 5, width: 3, height: 3,
     description: '중앙 광장 — 모든 에이전트의 교차점',
     adSlots: ['billboard', 'wall_wrap', 'bus_stop', 'kiosk', 'naming_rights'],
     heightLevel: 1, roofShape: 'flat',
@@ -249,7 +246,7 @@ const PLAZA_BUILDINGS: Building[] = [
     wallColor: 'hsl(25,22%,45%)', roofColor: 'hsl(15,28%,32%)', buildingType: 'shop' },
 
   { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
-    gridX: 9, gridY: 12, width: 4, height: 3,
+    gridX: 10, gridY: 12, width: 3, height: 3,
     description: '제작 & 크래프팅 공방',
     adSlots: ['wall_wrap', 'billboard', 'kiosk'],
     heightLevel: 2, roofShape: 'gear',
@@ -264,7 +261,7 @@ const PLAZA_BUILDINGS: Building[] = [
     wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,20%,35%)', buildingType: 'park_structure' },
 
   { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'primary',
-    gridX: 9, gridY: 15, width: 3, height: 2,
+    gridX: 10, gridY: 15, width: 2, height: 2,
     description: '별 관측소 & 미래 탐색',
     adSlots: ['naming_rights', 'kiosk'],
     heightLevel: 3, roofShape: 'dome',
