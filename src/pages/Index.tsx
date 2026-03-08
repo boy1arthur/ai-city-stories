@@ -15,7 +15,7 @@ import { useCampaigns } from '@/hooks/useCampaigns';
 import { useSlots, filterPatronTiles } from '@/hooks/useSlots';
 import { isCampaignActive } from '@/lib/adCampaign';
 import { handleSlotInteraction } from '@/lib/slotInteraction';
-import type { Building, Agent } from '@/data/world';
+import type { Building, Agent, AdSlot } from '@/data/world';
 import type { Slot } from '@/data/slots';
 
 const Index = () => {
