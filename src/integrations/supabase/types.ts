@@ -14,7 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      slots: {
+        Row: {
+          ai_hook_id: string | null
+          created_at: string
+          display_config: Json | null
+          id: string
+          label: string
+          location: Json
+          owner_id: string | null
+          owner_message: string | null
+          owner_name: string | null
+          owner_type: string
+          trigger_type: string | null
+          type: string
+          updated_at: string
+          zone: string
+        }
+        Insert: {
+          ai_hook_id?: string | null
+          created_at?: string
+          display_config?: Json | null
+          id: string
+          label?: string
+          location?: Json
+          owner_id?: string | null
+          owner_message?: string | null
+          owner_name?: string | null
+          owner_type?: string
+          trigger_type?: string | null
+          type: string
+          updated_at?: string
+          zone?: string
+        }
+        Update: {
+          ai_hook_id?: string | null
+          created_at?: string
+          display_config?: Json | null
+          id?: string
+          label?: string
+          location?: Json
+          owner_id?: string | null
+          owner_message?: string | null
+          owner_name?: string | null
+          owner_type?: string
+          trigger_type?: string | null
+          type?: string
+          updated_at?: string
+          zone?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
