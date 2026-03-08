@@ -61,10 +61,10 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
     return () => cancelAnimationFrame(raf);
   }, [isMoving]);
 
-  // Position interpolation
+  // Position interpolation along road path
   useEffect(() => {
     if (!building) return;
-    if (!visualState || !visualState.isMoving) {
+    if (!visualState || !visualState.isMoving || !visualState.path || visualState.path.length < 2) {
       const side = index % 4;
       const jitter = ((index * 7 + 3) % 5) * 0.3;
       let gx: number, gy: number;
@@ -80,11 +80,13 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
     let raf: number;
     const animate = () => {
       const elapsed = Date.now() - visualState.moveStartTime;
-      const t = easeInOutQuad(Math.min(1, elapsed / MOVE_DURATION));
-      const gx = lerp(visualState.fromX, visualState.toX, t);
-      const gy = lerp(visualState.fromY, visualState.toY, t);
-      setAnimPos(iso(gx, gy));
-      if (t < 1) raf = requestAnimationFrame(animate);
+      const duration = visualState.moveDuration || 3000;
+      // Ease in-out for natural walking
+      const rawT = Math.min(1, elapsed / duration);
+      const t = rawT < 0.5 ? 2 * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 2) / 2;
+      const pos = interpolatePath(visualState.path, t);
+      setAnimPos(iso(pos.x, pos.y));
+      if (rawT < 1) raf = requestAnimationFrame(animate);
     };
     raf = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(raf);
