@@ -6,11 +6,12 @@ interface Props {
   season: BrandLeagueSeason | null;
   scores: BrandLeagueScore[];
   currentTick: number;
+  onBrandClick?: (brandId: string) => void;
 }
 
 const RANK_MEDALS = ['🥇', '🥈', '🥉'];
 
-export const LeagueStandings: React.FC<Props> = ({ season, scores, currentTick }) => {
+export const LeagueStandings: React.FC<Props> = ({ season, scores, currentTick, onBrandClick }) => {
   if (!season || scores.length === 0) {
     return (
       <div className="bg-card border border-border rounded-lg p-4">
@@ -44,7 +45,7 @@ export const LeagueStandings: React.FC<Props> = ({ season, scores, currentTick }
         {scores.map((score, i) => {
           const barWidth = scores[0].totalScore > 0 ? (score.totalScore / scores[0].totalScore) * 100 : 0;
           return (
-            <div key={score.brandId} className="flex items-center gap-2 group">
+            <div key={score.brandId} className="flex items-center gap-2 group cursor-pointer" onClick={() => onBrandClick?.(score.brandId)}>
               <span className="text-sm w-6 text-center shrink-0">
                 {i < 3 ? RANK_MEDALS[i] : <span className="text-xs text-muted-foreground font-mono">{score.rank}</span>}
               </span>

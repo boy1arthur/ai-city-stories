@@ -8,6 +8,7 @@ import { EnergyBar } from '@/components/EnergyBar';
 import { SponsorDashboard } from '@/components/SponsorDashboard';
 import { TrendingOpinions } from '@/components/TrendingOpinions';
 import { WorldEventBanner } from '@/components/WorldEventBanner';
+import { AgentProfilePanel } from '@/components/agent/AgentProfilePanel';
 import { useWorldSimulation } from '@/hooks/useWorldSimulation';
 import { useCampaigns } from '@/hooks/useCampaigns';
 import { isCampaignActive } from '@/lib/adCampaign';
@@ -53,6 +54,7 @@ const Index = () => {
         adSlots={adSlots}
         allAdSlots={allAdSlots}
         agents={agents}
+        allAgents={allAgents}
         currentZone={currentZone}
         brandStats={brandStats}
         highlights={highlights}
@@ -62,6 +64,8 @@ const Index = () => {
         zones={zones}
         leagueSeason={leagueSeason}
         leagueScores={leagueScores}
+        worldLog={worldLog}
+        worldEvents={worldEvents}
         onCreateCampaign={createCampaign}
         onEndCampaign={endCampaign}
         onBack={() => setShowDashboard(false)}
@@ -113,6 +117,14 @@ const Index = () => {
       </div>
 
       <WorldLog logs={worldLog} isPaused={isPaused} onTogglePause={() => setIsPaused(!isPaused)} />
+
+      {selectedAgent && (
+        <AgentProfilePanel
+          agent={selectedAgent}
+          worldLog={worldLog}
+          onClose={() => setSelectedAgent(null)}
+        />
+      )}
     </div>
   );
 };
