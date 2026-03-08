@@ -460,7 +460,8 @@ const HARBOR_BUILDINGS: Building[] = [
     description: '등대 — 항구 랜드마크, 프리미엄 배너 위치',
     adSlots: ['billboard', 'naming_rights'],
     heightLevel: 6, roofShape: 'spire',
-    wallColor: 'hsl(0,0%,85%)', roofColor: 'hsl(5,60%,45%)', buildingType: 'tower' },
+    wallColor: 'hsl(0,0%,85%)', roofColor: 'hsl(5,60%,45%)', buildingType: 'tower',
+    isLandmark: true, landmarkType: 'lighthouse' },
 
   // SW: Craft & artisan — DIY brand PPL
   { id: 'craft_workshop', name: 'Craft Workshop', emoji: '🔨', color: 'primary',
