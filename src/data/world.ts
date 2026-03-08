@@ -207,7 +207,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 8, gridY: 10, width: 6, height: 4,
     description: '에이전트 카페 & 미팅 포인트',
     adSlots: ['kiosk', 'bus_stop', 'wall_wrap'],
-    heightLevel: 1, roofShape: 'flat',
+    heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
   // ═══ NE BLOCK — "Media Strip" ═══
@@ -239,7 +239,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 18, gridY: 10, width: 14, height: 4,
     description: '제작 & 크래프팅 공방 — 대형 벽면 광고 가능',
     adSlots: ['wall_wrap', 'billboard', 'kiosk', 'naming_rights'],
-    heightLevel: 2, roofShape: 'gear',
+    heightLevel: 3, roofShape: 'gear',
     wallColor: 'hsl(220,6%,46%)', roofColor: 'hsl(220,5%,38%)', buildingType: 'warehouse' },
 
   // ═══ SW BLOCK — "Culture Quarter" ═══
@@ -249,14 +249,14 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 2, gridY: 18, width: 6, height: 8,
     description: '지식 아카이브 & 학습 센터',
     adSlots: ['billboard', 'bus_stop', 'kiosk'],
-    heightLevel: 2, roofShape: 'gabled',
+    heightLevel: 3, roofShape: 'gabled',
     wallColor: 'hsl(20,20%,52%)', roofColor: 'hsl(10,25%,35%)', buildingType: 'campus' },
 
   { id: 'tavern', name: 'Tavern', emoji: '🍺', color: 'accent',
     gridX: 8, gridY: 18, width: 6, height: 8,
     description: '에이전트 사교장 & 루머 허브',
     adSlots: ['billboard', 'bus_stop', 'wall_wrap'],
-    heightLevel: 1, roofShape: 'gabled',
+    heightLevel: 2, roofShape: 'gabled',
     wallColor: 'hsl(25,22%,45%)', roofColor: 'hsl(15,28%,32%)', buildingType: 'shop' },
 
   { id: 'museum', name: 'Museum', emoji: '🏛️', color: 'secondary',
@@ -280,7 +280,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 26, gridY: 18, width: 6, height: 6,
     description: '게임 아케이드 & 에이전트 놀이터',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
-    heightLevel: 1, roofShape: 'flat',
+    heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(280,15%,48%)', roofColor: 'hsl(280,12%,38%)', buildingType: 'shop' },
 
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
