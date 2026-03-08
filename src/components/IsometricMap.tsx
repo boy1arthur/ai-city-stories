@@ -80,7 +80,7 @@ export const IsometricMap: React.FC<Props> = ({
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
         onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
         onWheel={onWheel}>
-        </defs>
+        
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
           {/* Layer 1: Ground tiles */}
