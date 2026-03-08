@@ -8,7 +8,10 @@ import { AdSlotVisual } from './map/AdSlotVisual';
 import { AgentRenderer } from './map/AgentRenderer';
 import { LockedZoneGhost } from './map/LockedZoneGhost';
 import { MultiBuildingAdRenderer } from './map/MultiBuildingAdRenderer';
+import { PatronTileRenderer } from './map/PatronTileRenderer';
 import { DEMO_MULTI_BUILDING_ADS } from '@/lib/multiBuildingAd';
+import { getPatronTiles } from '@/data/slots';
+import type { SlotZone } from '@/data/slots';
 
 interface Props {
   zone: Zone;
@@ -93,6 +96,9 @@ export const IsometricMap: React.FC<Props> = ({
 
           {/* Layer 1: Ground tiles */}
           <GroundLayer zone={zone} />
+
+          {/* Layer 1.5: Patron tiles (benches with plaques) */}
+          <PatronTileRenderer slots={getPatronTiles(zone.id as SlotZone)} />
 
           {/* Layer 2+3: Buildings with integrated ad visuals */}
           {sortedBuildings.map(b => {
