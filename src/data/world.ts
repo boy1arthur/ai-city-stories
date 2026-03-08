@@ -154,30 +154,29 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 
 // ===== PLAZA DISTRICT (dense campus-commercial hybrid) =====
 // Legend:  R=road  S=sidewalk  P=plaza_stone  K=park  G=grass
-// Building chars: A=Arena E=Feed O=Oracle L=Lab C=Cafe B=Library N=News T=Tavern H=Workshop V=Obs
+// Building chars: A=Arena E=Feed O=Oracle C=Cafe B=Library N=News T=Tavern H=Workshop V=Obs
 // Grid: 18x18. Vert road: col 8. Horiz boulevard: row 8.
 // All buildings have ≥1 tile buffer from roads (col 7/9 = sidewalk, row 7/9 = sidewalk).
 // Each row is exactly 18 chars.
 // ===== PLAZA TILE MAP =====
 // 18x18 tile map (each cell = 2x2 grid). Road: col 8 (vertical), row 8 (horizontal).
-// Buildings packed into tight street-wall blocks for maximum ad wall exposure.
-// NW: Arena(A)+Lab(L)+Café(C)  NE: Feed(E)+Oracle(O)+Newsstand(N)+Workshop(H)
-// SW: Library(B)+Tavern(T)+Museum(M)  SE: Observatory(V)+Arcade(D)+Garden(K)+TechLab(X)
+// NW: Arena(A)  NE: Feed(E)+Oracle(O)+Newsstand(N)+Workshop(H)
+// SW: Library(B)+Tavern(T)+Museum(M)  SE: Observatory(V)+Arcade(D)+Café(C)+TechLab(X)
 const PLAZA_TILE_MAP: string[] = [
   'GSSSSSSSRSSSSSSSSG', // 0  border
   'SAAAAAARSEEEEOOOSG', // 1  Arena(1-6) Feed(9-12) Oracle(13-15)
   'SAAAAAARSEEEEOOOSG', // 2
-  'SAAAAAARSEEEENNNSG', // 3  Newsstand(13-15) replaces Oracle
+  'SAAAAAARSEEEENNNSG', // 3  Newsstand(13-15)
   'SAAAAAARSEEEENNNSG', // 4
-  'SLLLCCCSRHHHHHHHSG', // 5  Lab(1-3) Café(4-6) Workshop(9-15)
-  'SLLLCCCSRHHHHHHHSG', // 6
+  'SKKKKKKRSRHHHHHHHSG', // 5  Garden/Park(1-6) Workshop(9-15)
+  'SKKKKKKSRHHHHHHHSG', // 6
   'SSSSSSSSRSSSSSSSSS', // 7  sidewalk buffer
   'RRRRRRRRRRRRRRRRRR', // 8  boulevard
   'SBBBTTTSRVVVVDDDSG', // 9  Library(1-3) Tavern(4-6) Obs(9-12) Arcade(13-15)
   'SBBBTTTSRVVVVDDDSG', // 10
   'SBBBTTTSRVVVVDDDSG', // 11
-  'SBBBTTTSRKKKXXXXSG', // 12 Garden(9-11) TechLab(12-15)
-  'SMMMMMMSRKKKXXXXSG', // 13 Museum(1-6)
+  'SBBBTTTSRKKKCCXSG', // 12 Garden(9-11) Café(12-13) TechLab(14-15)
+  'SMMMMMMSRKKKCCXSG', // 13 Museum(1-6)
   'SMMMMMMSRKKKXXXXSG', // 14
   'SMMMMMMSRSSSSSSSSG', // 15
   'SKKKKKKSRSSSSSSSSG', // 16 Park strip
