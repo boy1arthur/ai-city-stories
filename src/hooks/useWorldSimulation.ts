@@ -239,7 +239,7 @@ export function useWorldSimulation() {
               // Compute road-based path
               const waypointPath = findPath(oldBuilding, newBuilding);
               const totalDist = pathLength(waypointPath);
-              const duration = Math.max(2000, (totalDist / WALK_SPEED) * 1000); // ms
+              const duration = Math.max(4000, (totalDist / WALK_SPEED) * 1000); // ms, min 4s
 
               setAgentVisuals(prev => {
                 const next = new Map(prev);

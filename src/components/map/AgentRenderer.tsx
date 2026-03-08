@@ -83,7 +83,10 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
       const duration = visualState.moveDuration || 3000;
       // Ease in-out for natural walking
       const rawT = Math.min(1, elapsed / duration);
-      const t = rawT < 0.5 ? 2 * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 2) / 2;
+      // Gentle ease: slow start, constant middle, slow end
+      const t = rawT < 0.15 ? (rawT / 0.15) * (rawT / 0.15) * 0.15
+              : rawT > 0.85 ? 0.85 + (1 - Math.pow(1 - (rawT - 0.85) / 0.15, 2)) * 0.15
+              : 0.15 + (rawT - 0.15) * (0.7 / 0.7);
       const pos = interpolatePath(visualState.path, t);
       setAnimPos(iso(pos.x, pos.y));
       if (rawT < 1) raf = requestAnimationFrame(animate);
