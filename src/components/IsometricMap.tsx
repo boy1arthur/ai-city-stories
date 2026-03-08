@@ -1,11 +1,10 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
-import type { Building, Agent, AdSlot, InteractionEvent } from '@/data/world';
-import { getTileType, TILE_COLORS, isRoadCenter } from '@/data/world';
+import type { Building, Agent, AdSlot, InteractionEvent, Zone } from '@/data/world';
+import { getTileTypeFromMap, TILE_COLORS, isRoadCenterInZone } from '@/data/world';
 
 // Isometric constants - 2:1 diamond ratio like Zomboid
 const TILE_W = 48;
 const TILE_H = 24;
-const GRID = 18;
 const WALL_H_UNIT = 18; // pixels per height level
 
 function iso(gx: number, gy: number): { x: number; y: number } {
