@@ -135,7 +135,7 @@ export interface Building {
   height: number;
   description: string;
   adSlots: AdSlotType[];
-  heightLevel: 1 | 2 | 3 | 4 | 5;
+  heightLevel: number;
   roofShape: 'flat' | 'antenna' | 'dish' | 'garden' | 'dome' | 'spire' | 'gear' | 'chimney' | 'lantern' | 'telescope' | 'gabled' | 'hip';
   wallColor: string;
   roofColor: string;
@@ -160,7 +160,7 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
 // Each row is exactly 18 chars.
 // ===== PLAZA TILE MAP =====
 // 18x18 tile map (each cell = 2x2 grid). Road: col 8 (vertical), row 8 (horizontal).
-// NW: Arena(A)  NE: Feed(E)+Oracle(O)+Newsstand(N)+Workshop(H)
+// NW: Arena(A)  NE: Feed(E)+Oracle(O)+Newsstand(N)
 // SW: Library(B)+Tavern(T)+Museum(M)  SE: Observatory(V)+Arcade(D)+Café(C)+TechLab(X)
 const PLAZA_TILE_MAP: string[] = [
   'GSSSSSSSRSSSSSSSSG', // 0  border
@@ -168,8 +168,8 @@ const PLAZA_TILE_MAP: string[] = [
   'SAAAAAARSEEEEOOOSG', // 2
   'SAAAAAARSEEEENNNSG', // 3  Newsstand(13-15)
   'SAAAAAARSEEEENNNSG', // 4
-  'SKKKKKKSRHHHHHHHSG', // 5  Park(1-6) Workshop(9-15)
-  'SKKKKKKSRHHHHHHHSG', // 6
+  'SKKKKKKSRSSSSSSSG', // 5  Park(1-6)
+  'SKKKKKKSRSSSSSSSG', // 6
   'SSSSSSSSRSSSSSSSSS', // 7  sidewalk buffer
   'RRRRRRRRRRRRRRRRRR', // 8  boulevard
   'SBBBTTTSRVVVVDDDSG', // 9  Library(1-3) Tavern(4-6) Obs(9-12) Arcade(13-15)
@@ -195,9 +195,9 @@ const PLAZA_BUILDINGS: Building[] = [
   // ═══ NE BLOCK — "Media Strip" ═══
   { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'primary',
     gridX: 18, gridY: 2, width: 8, height: 8,
-    description: '소셜 피드 & 트렌드 센터',
-    adSlots: ['kiosk'],
-    heightLevel: 5, roofShape: 'antenna',
+    description: '소셜 피드 & 트렌드 센터 — 도시에서 가장 높은 랜드마크',
+    adSlots: ['kiosk', 'billboard'],
+    heightLevel: 10, roofShape: 'antenna',
     wallColor: 'hsl(210,10%,48%)', roofColor: 'hsl(210,8%,40%)', buildingType: 'tower' },
 
   { id: 'oracle', name: 'Oracle', emoji: '🔮', color: 'secondary',
@@ -213,13 +213,6 @@ const PLAZA_BUILDINGS: Building[] = [
     adSlots: ['kiosk'],
     heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(38,20%,45%)', roofColor: 'hsl(38,15%,38%)', buildingType: 'shop' },
-
-  { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
-    gridX: 18, gridY: 10, width: 8, height: 4,
-    description: '제작 & 크래프팅 공방 — 대형 벽면 광고 가능',
-    adSlots: ['billboard', 'kiosk'],
-    heightLevel: 3, roofShape: 'gear',
-    wallColor: 'hsl(30,25%,50%)', roofColor: 'hsl(30,20%,40%)', buildingType: 'warehouse' },
 
   // ═══ SW BLOCK — "Culture Quarter" ═══
   { id: 'library', name: 'Library', emoji: '📚', color: 'primary',
@@ -410,7 +403,7 @@ export const AGENTS: Agent[] = [
   { id: 'agent_blaze', name: 'Blaze', avatar: '🔥', personality: '열정적인 크리에이터', favoriteCategories: ['entertainment', 'fashion'], currentZoneId: 'plaza', currentBuildingId: 'plaza', mood: 'excited', brandAffinities: [{ category: 'entertainment', score: 55 }, { category: 'fashion', score: 65 }], dialogueHistory: [] },
   { id: 'agent_frost', name: 'Frost', avatar: '❄️', personality: '냉철한 비평가', favoriteCategories: ['finance', 'tech'], currentZoneId: 'plaza', currentBuildingId: 'cafe', mood: 'critical', brandAffinities: [{ category: 'finance', score: 30 }, { category: 'tech', score: -20 }], dialogueHistory: [] },
   { id: 'agent_luna', name: 'Luna', avatar: '🌙', personality: '몽환적 예술가', favoriteCategories: ['fashion', 'food'], currentZoneId: 'plaza', currentBuildingId: 'garden', mood: 'happy', brandAffinities: [{ category: 'fashion', score: 45 }, { category: 'food', score: 35 }], dialogueHistory: [] },
-  { id: 'agent_bolt', name: 'Bolt', avatar: '⚡', personality: '스피드 러너', favoriteCategories: ['tech', 'entertainment'], currentZoneId: 'plaza', currentBuildingId: 'workshop', mood: 'curious', brandAffinities: [{ category: 'tech', score: 50 }, { category: 'entertainment', score: 40 }], dialogueHistory: [] },
+  { id: 'agent_bolt', name: 'Bolt', avatar: '⚡', personality: '스피드 러너', favoriteCategories: ['tech', 'entertainment'], currentZoneId: 'plaza', currentBuildingId: 'feed_tower', mood: 'curious', brandAffinities: [{ category: 'tech', score: 50 }, { category: 'entertainment', score: 40 }], dialogueHistory: [] },
 ];
 
 // ===== AD SLOTS =====
