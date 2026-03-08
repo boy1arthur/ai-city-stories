@@ -135,7 +135,7 @@ export interface Building {
   height: number;
   description: string;
   adSlots: AdSlotType[];
-  heightLevel: 1 | 2 | 3;
+  heightLevel: 1 | 2 | 3 | 4 | 5;
   roofShape: 'flat' | 'antenna' | 'dish' | 'garden' | 'dome' | 'spire' | 'gear' | 'chimney' | 'lantern' | 'telescope' | 'gabled' | 'hip';
   wallColor: string;
   roofColor: string;
@@ -193,7 +193,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 2, gridY: 2, width: 12, height: 8,
     description: 'AI 에이전트 배틀 & 토너먼트 — 프리미엄 광고 랜드마크',
     adSlots: ['billboard', 'naming_rights', 'wall_wrap', 'bus_stop'],
-    heightLevel: 3, roofShape: 'dome',
+    heightLevel: 4, roofShape: 'dome',
     wallColor: 'hsl(215,12%,52%)', roofColor: 'hsl(215,10%,42%)', buildingType: 'civic' },
 
   { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary',
@@ -215,28 +215,28 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 18, gridY: 2, width: 8, height: 8,
     description: '소셜 피드 & 트렌드 센터',
     adSlots: ['billboard', 'kiosk', 'wall_wrap'],
-    heightLevel: 3, roofShape: 'antenna',
+    heightLevel: 5, roofShape: 'antenna',
     wallColor: 'hsl(210,10%,48%)', roofColor: 'hsl(210,8%,40%)', buildingType: 'tower' },
 
   { id: 'oracle', name: 'Oracle', emoji: '🔮', color: 'secondary',
     gridX: 26, gridY: 2, width: 6, height: 4,
     description: '예측 마켓 & 점술관',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
-    heightLevel: 3, roofShape: 'hip',
+    heightLevel: 4, roofShape: 'hip',
     wallColor: 'hsl(25,18%,48%)', roofColor: 'hsl(15,22%,38%)', buildingType: 'shop' },
 
   { id: 'newsstand', name: 'Newsstand', emoji: '📰', color: 'accent',
     gridX: 26, gridY: 6, width: 6, height: 4,
     description: '뉴스 & 브랜드 캠페인 게시판',
     adSlots: ['kiosk', 'billboard', 'wall_wrap'],
-    heightLevel: 2, roofShape: 'flat',
+    heightLevel: 3, roofShape: 'flat',
     wallColor: 'hsl(38,20%,45%)', roofColor: 'hsl(38,15%,38%)', buildingType: 'shop' },
 
   { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
     gridX: 18, gridY: 10, width: 14, height: 4,
     description: '제작 & 크래프팅 공방 — 대형 벽면 광고 가능',
     adSlots: ['wall_wrap', 'billboard', 'kiosk', 'naming_rights'],
-    heightLevel: 2, roofShape: 'gear',
+    heightLevel: 3, roofShape: 'gear',
     wallColor: 'hsl(220,6%,46%)', roofColor: 'hsl(220,5%,38%)', buildingType: 'warehouse' },
 
   // ═══ SW BLOCK — "Culture Quarter" ═══
@@ -273,7 +273,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 26, gridY: 18, width: 6, height: 6,
     description: '게임 아케이드 & 에이전트 놀이터',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
-    heightLevel: 1, roofShape: 'flat',
+    heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(280,15%,48%)', roofColor: 'hsl(280,12%,38%)', buildingType: 'shop' },
 
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
