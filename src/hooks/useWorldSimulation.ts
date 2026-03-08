@@ -143,6 +143,13 @@ export function useWorldSimulation() {
       setTick(t => t + 1);
       const now = Date.now();
 
+      // City energy tick
+      setCityEnergy(prev => {
+        const activeCampaignCount = adSlots.filter(s => s.brand).length;
+        const totalESV = adSlots.filter(s => s.brand).reduce((sum, s) => sum + s.esv, 0);
+        return tickCityEnergy(prev, { activeCampaignCount, totalESV });
+      });
+
       setAgents(prev => prev.map((agent, agentIndex) => {
         const agentZone = getZoneById(agent.currentZoneId);
         if (!agentZone || agentZone.locked) return agent;
