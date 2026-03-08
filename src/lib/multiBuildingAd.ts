@@ -103,16 +103,7 @@ export function isAdOccluded(ad: MultiBuildingAd, allBuildings: Building[]): boo
 
 // ===== DEMO PLACEMENTS =====
 export const DEMO_MULTI_BUILDING_ADS: MultiBuildingAd[] = [
-  // ═══ 12시 (NW) — Premium Tower Block ═══
-  {
-    id: 'mba_nw_east',
-    brandName: 'NovaTech',
-    brandColor: 'hsl(210,60%,55%)',
-    brandInitial: 'N',
-    tagline: 'Future, simplified.',
-    buildingIds: ['arena', 'cafe'],
-    face: 'east',
-  },
+  // ═══ 12시 (NW) — NovaTech on Lab+Café south wall only (Arena has naming_rights) ═══
   {
     id: 'mba_nw_south',
     brandName: 'NovaTech',
