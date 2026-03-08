@@ -6,7 +6,7 @@ import { initCityEnergy, tickCityEnergy, type CityEnergyState } from '@/lib/city
 import { calcLeagueScores, isSeasonActive, type BrandLeagueScore } from '@/lib/brandLeague';
 import { DEMO_SEASON } from '@/data/leagueSeason';
 import { findPath, pathLength, type Waypoint } from '@/lib/pathfinding';
-import { useAgentChat, type AIConversation } from '@/hooks/useAgentChat';
+import { selectDialogue, type DialogueMatchContext, type DialogueSelection } from '@/data/dialogueTemplates';
 import type { Highlight } from '@/components/sponsor/TodayHighlights';
 import type { WorldEvent } from '@/components/WorldEventBanner';
 
