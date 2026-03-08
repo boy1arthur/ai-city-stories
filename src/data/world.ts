@@ -651,6 +651,8 @@ const RESIDENTIAL_BUILDINGS: Building[] = [
   // SE: Community + brand space
   { id: 'brand_gallery', name: 'Brand Gallery', emoji: '🖼️', color: 'secondary', gridX: 18, gridY: 20, width: 8, height: 6, description: '브랜드 갤러리 — 아트 & 캠페인 전시', adSlots: ['naming_rights', 'billboard', 'wall_wrap'], heightLevel: 2, roofShape: 'flat', wallColor: 'hsl(35,14%,50%)', roofColor: 'hsl(30,12%,38%)', buildingType: 'civic' },
   { id: 'community_hall', name: 'Community Hall', emoji: '🤝', color: 'accent', gridX: 26, gridY: 20, width: 6, height: 6, description: '커뮤니티 홀 — 브랜드 팬 모임 공간', adSlots: ['naming_rights', 'kiosk'], heightLevel: 2, roofShape: 'dome', wallColor: 'hsl(32,18%,52%)', roofColor: 'hsl(25,22%,34%)', buildingType: 'civic' },
+  // Landmark
+  { id: 'golden_pavilion', name: 'Golden Pavilion', emoji: '🏯', color: 'primary', gridX: 14, gridY: 10, width: 6, height: 6, description: '골든 파빌리온 — Residential 랜드마크, 브랜드 VIP 라운지', adSlots: ['naming_rights', 'billboard', 'wall_wrap'], heightLevel: 3, roofShape: 'hip', wallColor: 'hsl(35,18%,55%)', roofColor: 'hsl(43,50%,48%)', buildingType: 'civic', isLandmark: true, landmarkType: 'golden_pavilion' },
 ];
 
 // ===== ALL ZONES =====
