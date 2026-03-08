@@ -236,23 +236,11 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
 
       // Plaza stone pattern
       if (type === 'plaza_stone') {
-        // Checkerboard pattern
         if ((gx + gy) % 2 === 0) {
           tiles.push(<polygon key={`pd_${gx}_${gy}`} points={diamond(pos.x, pos.y)}
             fill="hsl(35,15%,52%)" fillOpacity={0.2} stroke="none" />);
         }
-        // Radial pattern from center (grid ~17,17)
-        const dxc = gx - 17, dyc = gy - 17;
-        const distFromCenter = Math.sqrt(dxc * dxc + dyc * dyc);
-        if (distFromCenter < 6) {
-          // Inner ring decorative stones — concentric pattern
-          const ringIdx = Math.floor(distFromCenter / 2);
-          tiles.push(<polygon key={`pr_${gx}_${gy}`} points={diamond(pos.x, pos.y)}
-            fill={`hsl(${35 + ringIdx * 5},${18 - ringIdx * 2}%,${55 - ringIdx * 4}%)`}
-            fillOpacity={0.25} stroke="hsl(35,20%,58%)" strokeWidth={0.3} strokeOpacity={0.2} />);
-        }
-        // Occasional small potted plant on plaza
-        if (seed % 13 === 0 && distFromCenter > 4) {
+        if (seed % 13 === 0) {
           decorations.push(
             <g key={`ppot_${gx}_${gy}`}>
               <rect x={pos.x - 2} y={pos.y - 2.5} width={4} height={3} rx={0.5}
@@ -382,96 +370,6 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
       );
     }
 
-    // ─── Central fountain / clock monument ───
-    const fc = iso(17, 17); // center of the crossroads
-    decorations.push(
-      <g key="central_fountain">
-        {/* Circular fountain basin (outer ring) */}
-        <ellipse cx={fc.x} cy={fc.y + 2} rx={22} ry={11}
-          fill="hsl(205,30%,35%)" fillOpacity={0.3}
-          stroke="hsl(35,18%,50%)" strokeWidth={1.2} strokeOpacity={0.5} />
-        {/* Water surface */}
-        <ellipse cx={fc.x} cy={fc.y + 1} rx={18} ry={9}
-          fill="hsl(205,40%,40%)" fillOpacity={0.35}>
-          <animate attributeName="fillOpacity" values="0.3;0.45;0.3" dur="3s" repeatCount="indefinite" />
-        </ellipse>
-        {/* Water shimmer highlights */}
-        {[-8, -3, 3, 8].map(ox => (
-          <ellipse key={`wsh_${ox}`} cx={fc.x + ox} cy={fc.y + ox * 0.2}
-            rx={2.5} ry={1} fill="hsl(200,50%,65%)" fillOpacity={0.2}>
-            <animate attributeName="fillOpacity" values="0.1;0.3;0.1" dur={`${2 + Math.abs(ox) * 0.3}s`} repeatCount="indefinite" />
-          </ellipse>
-        ))}
-        {/* Inner basin rim */}
-        <ellipse cx={fc.x} cy={fc.y} rx={10} ry={5}
-          fill="none" stroke="hsl(35,15%,55%)" strokeWidth={0.8} strokeOpacity={0.4} />
-        {/* Central column base */}
-        <ellipse cx={fc.x} cy={fc.y - 1} rx={5} ry={2.5}
-          fill="hsl(35,12%,45%)" fillOpacity={0.7}
-          stroke="hsl(35,10%,55%)" strokeWidth={0.5} strokeOpacity={0.4} />
-        {/* Clock tower column */}
-        <rect x={fc.x - 2.5} y={fc.y - 38} width={5} height={37} rx={1}
-          fill="hsl(35,15%,48%)" fillOpacity={0.8}
-          stroke="hsl(35,10%,40%)" strokeWidth={0.5} strokeOpacity={0.5} />
-        {/* Column detail bands */}
-        {[0.25, 0.5, 0.75].map(t => (
-          <line key={`band_${t}`} x1={fc.x - 2.5} y1={fc.y - 38 * t} x2={fc.x + 2.5} y2={fc.y - 38 * t}
-            stroke="hsl(35,18%,55%)" strokeWidth={0.6} strokeOpacity={0.4} />
-        ))}
-        {/* Clock face */}
-        <circle cx={fc.x} cy={fc.y - 32} r={5}
-          fill="hsl(45,20%,85%)" fillOpacity={0.7}
-          stroke="hsl(38,25%,50%)" strokeWidth={0.8} strokeOpacity={0.6} />
-        {/* Clock hands */}
-        <line x1={fc.x} y1={fc.y - 32} x2={fc.x} y2={fc.y - 36}
-          stroke="hsl(0,0%,20%)" strokeWidth={0.6} strokeOpacity={0.7} />
-        <line x1={fc.x} y1={fc.y - 32} x2={fc.x + 3} y2={fc.y - 31}
-          stroke="hsl(0,0%,20%)" strokeWidth={0.5} strokeOpacity={0.6} />
-        {/* Clock dial markers */}
-        {[0, 90, 180, 270].map(deg => {
-          const rad = (deg * Math.PI) / 180;
-          return <circle key={`dial_${deg}`}
-            cx={fc.x + Math.sin(rad) * 4} cy={fc.y - 32 + Math.cos(rad) * -4 * 0.5}
-            r={0.5} fill="hsl(0,0%,25%)" fillOpacity={0.6} />;
-        })}
-        {/* Spire */}
-        <polygon points={`${fc.x},${fc.y - 48} ${fc.x - 3},${fc.y - 38} ${fc.x + 3},${fc.y - 38}`}
-          fill="hsl(38,25%,45%)" fillOpacity={0.8}
-          stroke="hsl(38,20%,55%)" strokeWidth={0.4} strokeOpacity={0.5} />
-        {/* Spire top orb */}
-        <circle cx={fc.x} cy={fc.y - 49} r={1.5}
-          fill="hsl(45,70%,65%)" fillOpacity={0.7}>
-          <animate attributeName="fillOpacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" />
-        </circle>
-        {/* Light glow around orb */}
-        <circle cx={fc.x} cy={fc.y - 49} r={6}
-          fill="hsl(45,60%,70%)" fillOpacity={0.06}>
-          <animate attributeName="fillOpacity" values="0.03;0.08;0.03" dur="3s" repeatCount="indefinite" />
-        </circle>
-        {/* Label */}
-        <text x={fc.x} y={fc.y - 52} textAnchor="middle" fontSize={5}
-          fill="hsl(38,50%,65%)" fillOpacity={0.6} fontFamily="Inter" fontWeight={600}>
-          🕰️ Clock Tower
-        </text>
-      </g>
-    );
-
-    // Corner bollards around the roundabout
-    const bollardOffsets = [
-      { gx: 14, gy: 14 }, { gx: 20, gy: 14 },
-      { gx: 14, gy: 20 }, { gx: 20, gy: 20 },
-    ];
-    for (const bo of bollardOffsets) {
-      const bp = iso(bo.gx, bo.gy);
-      decorations.push(
-        <g key={`bollard_${bo.gx}_${bo.gy}`}>
-          <rect x={bp.x - 1} y={bp.y - 4} width={2} height={4} rx={0.5}
-            fill="hsl(35,15%,50%)" fillOpacity={0.6} />
-          <circle cx={bp.x} cy={bp.y - 4.5} r={1.2}
-            fill="hsl(45,60%,60%)" fillOpacity={0.4} />
-        </g>
-      );
-    }
   }
 
   return (
