@@ -44,7 +44,7 @@ export const ZoneRenderer: React.FC<Props> = React.memo(({
   agents, adSlots, interactions,
   speechBubbles, adReactions, agentVisuals,
   zoneSlots, patronSlots,
-  onBuildingClick, onAgentClick, onSlotClick, onAdSlotClick,
+  onBuildingClick, onAgentClick, onSlotClick, onAdSlotClick, onZoneClick,
 }) => {
   const buildings = zone.buildings;
 
