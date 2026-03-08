@@ -156,6 +156,8 @@ export interface Building {
   wallColor: string;
   roofColor: string;
   buildingType: 'office' | 'shop' | 'campus' | 'house' | 'warehouse' | 'civic' | 'tower' | 'park_structure';
+  isLandmark?: boolean;
+  landmarkType?: 'clock_tower' | 'lighthouse' | 'neon_obelisk' | 'golden_pavilion';
 }
 
 export type AdSlotType = 'billboard' | 'wall_wrap' | 'bus_stop' | 'kiosk' | 'naming_rights';
@@ -328,7 +330,8 @@ const CAMPUS_BUILDINGS: Building[] = [
     description: '시계탑 — 캠퍼스 랜드마크, 프리미엄 배너 위치',
     adSlots: ['billboard', 'naming_rights'],
     heightLevel: 7, roofShape: 'spire',
-    wallColor: 'hsl(10,30%,40%)', roofColor: 'hsl(5,25%,30%)', buildingType: 'tower' },
+    wallColor: 'hsl(10,30%,40%)', roofColor: 'hsl(5,25%,30%)', buildingType: 'tower',
+    isLandmark: true, landmarkType: 'clock_tower' },
 
   // NE: Tech & Innovation
   { id: 'tech_incubator', name: 'Tech Incubator', emoji: '🚀', color: 'primary',
@@ -457,7 +460,8 @@ const HARBOR_BUILDINGS: Building[] = [
     description: '등대 — 항구 랜드마크, 프리미엄 배너 위치',
     adSlots: ['billboard', 'naming_rights'],
     heightLevel: 6, roofShape: 'spire',
-    wallColor: 'hsl(0,0%,85%)', roofColor: 'hsl(5,60%,45%)', buildingType: 'tower' },
+    wallColor: 'hsl(0,0%,85%)', roofColor: 'hsl(5,60%,45%)', buildingType: 'tower',
+    isLandmark: true, landmarkType: 'lighthouse' },
 
   // SW: Craft & artisan — DIY brand PPL
   { id: 'craft_workshop', name: 'Craft Workshop', emoji: '🔨', color: 'primary',
@@ -529,12 +533,13 @@ const INDUSTRIAL_TILE_MAP = [
 
 const INDUSTRIAL_BUILDINGS: Building[] = [
   // NW: Mega towers — maximum visibility
-  { id: 'neon_tower', name: 'Neon Tower', emoji: '🌆', color: 'primary',
+  { id: 'neon_tower', name: 'Neon Obelisk', emoji: '🌆', color: 'primary',
     gridX: 2, gridY: 2, width: 6, height: 8,
-    description: '초대형 네온 타워 — 360도 디지털 래핑 & 빌보드',
+    description: '네온 오벨리스크 — 사이버펑크 랜드마크, 360도 디지털 래핑',
     adSlots: ['billboard', 'billboard', 'wall_wrap', 'naming_rights'],
     heightLevel: 8, roofShape: 'antenna',
-    wallColor: 'hsl(250,12%,22%)', roofColor: 'hsl(250,10%,16%)', buildingType: 'tower' },
+    wallColor: 'hsl(250,12%,22%)', roofColor: 'hsl(250,10%,16%)', buildingType: 'tower',
+    isLandmark: true, landmarkType: 'neon_obelisk' },
 
   { id: 'led_wall', name: 'LED Wall', emoji: '📺', color: 'accent',
     gridX: 8, gridY: 2, width: 6, height: 6,
@@ -646,6 +651,8 @@ const RESIDENTIAL_BUILDINGS: Building[] = [
   // SE: Community + brand space
   { id: 'brand_gallery', name: 'Brand Gallery', emoji: '🖼️', color: 'secondary', gridX: 18, gridY: 20, width: 8, height: 6, description: '브랜드 갤러리 — 아트 & 캠페인 전시', adSlots: ['naming_rights', 'billboard', 'wall_wrap'], heightLevel: 2, roofShape: 'flat', wallColor: 'hsl(35,14%,50%)', roofColor: 'hsl(30,12%,38%)', buildingType: 'civic' },
   { id: 'community_hall', name: 'Community Hall', emoji: '🤝', color: 'accent', gridX: 26, gridY: 20, width: 6, height: 6, description: '커뮤니티 홀 — 브랜드 팬 모임 공간', adSlots: ['naming_rights', 'kiosk'], heightLevel: 2, roofShape: 'dome', wallColor: 'hsl(32,18%,52%)', roofColor: 'hsl(25,22%,34%)', buildingType: 'civic' },
+  // Landmark
+  { id: 'golden_pavilion', name: 'Golden Pavilion', emoji: '🏯', color: 'primary', gridX: 14, gridY: 10, width: 6, height: 6, description: '골든 파빌리온 — Residential 랜드마크, 브랜드 VIP 라운지', adSlots: ['naming_rights', 'billboard', 'wall_wrap'], heightLevel: 3, roofShape: 'hip', wallColor: 'hsl(35,18%,55%)', roofColor: 'hsl(43,50%,48%)', buildingType: 'civic', isLandmark: true, landmarkType: 'golden_pavilion' },
 ];
 
 // ===== ALL ZONES =====
