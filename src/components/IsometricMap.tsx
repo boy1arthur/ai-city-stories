@@ -6,6 +6,7 @@ import { GroundLayer } from './map/GroundLayer';
 import { BuildingRenderer } from './map/BuildingRenderer';
 import { AdSlotVisual } from './map/AdSlotVisual';
 import { AgentRenderer } from './map/AgentRenderer';
+import { LockedZoneGhost } from './map/LockedZoneGhost';
 
 interface Props {
   zone: Zone;
