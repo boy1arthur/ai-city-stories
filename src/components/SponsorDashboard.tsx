@@ -97,7 +97,7 @@ export const SponsorDashboard: React.FC<Props> = ({
 
         {/* Brand League */}
         <div className="mb-8">
-          <LeagueStandings season={leagueSeason} scores={leagueScores} currentTick={currentTick} />
+          <LeagueStandings season={leagueSeason} scores={leagueScores} currentTick={currentTick} onBrandClick={setSelectedBrand} />
         </div>
 
         {/* Campaign Management */}
