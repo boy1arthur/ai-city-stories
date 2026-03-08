@@ -65,8 +65,8 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
   const leftCx = (tl.x + ml.x + bl.x + mlB.x) / 4;
   const leftCy = (tl.y + ml.y + bl.y + mlB.y) / 4;
   const panelH = Math.abs(tl.y - bl.y);
-  const fs = Math.max(4.5, panelH * 0.4);
-  const fsN = Math.max(3.5, panelH * 0.28);
+  const fs = Math.max(6, panelH * 0.5);
+  const fsN = Math.max(5, panelH * 0.38);
 
   const pts = (a: any, b2: any, c: any, d: any) => `${a.x},${a.y} ${b2.x},${b2.y} ${c.x},${c.y} ${d.x},${d.y}`;
 
