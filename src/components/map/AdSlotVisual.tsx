@@ -123,7 +123,7 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
 
       {/* ===== BUS STOPS — pill on shelter ===== */}
       {adSlots.filter(s => s.type === 'bus_stop').map((slot, i) => {
-        const bsPos = iso(b.gridX + i * 1.2, b.gridY + b.height + 0.6);
+        const bsPos = iso(b.gridX + i * 2.5, b.gridY + b.height + 1.5);
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
         const pw = 26;
