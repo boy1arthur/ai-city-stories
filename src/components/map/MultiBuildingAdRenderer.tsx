@@ -100,12 +100,12 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
             <animate attributeName="fillOpacity" values="0.04;0.12;0.04" dur="2s" repeatCount="indefinite" />
           </polygon>
         )}
-        <g transform={`rotate(${angle}, ${cx}, ${cy})`}>
-          <text x={cx - fs * 1.5} y={cy - fsT * 0.3} textAnchor="middle" fontSize={fs}
+        <g>
+          <text x={cx} y={cy - fsN * 0.6} textAnchor="middle" fontSize={fs}
             fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={900}>{ad.brandInitial}</text>
-          <text x={cx + fsN * 0.3} y={cy - fsT * 0.3} textAnchor="middle" fontSize={fsN}
+          <text x={cx} y={cy + fsN * 0.5} textAnchor="middle" fontSize={fsN}
             fill="hsl(0,0%,100%)" fontFamily="Inter" fontWeight={800} letterSpacing="0.8">{ad.brandName}</text>
-          <text x={cx} y={cy + fsT * 2.5} textAnchor="middle" fontSize={fsT}
+          <text x={cx} y={cy + fsN * 0.5 + fsT * 1.8} textAnchor="middle" fontSize={fsT}
             fill="hsl(0,0%,100%)" fillOpacity={0.7} fontFamily="Inter" fontWeight={500} fontStyle="italic">{ad.tagline}</text>
         </g>
       </g>
