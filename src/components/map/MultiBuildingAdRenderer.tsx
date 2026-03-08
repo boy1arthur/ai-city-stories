@@ -65,7 +65,7 @@ const WallPaintedAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = 
         {/* Brand name */}
         <text x={mx + 4} y={my + panelH * 0.12}
           textAnchor="middle" fontSize={panelH * 0.32}
-          fill={ad.brandColor} fillOpacity={0.7}
+          fill={ad.brandColor} fillOpacity={0.9}
           fontFamily="Inter" fontWeight={800} letterSpacing="1">
           {ad.brandName}
         </text>
