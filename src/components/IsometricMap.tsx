@@ -77,7 +77,7 @@ export const IsometricMap: React.FC<Props> = ({
   return (
     <div className="w-full h-full overflow-hidden bg-background relative" style={{ cursor: dragging ? 'grabbing' : 'grab' }}>
 
-      <svg width="100%" height="100%" viewBox="0 0 1000 600"
+      <svg width="100%" height="100%" viewBox="-200 -100 1400 900"
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
         onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
         onWheel={onWheel}>
