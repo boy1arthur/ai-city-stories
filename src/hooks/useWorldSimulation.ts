@@ -145,6 +145,7 @@ export function useWorldSimulation() {
   const [worldEvents, setWorldEvents] = useState<WorldEvent[]>([]);
   const prevLeaderRef = useRef<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const agentVisualsRef = useRef<Map<string, AgentVisualState>>(new Map());
 
   const currentZone = getZoneById(currentZoneId)!;
 
