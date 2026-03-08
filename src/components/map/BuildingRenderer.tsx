@@ -168,16 +168,6 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
       <RoofDetail shape={b.roofShape} center={center} nw={nw} ne={ne} sw={sw} se={se}
         wallHeight={wallHeight} rColor={rColor} wColorDark={wColorDark} width={b.width} height={b.height} />
 
-      {/* ── Emoji + label ── */}
-      <text x={center.x} y={center.y - wallHeight - 6} textAnchor="middle" fontSize={14}
-        style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.4))' }}>{b.emoji}</text>
-      
-      {/* Label with background pill */}
-      <rect x={center.x - displayName.length * 2.5 - 3} y={center.y - wallHeight + 6}
-        width={displayName.length * 5 + 6} height={9} rx={4}
-        fill="hsl(0,0%,0%)" fillOpacity={0.45} />
-      <text x={center.x} y={center.y - wallHeight + 13} textAnchor="middle" fontSize={6}
-        fill="hsl(0,0%,92%)" fontFamily="Inter" fontWeight={600} letterSpacing={0.3}>{displayName}</text>
     </g>
   );
 });
