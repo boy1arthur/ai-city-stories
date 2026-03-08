@@ -7,6 +7,8 @@ import { BuildingRenderer } from './map/BuildingRenderer';
 import { AdSlotVisual } from './map/AdSlotVisual';
 import { AgentRenderer } from './map/AgentRenderer';
 import { LockedZoneGhost } from './map/LockedZoneGhost';
+import { MultiBuildingAdRenderer } from './map/MultiBuildingAdRenderer';
+import { DEMO_MULTI_BUILDING_ADS } from '@/lib/multiBuildingAd';
 
 interface Props {
   zone: Zone;
