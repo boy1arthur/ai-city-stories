@@ -75,21 +75,12 @@ export const IsometricMap: React.FC<Props> = ({
 
   return (
     <div className="w-full h-full overflow-hidden bg-background relative" style={{ cursor: dragging ? 'grabbing' : 'grab' }}>
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse at 50% 40%, hsla(210,20%,20%,0.3) 0%, transparent 60%)',
-      }} />
 
       <svg width="100%" height="100%" viewBox="0 0 1000 600"
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
         onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
         onWheel={onWheel}>
-        <defs>
-          <radialGradient id="vignette" cx="50%" cy="45%" r="55%">
-            <stop offset="0%" stopColor="transparent" />
-            <stop offset="75%" stopColor="transparent" />
-            <stop offset="100%" stopColor="hsl(220,18%,8%)" stopOpacity="0.6" />
-          </radialGradient>
-        </defs>
+        
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
           {/* Layer 1: Ground tiles */}
@@ -124,7 +115,7 @@ export const IsometricMap: React.FC<Props> = ({
           ))}
         </g>
 
-        <rect width="1000" height="600" fill="url(#vignette)" pointerEvents="none" />
+        
 
         {/* Energy overlay */}
         {energyStatus && energyStatus !== 'stable' && (
