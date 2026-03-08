@@ -266,7 +266,7 @@ const PLAZA_BUILDINGS: Building[] = [
     gridX: 18, gridY: 18, width: 8, height: 6,
     description: '별 관측소 & 미래 탐색',
     adSlots: ['naming_rights', 'kiosk', 'wall_wrap'],
-    heightLevel: 2, roofShape: 'dome',
+    heightLevel: 3, roofShape: 'dome',
     wallColor: 'hsl(215,10%,50%)', roofColor: 'hsl(215,8%,40%)', buildingType: 'tower' },
 
   { id: 'arcade', name: 'Arcade', emoji: '🎮', color: 'accent',
