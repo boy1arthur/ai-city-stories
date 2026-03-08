@@ -97,6 +97,9 @@ export const IsometricMap: React.FC<Props> = ({
           {/* Layer 1: Ground tiles */}
           <GroundLayer zone={zone} />
 
+          {/* Layer 1.5: Patron tiles (benches with plaques) */}
+          <PatronTileRenderer slots={getPatronTiles(zone.id as SlotZone)} />
+
           {/* Layer 2+3: Buildings with integrated ad visuals */}
           {sortedBuildings.map(b => {
             const buildingAds = adSlots.filter(s => s.buildingId === b.id);
