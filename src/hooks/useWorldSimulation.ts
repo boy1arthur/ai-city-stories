@@ -442,6 +442,40 @@ export function useWorldSimulation() {
       }));
   }, [worldLog, tick]);
 
+  // League scores
+  const leagueSeason = isSeasonActive(DEMO_SEASON, tick) ? DEMO_SEASON : null;
+  const leagueScores: BrandLeagueScore[] = useMemo(() => {
+    if (!leagueSeason) return [];
+    const statsMap = new Map<string, { esv: number; mentions: number; positive: number; negative: number }>();
+    for (const bs of brandStats) {
+      statsMap.set(bs.brand, {
+        esv: bs.totalESV,
+        mentions: bs.totalMentions,
+        positive: Math.round(bs.positiveRatio * (bs.totalMentions || 1)),
+        negative: Math.round(bs.negativeRatio * (bs.totalMentions || 1)),
+      });
+    }
+    return calcLeagueScores(leagueSeason, statsMap, tick);
+  }, [brandStats, tick, leagueSeason]);
+
+  // Detect league lead changes → world events
+  useEffect(() => {
+    if (leagueScores.length === 0) return;
+    const leader = leagueScores[0].brandId;
+    if (prevLeaderRef.current && prevLeaderRef.current !== leader) {
+      const evt: WorldEvent = {
+        id: `evt_${tick}_${leader}`,
+        type: 'league.lead_change',
+        brandId: leader,
+        tick,
+        message: `${leader}이(가) Brand League 1위를 탈환했습니다!`,
+      };
+      setWorldEvents(prev => [evt, ...prev].slice(0, 20));
+      addLog(`🏆 ${evt.message}`);
+    }
+    prevLeaderRef.current = leader;
+  }, [leagueScores, tick, addLog]);
+
   return {
     agents: zoneAgents,
     allAgents: agents,
@@ -465,5 +499,8 @@ export function useWorldSimulation() {
     brandStats,
     highlights,
     cityEnergy,
+    leagueSeason,
+    leagueScores,
+    worldEvents,
   };
 }
