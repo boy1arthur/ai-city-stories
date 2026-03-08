@@ -236,23 +236,11 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
 
       // Plaza stone pattern
       if (type === 'plaza_stone') {
-        // Checkerboard pattern
         if ((gx + gy) % 2 === 0) {
           tiles.push(<polygon key={`pd_${gx}_${gy}`} points={diamond(pos.x, pos.y)}
             fill="hsl(35,15%,52%)" fillOpacity={0.2} stroke="none" />);
         }
-        // Radial pattern from center (grid ~17,17)
-        const dxc = gx - 17, dyc = gy - 17;
-        const distFromCenter = Math.sqrt(dxc * dxc + dyc * dyc);
-        if (distFromCenter < 6) {
-          // Inner ring decorative stones — concentric pattern
-          const ringIdx = Math.floor(distFromCenter / 2);
-          tiles.push(<polygon key={`pr_${gx}_${gy}`} points={diamond(pos.x, pos.y)}
-            fill={`hsl(${35 + ringIdx * 5},${18 - ringIdx * 2}%,${55 - ringIdx * 4}%)`}
-            fillOpacity={0.25} stroke="hsl(35,20%,58%)" strokeWidth={0.3} strokeOpacity={0.2} />);
-        }
-        // Occasional small potted plant on plaza
-        if (seed % 13 === 0 && distFromCenter > 4) {
+        if (seed % 13 === 0) {
           decorations.push(
             <g key={`ppot_${gx}_${gy}`}>
               <rect x={pos.x - 2} y={pos.y - 2.5} width={4} height={3} rx={0.5}
