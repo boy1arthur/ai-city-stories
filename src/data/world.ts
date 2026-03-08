@@ -42,8 +42,9 @@ export function getTileTypeFromMap(tileMap: string[], gx: number, gy: number, gr
 export function isRoadCenterInZone(tileMap: string[], gx: number, gy: number, gridSize: number): boolean {
   const t = getTileTypeFromMap(tileMap, gx, gy, gridSize);
   if (t !== 'road') return false;
-  if (gx === 7 || gx === 13) return true;
-  if (gy === 5 || gy === 10) return true;
+  // Plaza roads: single-tile pedestrian spines
+  if (gx === 9) return true;    // vertical spine
+  if (gy === 8) return true;    // horizontal spine
   return false;
 }
 
