@@ -57,6 +57,18 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
           className="text-xs text-muted-foreground hover:text-foreground transition-colors hidden md:inline">
           GitHub
         </a>
+        {onToggleFullView && (
+          <button
+            onClick={onToggleFullView}
+            className={`text-xs px-2.5 py-1 rounded border transition-colors font-medium hidden md:inline-flex items-center gap-1 ${
+              isFullView
+                ? 'border-primary/40 text-primary bg-primary/10'
+                : 'border-border text-muted-foreground hover:text-foreground hover:border-primary/30'
+            }`}
+          >
+            🗺️ {isFullView ? 'Zone View' : 'Full City'}
+          </button>
+        )}
         <button
           onClick={onSponsorDashboard}
           className="text-xs px-3 py-1 rounded border border-accent/40 text-accent hover:bg-accent/10 transition-colors font-medium"
