@@ -23,7 +23,7 @@ interface Props {
 
 export const IsometricMap: React.FC<Props> = ({
   zone, buildings, agents, adSlots, interactions,
-  speechBubbles, adReactions, agentVisuals,
+  speechBubbles, adReactions, agentVisuals, energyStatus,
   onBuildingClick, onAgentClick,
 }) => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
