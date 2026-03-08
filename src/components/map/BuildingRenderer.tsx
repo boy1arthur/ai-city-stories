@@ -182,6 +182,64 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
       <RoofDetail shape={b.roofShape} center={center} nw={nw} ne={ne} sw={sw} se={se}
         wallHeight={wallHeight} rColor={rColor} wColorDark={wColorDark} width={b.width} height={b.height} />
 
+      {/* ═══ FLAGSHIP BRAND SKIN OVERLAYS ═══ */}
+      {hasSkin && (
+        <g>
+          {/* Neon edge lines — vertical corners */}
+          <line x1={sw.x} y1={sw.y} x2={sw.x} y2={sw.y - wallHeight}
+            stroke={skinColor} strokeWidth={1.5} strokeOpacity={0.7} />
+          <line x1={se.x} y1={se.y} x2={se.x} y2={se.y - wallHeight}
+            stroke={skinColor} strokeWidth={2} strokeOpacity={0.8}>
+            <animate attributeName="strokeOpacity" values="0.5;0.9;0.5" dur="3s" repeatCount="indefinite" />
+          </line>
+          <line x1={ne.x} y1={ne.y} x2={ne.x} y2={ne.y - wallHeight}
+            stroke={skinColor} strokeWidth={1} strokeOpacity={0.5} />
+
+          {/* Roof edge neon */}
+          <line x1={sw.x} y1={sw.y - wallHeight} x2={se.x} y2={se.y - wallHeight}
+            stroke={skinColor} strokeWidth={1.2} strokeOpacity={0.6} />
+          <line x1={ne.x} y1={ne.y - wallHeight} x2={se.x} y2={se.y - wallHeight}
+            stroke={skinColor} strokeWidth={0.8} strokeOpacity={0.4} />
+
+          {/* Ground neon base glow */}
+          <line x1={sw.x} y1={sw.y + 1} x2={se.x} y2={se.y + 1}
+            stroke={skinColor} strokeWidth={2} strokeOpacity={0.3} />
+          <line x1={ne.x} y1={ne.y + 1} x2={se.x} y2={se.y + 1}
+            stroke={skinColor} strokeWidth={1.5} strokeOpacity={0.2} />
+
+          {/* Branded entrance — glass storefront on south wall */}
+          {(() => {
+            const midX = (sw.x + se.x) / 2;
+            const midY = (sw.y + se.y) / 2;
+            const doorW = Math.min(16, b.width * 1.8);
+            const doorH = Math.min(wallHeight * 0.5, 14);
+            return (
+              <g>
+                {/* Glass entrance panel */}
+                <rect x={midX - doorW / 2} y={midY - doorH} width={doorW} height={doorH} rx={1}
+                  fill={skinColor} fillOpacity={0.12}
+                  stroke={skinColor} strokeWidth={0.8} strokeOpacity={0.6} />
+                {/* Glass reflection */}
+                <rect x={midX - doorW / 2 + 1} y={midY - doorH + 1} width={doorW * 0.3} height={doorH - 2} rx={0.5}
+                  fill="hsl(0,0%,100%)" fillOpacity={0.06} />
+                {/* Small brand nameplate at entrance */}
+                <rect x={midX - 12} y={midY - doorH - 5} width={24} height={5} rx={1.5}
+                  fill="hsl(0,0%,5%)" fillOpacity={0.9}
+                  stroke={skinColor} strokeWidth={0.6} />
+                <text x={midX} y={midY - doorH - 1.5} textAnchor="middle" fontSize={3.5}
+                  fill={skinLight} fontFamily="Inter" fontWeight={700} letterSpacing="1.5">
+                  {brandSkin!.name.toUpperCase()}
+                </text>
+              </g>
+            );
+          })()}
+
+          {/* Ambient glow beneath building */}
+          <ellipse cx={center.x} cy={center.y + 6} rx={b.width * 2.5} ry={b.height * 1.2}
+            fill={skinColor} fillOpacity={0.04} />
+        </g>
+      )}
+
     </g>
   );
 });
