@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import type { Building, Agent, InteractionEvent } from '@/data/world';
 import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/useWorldSimulation';
-import { iso, lerp, easeInOutQuad, MOVE_DURATION } from './constants';
+import { iso, MOVE_DURATION } from './constants';
+import { interpolatePath, getPathDirection } from '@/lib/pathfinding';
 
 interface Props {
   agent: Agent;
