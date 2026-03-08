@@ -142,7 +142,7 @@ export const IsometricMap: React.FC<Props> = ({
 
         {/* Energy overlay */}
         {energyStatus && energyStatus !== 'stable' && (
-          <rect width="1000" height="600" pointerEvents="none"
+          <rect x="-200" y="-100" width="1400" height="900" pointerEvents="none"
             fill={energyStatus === 'critical' ? 'hsl(0,30%,8%)' : 'hsl(220,20%,8%)'}
             fillOpacity={energyStatus === 'critical' ? 0.35 : 0.18}>
             {energyStatus === 'critical' && (
