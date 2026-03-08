@@ -47,108 +47,50 @@ export const SlotVisualRenderer: React.FC<Props> = React.memo(({ slots, building
 SlotVisualRenderer.displayName = 'SlotVisualRenderer';
 
 // ═══════════════════════════════════════
-// BRAND_BUILDING — Premium neon panel
+// BRAND_BUILDING — Minimal floating badge (building itself is skinned)
 // ═══════════════════════════════════════
 const BrandBuildingSlot: React.FC<{ slot: Slot; building: Building; onClick: () => void }> = ({ slot, building, onClick }) => {
   const wallH = WALL_H_UNIT * building.heightLevel;
-  const face = slot.location.face || 'roof';
   const isOwned = slot.ownerType === 'brand';
   const label = slot.ownerName || slot.label;
-
   const center = iso(building.gridX + building.width / 2, building.gridY + building.height / 2);
 
-  if (face === 'roof') {
-    // Floating banner above the roof
-    const bx = center.x;
-    const by = center.y - wallH - 38;
-    const w = 58;
-    const h = 16;
-    const accentColor = isOwned ? 'hsl(38,80%,55%)' : 'hsl(215,20%,45%)';
-    const bgColor = isOwned ? 'hsl(38,30%,12%)' : 'hsl(215,10%,15%)';
-
-    return (
-      <g style={{ cursor: 'pointer' }} onClick={onClick}>
-        {/* Connector line */}
-        <line x1={bx} y1={center.y - wallH - 2} x2={bx} y2={by + h}
-          stroke={accentColor} strokeWidth={0.6} strokeOpacity={0.4} strokeDasharray="2 2" />
-
-        {/* Outer glow */}
-        {isOwned && (
-          <rect x={bx - w / 2 - 2} y={by - 2} width={w + 4} height={h + 4} rx={4}
-            fill="none" stroke={accentColor} strokeWidth={1} strokeOpacity={0.15}>
-            <animate attributeName="strokeOpacity" values="0.08;0.25;0.08" dur="3s" repeatCount="indefinite" />
-          </rect>
-        )}
-
-        {/* Panel background */}
-        <rect x={bx - w / 2} y={by} width={w} height={h} rx={2.5}
-          fill={bgColor} fillOpacity={0.95}
-          stroke={accentColor} strokeWidth={isOwned ? 1.2 : 0.6} />
-
-        {/* Top accent bar */}
-        <rect x={bx - w / 2} y={by} width={w} height={1.8} rx={1}
-          fill={accentColor} fillOpacity={isOwned ? 0.7 : 0.3} />
-
-        {isOwned ? (
-          <>
-            {/* Crown icon */}
-            <text x={bx - w / 2 + 7} y={by + h / 2 + 2.5} textAnchor="middle" fontSize={7}>👑</text>
-            {/* Brand name */}
-            <text x={bx + 3} y={by + h / 2 + 2.5} textAnchor="middle" fontSize={7}
-              fill="hsl(38,70%,80%)" fontFamily="Inter" fontWeight={800}>
-              {fit(label, 10)}
-            </text>
-            {/* PREMIUM badge */}
-            <text x={bx + w / 2 - 6} y={by + h / 2 + 1.5} textAnchor="middle" fontSize={2.5}
-              fill="hsl(38,50%,55%)" fontFamily="Inter" fontWeight={700} letterSpacing="0.5">
-              PREMIUM
-            </text>
-          </>
-        ) : (
-          <>
-            <text x={bx} y={by + h / 2 + 0.5} textAnchor="middle" fontSize={5}
-              fill="hsl(215,20%,65%)" fontFamily="Inter" fontWeight={600}>
-              🏢 BRAND SLOT
-            </text>
-            <text x={bx} y={by + h / 2 + 5.5} textAnchor="middle" fontSize={3.5}
-              fill="hsl(215,15%,50%)" fontFamily="Inter" fontWeight={500}>
-              {fit(slot.label, 16)}
-            </text>
-          </>
-        )}
-      </g>
-    );
-  }
-
-  // Face: front or side — panel on wall
-  const isFront = face === 'front';
-  const sw = iso(building.gridX, building.gridY + building.height);
-  const se = iso(building.gridX + building.width, building.gridY + building.height);
-  const ne = iso(building.gridX + building.width, building.gridY);
-
-  const wallStart = isFront ? sw : ne;
-  const wallEnd = isFront ? se : se;
-  const mx = (wallStart.x + wallEnd.x) / 2;
-  const my = (wallStart.y + wallEnd.y) / 2 - wallH * 0.5;
-  const pw = 36;
-  const ph = 12;
+  // Small crown badge floating above roof
+  const bx = center.x;
+  const by = center.y - wallH - 16;
   const accentColor = isOwned ? 'hsl(38,80%,55%)' : 'hsl(215,20%,45%)';
 
   return (
     <g style={{ cursor: 'pointer' }} onClick={onClick}>
-      {isOwned && (
-        <rect x={mx - pw / 2 - 1.5} y={my - ph / 2 - 1.5} width={pw + 3} height={ph + 3} rx={3}
-          fill="none" stroke={accentColor} strokeWidth={0.8} strokeOpacity={0.2}>
-          <animate attributeName="strokeOpacity" values="0.1;0.3;0.1" dur="3s" repeatCount="indefinite" />
-        </rect>
+      {isOwned ? (
+        <g>
+          {/* Crown + name pill */}
+          <rect x={bx - 18} y={by - 4} width={36} height={9} rx={4.5}
+            fill="hsl(0,0%,5%)" fillOpacity={0.85}
+            stroke={accentColor} strokeWidth={0.8} />
+          <text x={bx - 8} y={by + 2.5} textAnchor="middle" fontSize={6}>👑</text>
+          <text x={bx + 6} y={by + 2} textAnchor="middle" fontSize={4.5}
+            fill="hsl(38,70%,80%)" fontFamily="Inter" fontWeight={800}>
+            {fit(label, 8)}
+          </text>
+          {/* Subtle pulse */}
+          <rect x={bx - 19} y={by - 5} width={38} height={11} rx={5.5}
+            fill="none" stroke={accentColor} strokeWidth={0.5} strokeOpacity={0.15}>
+            <animate attributeName="strokeOpacity" values="0.05;0.25;0.05" dur="3s" repeatCount="indefinite" />
+          </rect>
+        </g>
+      ) : (
+        <g>
+          {/* Empty slot indicator */}
+          <rect x={bx - 16} y={by - 3} width={32} height={8} rx={4}
+            fill="hsl(215,10%,12%)" fillOpacity={0.8}
+            stroke="hsl(215,15%,35%)" strokeWidth={0.5} />
+          <text x={bx} y={by + 2} textAnchor="middle" fontSize={3.5}
+            fill="hsl(215,15%,50%)" fontFamily="Inter" fontWeight={500}>
+            🏢 BRAND SLOT
+          </text>
+        </g>
       )}
-      <rect x={mx - pw / 2} y={my - ph / 2} width={pw} height={ph} rx={2}
-        fill={isOwned ? 'hsl(38,25%,12%)' : 'hsl(215,8%,18%)'} fillOpacity={0.92}
-        stroke={accentColor} strokeWidth={isOwned ? 1 : 0.5} />
-      <text x={mx} y={my + 2} textAnchor="middle" fontSize={isOwned ? 5 : 3.5}
-        fill={isOwned ? 'hsl(38,65%,70%)' : 'hsl(215,15%,55%)'} fontFamily="Inter" fontWeight={isOwned ? 700 : 500}>
-        {isOwned ? fit(label, 8) : 'AD SPACE'}
-      </text>
     </g>
   );
 };

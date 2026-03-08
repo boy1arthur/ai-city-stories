@@ -2,14 +2,20 @@ import React from 'react';
 import type { Building } from '@/data/world';
 import { iso, TILE_W, TILE_H, WALL_H_UNIT } from './constants';
 
+interface BrandSkin {
+  name: string;
+  color: string; // hsl string
+}
+
 interface Props {
   b: Building;
   namingBrand: string | null;
   wallWrapBrand: string | null;
+  brandSkin: BrandSkin | null;
   onClick: () => void;
 }
 
-export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, wallWrapBrand, onClick }) => {
+export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, wallWrapBrand, brandSkin, onClick }) => {
   const wallHeight = WALL_H_UNIT * b.heightLevel;
   const nw = iso(b.gridX, b.gridY);
   const ne = iso(b.gridX + b.width, b.gridY);
@@ -17,10 +23,18 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
   const sw = iso(b.gridX, b.gridY + b.height);
   const center = iso(b.gridX + b.width / 2, b.gridY + b.height / 2);
 
-  const wColor = wallWrapBrand ? 'hsl(38,50%,45%)' : b.wallColor;
-  const wColorDark = b.wallColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.max(0, parseInt(n) - 8)}%)`);
-  const wColorLight = b.wallColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.min(95, parseInt(n) + 6)}%)`);
-  const rColor = b.roofColor;
+  // If brand skin is active, override wall/roof colors
+  const hasSkin = !!brandSkin;
+  const skinColor = brandSkin?.color || '';
+  const skinDark = hasSkin ? skinColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.max(0, parseInt(n) - 15)}%)`) : '';
+  const skinLight = hasSkin ? skinColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.min(95, parseInt(n) + 10)}%)`) : '';
+
+  const wColor = hasSkin ? skinDark : (wallWrapBrand ? 'hsl(38,50%,45%)' : b.wallColor);
+  const wColorDark = hasSkin
+    ? skinColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.max(0, parseInt(n) - 22)}%)`)
+    : b.wallColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.max(0, parseInt(n) - 8)}%)`);
+  const wColorLight = hasSkin ? skinLight : b.wallColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.min(95, parseInt(n) + 6)}%)`);
+  const rColor = hasSkin ? skinColor.replace(/(\d+)%\)$/, (_, n: string) => `${Math.max(0, parseInt(n) - 18)}%)`) : b.roofColor;
   const displayName = namingBrand ? `${namingBrand} ${b.name}` : b.name;
   const winStyle = getWindowStyle(b.buildingType);
   const seed = b.gridX * 17 + b.gridY * 31;
@@ -82,8 +96,8 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
               {glowAnim && (
                 <rect x={wx - winStyle.w / 2} y={winY - winStyle.h / 2}
                   width={winStyle.w} height={winStyle.h} rx={winStyle.rx}
-                  fill="hsl(45,60%,70%)" fillOpacity={0.12}>
-                  <animate attributeName="fillOpacity" values="0.06;0.18;0.06" dur={`${3 + (wi % 2)}s`} repeatCount="indefinite" />
+                  fill={hasSkin ? skinColor : 'hsl(45,60%,70%)'} fillOpacity={hasSkin ? 0.2 : 0.12}>
+                  <animate attributeName="fillOpacity" values={hasSkin ? '0.1;0.3;0.1' : '0.06;0.18;0.06'} dur={`${3 + (wi % 2)}s`} repeatCount="indefinite" />
                 </rect>
               )}
             </g>
@@ -139,8 +153,8 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
               {glowAnim && (
                 <rect x={wx - winStyle.w / 2 + 0.5} y={winY - winStyle.h / 2}
                   width={winStyle.w - 1} height={winStyle.h} rx={winStyle.rx}
-                  fill="hsl(40,55%,65%)" fillOpacity={0.1}>
-                  <animate attributeName="fillOpacity" values="0.05;0.15;0.05" dur={`${3.5 + (wi % 2)}s`} repeatCount="indefinite" />
+                  fill={hasSkin ? skinColor : 'hsl(40,55%,65%)'} fillOpacity={hasSkin ? 0.18 : 0.1}>
+                  <animate attributeName="fillOpacity" values={hasSkin ? '0.08;0.25;0.08' : '0.05;0.15;0.05'} dur={`${3.5 + (wi % 2)}s`} repeatCount="indefinite" />
                 </rect>
               )}
             </g>
@@ -167,6 +181,64 @@ export const BuildingRenderer: React.FC<Props> = React.memo(({ b, namingBrand, w
       {/* Roof detail by shape */}
       <RoofDetail shape={b.roofShape} center={center} nw={nw} ne={ne} sw={sw} se={se}
         wallHeight={wallHeight} rColor={rColor} wColorDark={wColorDark} width={b.width} height={b.height} />
+
+      {/* ═══ FLAGSHIP BRAND SKIN OVERLAYS ═══ */}
+      {hasSkin && (
+        <g>
+          {/* Neon edge lines — vertical corners */}
+          <line x1={sw.x} y1={sw.y} x2={sw.x} y2={sw.y - wallHeight}
+            stroke={skinColor} strokeWidth={1.5} strokeOpacity={0.7} />
+          <line x1={se.x} y1={se.y} x2={se.x} y2={se.y - wallHeight}
+            stroke={skinColor} strokeWidth={2} strokeOpacity={0.8}>
+            <animate attributeName="strokeOpacity" values="0.5;0.9;0.5" dur="3s" repeatCount="indefinite" />
+          </line>
+          <line x1={ne.x} y1={ne.y} x2={ne.x} y2={ne.y - wallHeight}
+            stroke={skinColor} strokeWidth={1} strokeOpacity={0.5} />
+
+          {/* Roof edge neon */}
+          <line x1={sw.x} y1={sw.y - wallHeight} x2={se.x} y2={se.y - wallHeight}
+            stroke={skinColor} strokeWidth={1.2} strokeOpacity={0.6} />
+          <line x1={ne.x} y1={ne.y - wallHeight} x2={se.x} y2={se.y - wallHeight}
+            stroke={skinColor} strokeWidth={0.8} strokeOpacity={0.4} />
+
+          {/* Ground neon base glow */}
+          <line x1={sw.x} y1={sw.y + 1} x2={se.x} y2={se.y + 1}
+            stroke={skinColor} strokeWidth={2} strokeOpacity={0.3} />
+          <line x1={ne.x} y1={ne.y + 1} x2={se.x} y2={se.y + 1}
+            stroke={skinColor} strokeWidth={1.5} strokeOpacity={0.2} />
+
+          {/* Branded entrance — glass storefront on south wall */}
+          {(() => {
+            const midX = (sw.x + se.x) / 2;
+            const midY = (sw.y + se.y) / 2;
+            const doorW = Math.min(16, b.width * 1.8);
+            const doorH = Math.min(wallHeight * 0.5, 14);
+            return (
+              <g>
+                {/* Glass entrance panel */}
+                <rect x={midX - doorW / 2} y={midY - doorH} width={doorW} height={doorH} rx={1}
+                  fill={skinColor} fillOpacity={0.12}
+                  stroke={skinColor} strokeWidth={0.8} strokeOpacity={0.6} />
+                {/* Glass reflection */}
+                <rect x={midX - doorW / 2 + 1} y={midY - doorH + 1} width={doorW * 0.3} height={doorH - 2} rx={0.5}
+                  fill="hsl(0,0%,100%)" fillOpacity={0.06} />
+                {/* Small brand nameplate at entrance */}
+                <rect x={midX - 12} y={midY - doorH - 5} width={24} height={5} rx={1.5}
+                  fill="hsl(0,0%,5%)" fillOpacity={0.9}
+                  stroke={skinColor} strokeWidth={0.6} />
+                <text x={midX} y={midY - doorH - 1.5} textAnchor="middle" fontSize={3.5}
+                  fill={skinLight} fontFamily="Inter" fontWeight={700} letterSpacing="1.5">
+                  {brandSkin!.name.toUpperCase()}
+                </text>
+              </g>
+            );
+          })()}
+
+          {/* Ambient glow beneath building */}
+          <ellipse cx={center.x} cy={center.y + 6} rx={b.width * 2.5} ry={b.height * 1.2}
+            fill={skinColor} fillOpacity={0.04} />
+        </g>
+      )}
 
     </g>
   );
