@@ -82,9 +82,9 @@ const WallPaintedAd: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = 
     const wallH = WALL_H_UNIT * minH;
 
     const mx = (ne.x + se.x) / 2;
-    const my = (ne.y + se.y) / 2 - wallH * 0.5;
+    const my = (ne.y + se.y) / 2 - wallH * 0.65;
     const panelW = Math.hypot(se.x - ne.x, se.y - ne.y) * 0.75;
-    const panelH = wallH * 0.5;
+    const panelH = wallH * 0.4;
 
     return (
       <g transform={`rotate(${EAST_ANGLE}, ${mx}, ${my})`}>
