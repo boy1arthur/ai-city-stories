@@ -136,6 +136,7 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
   const GRID = zone.gridSize;
   const palette = getZonePalette(zone.id);
   const isPlaza = zone.id === 'plaza';
+  const isResidential = zone.id === 'residential';
 
   for (let gy = 0; gy < GRID; gy++) {
     for (let gx = 0; gx < GRID; gx++) {
