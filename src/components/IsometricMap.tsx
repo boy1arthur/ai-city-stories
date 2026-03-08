@@ -107,22 +107,27 @@ export const IsometricMap: React.FC<Props> = ({
           {/* Layer 1: Ground tiles */}
           <GroundLayer zone={zone} />
 
-          {/* Layer 2+3: Buildings with integrated ad visuals */}
+          {/* Layer 2: Buildings only (no inline ads — prevents occlusion) */}
           {sortedBuildings.map(b => {
             const buildingAds = adSlots.filter(s => s.buildingId === b.id);
             const wallWrapAd = buildingAds.find(s => s.type === 'wall_wrap' && s.brand);
             const namingAd = buildingAds.find(s => s.type === 'naming_rights' && s.brand);
             return (
-              <g key={b.id}>
-                <BuildingRenderer
-                  b={b}
-                  namingBrand={namingAd?.brand ?? null}
-                  wallWrapBrand={wallWrapAd?.brand ?? null}
-                  onClick={() => onBuildingClick(b)}
-                />
-                <AdSlotVisual building={b} adSlots={buildingAds} />
-              </g>
+              <BuildingRenderer
+                key={b.id}
+                b={b}
+                namingBrand={namingAd?.brand ?? null}
+                wallWrapBrand={wallWrapAd?.brand ?? null}
+                onClick={() => onBuildingClick(b)}
+              />
             );
+          })}
+
+          {/* Layer 2.5: Ad slot visuals (billboards, kiosks, bus stops) — rendered ABOVE all buildings */}
+          {sortedBuildings.map(b => {
+            const buildingAds = adSlots.filter(s => s.buildingId === b.id);
+            if (buildingAds.length === 0) return null;
+            return <AdSlotVisual key={`ad-${b.id}`} building={b} adSlots={buildingAds} />;
           })}
 
           {/* Layer 3.5: Multi-building ad canvases */}
