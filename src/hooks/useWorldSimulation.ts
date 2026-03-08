@@ -81,6 +81,7 @@ export function useWorldSimulation() {
   const [speechBubbles, setSpeechBubbles] = useState<SpeechBubble[]>([]);
   const [agentVisuals, setAgentVisuals] = useState<Map<string, AgentVisualState>>(new Map());
   const [adReactions, setAdReactions] = useState<AdReaction[]>([]);
+  const [cityEnergy, setCityEnergy] = useState<CityEnergyState>(initCityEnergy);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const currentZone = getZoneById(currentZoneId)!;
