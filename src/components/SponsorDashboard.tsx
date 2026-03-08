@@ -1,16 +1,22 @@
 import React from 'react';
 import type { AdSlot, Agent, Zone } from '@/data/world';
 import { SPONSOR_TIERS, ZONES, type SponsorTier } from '@/data/world';
+import type { BrandStats } from '@/lib/esv';
+import type { Highlight } from '@/components/sponsor/TodayHighlights';
+import { BrandRanking } from '@/components/sponsor/BrandRanking';
+import { TodayHighlights } from '@/components/sponsor/TodayHighlights';
 
 interface Props {
   adSlots: AdSlot[];
   allAdSlots: AdSlot[];
   agents: Agent[];
   currentZone: Zone;
+  brandStats: BrandStats[];
+  highlights: Highlight[];
   onBack: () => void;
 }
 
-export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents, currentZone, onBack }) => {
+export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents, currentZone, brandStats, highlights, onBack }) => {
   const activeAds = allAdSlots.filter(s => s.brand);
   const zoneActiveAds = adSlots.filter(s => s.brand);
   const totalImpressions = activeAds.reduce((sum, s) => sum + s.impressions, 0);
@@ -20,8 +26,6 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
   const premiumSlots = adSlots.filter(s => s.priority === 'premium');
   const standardSlots = adSlots.filter(s => s.priority === 'standard');
   const basicSlots = adSlots.filter(s => s.priority === 'basic');
-
-  const sentimentDist = { positive: 42, neutral: 35, negative: 23 };
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -48,6 +52,12 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
           <KPICard label="총 노출" value={totalImpressions.toLocaleString()} sub="impressions" color="primary" />
           <KPICard label="총 ESV" value={`$${totalESV.toLocaleString()}`} sub="estimated value" color="accent" />
           <KPICard label="브랜드" value={uniqueBrands.length.toString()} sub="active brands" color="primary" />
+        </div>
+
+        {/* NEW: Brand Ranking + Highlights */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <BrandRanking brandStats={brandStats} />
+          <TodayHighlights highlights={highlights} />
         </div>
 
         {/* Zone Inventory */}
@@ -112,7 +122,7 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
         <div className="bg-card border border-border rounded-lg p-4 mb-8">
           <h3 className="text-xs font-semibold text-primary uppercase tracking-wider mb-4">활성 광고 현황</h3>
           {activeAds.length === 0 ? (
-            <p className="text-xs text-muted-foreground">아직 배치된 광고가 없습니다. 맵에서 건물을 클릭하여 광고를 배치하세요.</p>
+            <p className="text-xs text-muted-foreground">아직 배치된 광고가 없습니다.</p>
           ) : (
             <table className="w-full text-xs">
               <thead>
@@ -156,9 +166,9 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
           <div className="bg-card border border-border rounded-lg p-4">
             <h3 className="text-xs font-semibold text-primary uppercase tracking-wider mb-4">감정 분포</h3>
             <div className="flex gap-4 items-end h-32">
-              <SentimentBar label="긍정" value={sentimentDist.positive} color="hsl(145,35%,42%)" />
-              <SentimentBar label="중립" value={sentimentDist.neutral} color="hsl(215,12%,55%)" />
-              <SentimentBar label="부정" value={sentimentDist.negative} color="hsl(0,60%,48%)" />
+              <SentimentBar label="긍정" value={42} color="hsl(145,35%,42%)" />
+              <SentimentBar label="중립" value={35} color="hsl(215,12%,55%)" />
+              <SentimentBar label="부정" value={23} color="hsl(0,60%,48%)" />
             </div>
           </div>
           <div className="bg-card border border-border rounded-lg p-4">
@@ -171,7 +181,7 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
                     <p className="text-xs font-semibold text-foreground">{agent.name}</p>
                     <div className="flex gap-1 mt-0.5">
                       {agent.brandAffinities.map(ba => (
-                        <span key={ba.category} className="text-xs px-1 py-0.5 rounded bg-surface-elevated"
+                        <span key={ba.category} className="text-xs px-1 py-0.5 rounded bg-muted"
                           style={{ color: ba.score > 0 ? 'hsl(145,35%,50%)' : 'hsl(0,60%,50%)' }}>
                           {ba.category}: {ba.score > 0 ? '+' : ''}{ba.score}
                         </span>

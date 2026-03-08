@@ -13,6 +13,7 @@ const Index = () => {
     isPaused, setIsPaused, placeBrandAd, buildings, interactions,
     currentZoneId, setCurrentZoneId, currentZone, zones,
     speechBubbles, adReactions, agentVisuals,
+    brandStats, highlights,
   } = useWorldSimulation();
 
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
@@ -28,6 +29,8 @@ const Index = () => {
         allAdSlots={allAdSlots}
         agents={agents}
         currentZone={currentZone}
+        brandStats={brandStats}
+        highlights={highlights}
         onBack={() => setShowDashboard(false)}
       />
     );
