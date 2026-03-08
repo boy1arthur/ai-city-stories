@@ -36,9 +36,9 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
         const signPos = iso(b.gridX + b.width + 0.6, b.gridY + i * 1.5);
         const has = !!slot.brand;
         const bv = has ? getBrandVisual(slot.brand!) : null;
-        const boardW = 24;
-        const boardH = 10;
-        const postH = 16;
+        const boardW = 30;
+        const boardH = 14;
+        const postH = 18;
 
         return (
           <g key={slot.id}>
@@ -56,21 +56,21 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
               <>
                 {/* Logo */}
                 <circle cx={signPos.x - boardW / 2 + boardH / 2 + 0.5} cy={signPos.y - postH - boardH / 2}
-                  r={3} fill={bv.color} />
-                <text x={signPos.x - boardW / 2 + boardH / 2 + 0.5} y={signPos.y - postH - boardH / 2 + 1.3}
-                  textAnchor="middle" fontSize={3.5} fill="hsl(0,0%,100%)"
+                  r={4} fill={bv.color} />
+                <text x={signPos.x - boardW / 2 + boardH / 2 + 0.5} y={signPos.y - postH - boardH / 2 + 1.8}
+                  textAnchor="middle" fontSize={4.5} fill="hsl(0,0%,100%)"
                   fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
 
-                {/* Brand name only */}
-                <text x={signPos.x + 2} y={signPos.y - postH - boardH / 2 + 1.8}
-                  textAnchor="middle" fontSize={4}
+                {/* Brand name */}
+                <text x={signPos.x + 3} y={signPos.y - postH - boardH / 2 + 2}
+                  textAnchor="middle" fontSize={5}
                   fill="hsl(220,18%,15%)" fontFamily="Inter" fontWeight={700}>
                   {fitText(slot.brand!, 6)}
                 </text>
               </>
             ) : (
-              <text x={signPos.x} y={signPos.y - postH - boardH / 2 + 1.5}
-                textAnchor="middle" fontSize={3}
+              <text x={signPos.x} y={signPos.y - postH - boardH / 2 + 2}
+                textAnchor="middle" fontSize={3.5}
                 fill="hsl(215,8%,50%)" fontFamily="Inter" fontWeight={500}>
                 AD SPACE
               </text>
