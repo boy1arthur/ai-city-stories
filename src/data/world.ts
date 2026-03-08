@@ -533,12 +533,13 @@ const INDUSTRIAL_TILE_MAP = [
 
 const INDUSTRIAL_BUILDINGS: Building[] = [
   // NW: Mega towers — maximum visibility
-  { id: 'neon_tower', name: 'Neon Tower', emoji: '🌆', color: 'primary',
+  { id: 'neon_tower', name: 'Neon Obelisk', emoji: '🌆', color: 'primary',
     gridX: 2, gridY: 2, width: 6, height: 8,
-    description: '초대형 네온 타워 — 360도 디지털 래핑 & 빌보드',
+    description: '네온 오벨리스크 — 사이버펑크 랜드마크, 360도 디지털 래핑',
     adSlots: ['billboard', 'billboard', 'wall_wrap', 'naming_rights'],
     heightLevel: 8, roofShape: 'antenna',
-    wallColor: 'hsl(250,12%,22%)', roofColor: 'hsl(250,10%,16%)', buildingType: 'tower' },
+    wallColor: 'hsl(250,12%,22%)', roofColor: 'hsl(250,10%,16%)', buildingType: 'tower',
+    isLandmark: true, landmarkType: 'neon_obelisk' },
 
   { id: 'led_wall', name: 'LED Wall', emoji: '📺', color: 'accent',
     gridX: 8, gridY: 2, width: 6, height: 6,
