@@ -301,15 +301,31 @@ export function useWorldSimulation() {
                   timestamp: now + 1300, // delay until agent arrives
                 });
 
-                // Speech bubble for dialogue
-                if (Math.random() < 0.25) {
-                  const dialogue = generateBrandDialogue(agent.name, ad.brand, score);
-                  addLog(dialogue);
+                // Speech bubble — brand story dialogue
+                if (Math.random() < 0.3) {
+                  const storyLines: Record<string, string[]> = {
+                    positive: [
+                      `오늘은 ${ad.brand}이(가) 후원해줬어! 감사 🙏`,
+                      `${ad.brand} 로비 분위기 좋다~ ✨`,
+                      `${ad.brand} 최고! ❤️`,
+                    ],
+                    neutral: [
+                      `${ad.brand} 건물이네... 흠 🤔`,
+                      `${ad.brand}? 한번 살펴볼까`,
+                    ],
+                    negative: [
+                      `${ad.brand}... 별로야 😒`,
+                      `${ad.brand} 광고 너무 많은 거 아냐?`,
+                    ],
+                  };
+                  const sentKey = score > 30 ? 'positive' : score > -10 ? 'neutral' : 'negative';
+                  const line = pickRandom(storyLines[sentKey]);
+                  addLog(generateBrandDialogue(agent.name, ad.brand, score));
                   addSpeechBubble({
                     id: `speech_${agent.id}_${now}`,
                     agentId: agent.id,
-                    text: ad.brand + (score > 30 ? ' 좋아!' : score > 0 ? ' 흠...' : ' 별로'),
-                    emoji: score > 30 ? '❤️' : score > 0 ? '🤔' : '😒',
+                    text: line,
+                    emoji: sentKey === 'positive' ? '❤️' : sentKey === 'neutral' ? '🤔' : '😒',
                     timestamp: now + 1500,
                     type: 'dialogue',
                   });
