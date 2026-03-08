@@ -342,7 +342,7 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
             <line key={`curb_l_${gx}_${gy}`}
               x1={pos.x - TILE_W / 4 - 2} y1={pos.y - 2}
               x2={pos.x - TILE_W / 4 + 2} y2={pos.y + 2}
-              stroke="hsl(30,12%,60%)" strokeWidth={1} strokeOpacity={0.3} />
+              stroke={isResidential ? 'hsl(43,40%,70%)' : 'hsl(30,12%,60%)'} strokeWidth={1} strokeOpacity={0.3} />
           );
         }
         if (topType === 'road') {
@@ -350,7 +350,7 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
             <line key={`curb_t_${gx}_${gy}`}
               x1={pos.x - 2} y1={pos.y - TILE_H / 4 - 1}
               x2={pos.x + 2} y2={pos.y - TILE_H / 4 + 1}
-              stroke="hsl(30,12%,60%)" strokeWidth={1} strokeOpacity={0.3} />
+              stroke={isResidential ? 'hsl(43,40%,70%)' : 'hsl(30,12%,60%)'} strokeWidth={1} strokeOpacity={0.3} />
           );
         }
         // Small sidewalk tree (like reference street trees)
