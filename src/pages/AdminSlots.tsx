@@ -26,9 +26,13 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 const AdminSlots = () => {
+  const { isAdmin, loading: authLoading } = useAdminAuth();
   const { data: slots, isLoading, error } = useSlots();
   const updateSlot = useUpdateSlot();
   const navigate = useNavigate();
+
+  if (authLoading) return <div className="flex items-center justify-center min-h-screen text-muted-foreground">인증 확인 중...</div>;
+  if (!isAdmin) return <Navigate to="/admin/login" replace />;
   const [editingSlot, setEditingSlot] = useState<Slot | null>(null);
   const [form, setForm] = useState({ label: '', ownerType: '', ownerId: '', ownerName: '', ownerMessage: '' });
 
