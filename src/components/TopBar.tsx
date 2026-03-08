@@ -10,9 +10,10 @@ interface Props {
   onZoneChange: (zoneId: string) => void;
   onSponsorDashboard: () => void;
   onHome?: () => void;
+  energyBar?: React.ReactNode;
 }
 
-export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard, onHome }) => {
+export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard, onHome, energyBar }) => {
   return (
     <header className="h-12 bg-card/90 backdrop-blur-md border-b border-border flex items-center justify-between px-4 z-30">
       <div className="flex items-center gap-3">
@@ -23,7 +24,6 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
         </button>
         <div className="h-4 w-px bg-border" />
 
-        {/* Zone selector */}
         <div className="flex items-center gap-1">
           {zones.map(zone => (
             <button
@@ -48,6 +48,7 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
         <span className="text-xs text-muted-foreground/50 font-mono">T#{tick}</span>
       </div>
       <div className="flex items-center gap-4">
+        {energyBar}
         <Stat label="Agents" value={agentCount} color="text-primary" />
         <Stat label="Ads" value={activeAds} color="text-accent" />
         <a href="https://github.com" target="_blank" rel="noopener noreferrer"

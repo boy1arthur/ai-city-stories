@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { AGENTS, ZONES, INITIAL_AD_SLOTS, generateBrandDialogue, getZoneById, type Agent, type AdSlot, type InteractionEvent, type Building } from '@/data/world';
 import { applyDemoSeed } from '@/data/demoSeed';
 import { aggregateBrandStats, type BrandStats, type SlotStats } from '@/lib/esv';
+import { initCityEnergy, tickCityEnergy, type CityEnergyState } from '@/lib/cityEnergy';
 import type { Highlight } from '@/components/sponsor/TodayHighlights';
 
 const TICK_MS = 2500;
@@ -80,6 +81,7 @@ export function useWorldSimulation() {
   const [speechBubbles, setSpeechBubbles] = useState<SpeechBubble[]>([]);
   const [agentVisuals, setAgentVisuals] = useState<Map<string, AgentVisualState>>(new Map());
   const [adReactions, setAdReactions] = useState<AdReaction[]>([]);
+  const [cityEnergy, setCityEnergy] = useState<CityEnergyState>(initCityEnergy);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const currentZone = getZoneById(currentZoneId)!;
@@ -140,6 +142,13 @@ export function useWorldSimulation() {
     intervalRef.current = setInterval(() => {
       setTick(t => t + 1);
       const now = Date.now();
+
+      // City energy tick
+      setCityEnergy(prev => {
+        const activeCampaignCount = adSlots.filter(s => s.brand).length;
+        const totalESV = adSlots.filter(s => s.brand).reduce((sum, s) => sum + s.esv, 0);
+        return tickCityEnergy(prev, { activeCampaignCount, totalESV });
+      });
 
       setAgents(prev => prev.map((agent, agentIndex) => {
         const agentZone = getZoneById(agent.currentZoneId);
@@ -320,6 +329,7 @@ export function useWorldSimulation() {
     allAgents: agents,
     adSlots: zoneAdSlots,
     allAdSlots: adSlots,
+    setAdSlots,
     worldLog,
     tick,
     isPaused,
@@ -336,5 +346,6 @@ export function useWorldSimulation() {
     agentVisuals,
     brandStats,
     highlights,
+    cityEnergy,
   };
 }

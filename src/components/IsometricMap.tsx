@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import type { Building, Agent, AdSlot, InteractionEvent, Zone } from '@/data/world';
 import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/useWorldSimulation';
+import type { CityEnergyStatus } from '@/lib/cityEnergy';
 import { GroundLayer } from './map/GroundLayer';
 import { BuildingRenderer } from './map/BuildingRenderer';
 import { AdSlotVisual } from './map/AdSlotVisual';
@@ -15,13 +16,14 @@ interface Props {
   speechBubbles: SpeechBubble[];
   adReactions: AdReaction[];
   agentVisuals: Map<string, AgentVisualState>;
+  energyStatus?: CityEnergyStatus;
   onBuildingClick: (b: Building) => void;
   onAgentClick: (a: Agent) => void;
 }
 
 export const IsometricMap: React.FC<Props> = ({
   zone, buildings, agents, adSlots, interactions,
-  speechBubbles, adReactions, agentVisuals,
+  speechBubbles, adReactions, agentVisuals, energyStatus,
   onBuildingClick, onAgentClick,
 }) => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -123,6 +125,17 @@ export const IsometricMap: React.FC<Props> = ({
         </g>
 
         <rect width="1000" height="600" fill="url(#vignette)" pointerEvents="none" />
+
+        {/* Energy overlay */}
+        {energyStatus && energyStatus !== 'stable' && (
+          <rect width="1000" height="600" pointerEvents="none"
+            fill={energyStatus === 'critical' ? 'hsl(0,30%,8%)' : 'hsl(220,20%,8%)'}
+            fillOpacity={energyStatus === 'critical' ? 0.35 : 0.18}>
+            {energyStatus === 'critical' && (
+              <animate attributeName="fillOpacity" values="0.25;0.4;0.25" dur="2s" repeatCount="indefinite" />
+            )}
+          </rect>
+        )}
       </svg>
 
       {/* Zoom controls */}
