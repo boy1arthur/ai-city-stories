@@ -185,29 +185,12 @@ const PLAZA_TILE_MAP: string[] = [
 
 const PLAZA_BUILDINGS: Building[] = [
   // ═══ NW BLOCK — "Premium Tower District" ═══
-  // Arena + Lab + Café form L-shaped street wall
-  // Arena's E wall + Lab/Café's E walls = continuous vertical ad strip
-  // Lab + Café's S walls = continuous horizontal ad strip facing boulevard
   { id: 'arena', name: 'Arena', emoji: '⚔️', color: 'primary',
     gridX: 2, gridY: 2, width: 12, height: 8,
     description: 'AI 에이전트 배틀 & 토너먼트 — 프리미엄 광고 랜드마크',
     adSlots: ['billboard', 'bus_stop'],
     heightLevel: 5, roofShape: 'dome',
     wallColor: 'hsl(215,12%,52%)', roofColor: 'hsl(215,10%,42%)', buildingType: 'civic' },
-
-  { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary',
-    gridX: 2, gridY: 10, width: 6, height: 4,
-    description: '실험 & 프로토타입 연구소',
-    adSlots: ['kiosk'],
-    heightLevel: 2, roofShape: 'flat',
-    wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
-
-  { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
-    gridX: 8, gridY: 10, width: 6, height: 4,
-    description: '에이전트 카페 & 미팅 포인트',
-    adSlots: ['kiosk'],
-    heightLevel: 1, roofShape: 'flat',
-    wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
   // ═══ NE BLOCK — "Media Strip" ═══
   { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'primary',
