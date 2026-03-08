@@ -91,7 +91,7 @@ export const SponsorDashboard: React.FC<Props> = ({
 
         {/* Brand Ranking + Highlights */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <BrandRanking brandStats={brandStats} />
+          <BrandRanking brandStats={brandStats} onBrandClick={setSelectedBrand} />
           <TodayHighlights highlights={highlights} />
         </div>
 
