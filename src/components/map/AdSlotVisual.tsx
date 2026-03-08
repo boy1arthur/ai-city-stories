@@ -149,13 +149,13 @@ export const AdSlotVisual: React.FC<Props> = React.memo(({ building: b, adSlots 
 
             {has && bv ? (
               <>
-                <circle cx={bsPos.x - pw / 2 + ph / 2 + 0.5} cy={bsPos.y - shelterH + 2 + ph / 2}
-                  r={3.5} fill={bv.color} />
-                <text x={bsPos.x - pw / 2 + ph / 2 + 0.5} y={bsPos.y - shelterH + 2 + ph / 2 + 1.5}
-                  textAnchor="middle" fontSize={4} fill="hsl(0,0%,100%)"
+                <circle cx={bsPos.x - pw / 2 + ph / 2 + 1} cy={bsPos.y - shelterH + 2 + ph / 2}
+                  r={4.5} fill={bv.color} />
+                <text x={bsPos.x - pw / 2 + ph / 2 + 1} y={bsPos.y - shelterH + 2 + ph / 2 + 1.8}
+                  textAnchor="middle" fontSize={5} fill="hsl(0,0%,100%)"
                   fontFamily="Inter" fontWeight={800}>{bv.initial}</text>
-                <text x={bsPos.x + 3} y={bsPos.y - shelterH + 2 + ph / 2 + 1.8}
-                  textAnchor="middle" fontSize={4}
+                <text x={bsPos.x + 4} y={bsPos.y - shelterH + 2 + ph / 2 + 2}
+                  textAnchor="middle" fontSize={5.5}
                   fill="hsl(220,18%,15%)" fontFamily="Inter" fontWeight={700}>
                   {fitText(slot.brand!, 5)}
                 </text>
