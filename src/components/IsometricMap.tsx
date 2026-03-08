@@ -143,8 +143,7 @@ export const IsometricMap: React.FC<Props> = ({
             <PatronTileRenderer slots={patronSlots} onSlotClick={handleSlotClick} />
           )}
 
-          {/* Layer 3.8: Guide NPC */}
-          {zone.id === 'plaza' && <GuideNPC onGuideClick={handleSlotClick} />}
+          {/* Layer 3.8: Guide NPC — rendered in HTML overlay instead */}
 
           {/* Layer 4: Agents */}
           {sortedAgents.map(({ agent, index }) => (
