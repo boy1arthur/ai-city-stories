@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { AGENTS, ZONES, INITIAL_AD_SLOTS, generateBrandDialogue, getZoneById, type Agent, type AdSlot, type InteractionEvent, type Building } from '@/data/world';
+import { aggregateBrandStats, type BrandStats, type SlotStats } from '@/lib/esv';
+import type { Highlight } from '@/components/sponsor/TodayHighlights';
 
 const TICK_MS = 2500;
 
