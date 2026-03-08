@@ -141,6 +141,7 @@ const Index = () => {
           onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
           onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
           onSlotClick={onSlotClick}
+          onAdSlotClick={onAdSlotClick}
         />
         <TrendingOpinions highlights={highlights} />
         <WorldPanel
