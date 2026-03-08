@@ -28,6 +28,11 @@ export const SlotVisualRenderer: React.FC<Props> = React.memo(({ slots, building
           ? buildings.find(b => b.id === slot.location.buildingId)
           : null;
 
+        // Freestanding tile-based slot (edge kiosk/billboard)
+        if (!building && slot.location.tile) {
+          return <FreestandingSlot key={slot.id} slot={slot} onClick={() => onSlotClick(slot)} />;
+        }
+
         if (!building && slot.location.buildingId) return null;
 
         switch (slot.type) {
@@ -45,6 +50,81 @@ export const SlotVisualRenderer: React.FC<Props> = React.memo(({ slots, building
   );
 });
 SlotVisualRenderer.displayName = 'SlotVisualRenderer';
+
+// ═══════════════════════════════════════
+// FREESTANDING — Edge kiosk/billboard at tile coordinates
+// ═══════════════════════════════════════
+const FreestandingSlot: React.FC<{ slot: Slot; onClick: () => void }> = ({ slot, onClick }) => {
+  const tile = slot.location.tile!;
+  const pos = iso(tile.x, tile.y);
+  const isOwned = slot.ownerType !== 'empty';
+  const label = slot.ownerName || slot.label;
+  const isScreen = slot.type === 'BRAND_SCREEN';
+
+  const postH = 22;
+  const boardW = isScreen ? 28 : 18;
+  const boardH = isScreen ? 16 : 22;
+  const accentColor = isOwned
+    ? (isScreen ? 'hsl(200,60%,50%)' : 'hsl(150,40%,45%)')
+    : 'hsl(215,12%,40%)';
+
+  return (
+    <g style={{ cursor: 'pointer' }} onClick={onClick}>
+      {/* Post */}
+      <line x1={pos.x} y1={pos.y} x2={pos.x} y2={pos.y - postH}
+        stroke="hsl(215,6%,38%)" strokeWidth={1.2} strokeLinecap="round" />
+
+      {/* Shadow */}
+      <rect x={pos.x - boardW / 2 + 1} y={pos.y - postH - boardH + 1}
+        width={boardW} height={boardH} rx={isScreen ? 2 : 1.5}
+        fill="hsl(0,0%,0%)" fillOpacity={0.15} />
+
+      {/* Board */}
+      <rect x={pos.x - boardW / 2} y={pos.y - postH - boardH}
+        width={boardW} height={boardH} rx={isScreen ? 2 : 1.5}
+        fill={isOwned ? 'hsl(0,0%,8%)' : 'hsl(215,8%,14%)'}
+        fillOpacity={0.9}
+        stroke={accentColor} strokeWidth={isOwned ? 0.8 : 0.4}
+        strokeDasharray={isOwned ? 'none' : '3 2'} />
+
+      {/* Top accent bar */}
+      <rect x={pos.x - boardW / 2 + 2} y={pos.y - postH - boardH}
+        width={boardW - 4} height={1.5} rx={0.75}
+        fill={accentColor} fillOpacity={isOwned ? 0.6 : 0.25} />
+
+      {isOwned ? (
+        <>
+          <text x={pos.x} y={pos.y - postH - boardH / 2 + 1} textAnchor="middle"
+            fontSize={isScreen ? 4.5 : 3.5} fill={accentColor}
+            fontFamily="Inter" fontWeight={700}>
+            {fit(label, 8)}
+          </text>
+          <text x={pos.x} y={pos.y - postH - boardH / 2 + 6} textAnchor="middle"
+            fontSize={2} fill="hsl(215,15%,50%)" fontFamily="Inter" fontWeight={400}>
+            {isScreen ? 'SCREEN' : 'PPL'}
+          </text>
+          {/* Subtle glow */}
+          <rect x={pos.x - boardW / 2 - 1} y={pos.y - postH - boardH - 1}
+            width={boardW + 2} height={boardH + 2} rx={3}
+            fill="none" stroke={accentColor} strokeWidth={0.4} strokeOpacity={0.1}>
+            <animate attributeName="strokeOpacity" values="0.05;0.18;0.05" dur="3s" repeatCount="indefinite" />
+          </rect>
+        </>
+      ) : (
+        <>
+          <text x={pos.x} y={pos.y - postH - boardH / 2 + 1} textAnchor="middle"
+            fontSize={3} fill="hsl(215,10%,45%)" fontFamily="Inter" fontWeight={500}>
+            {isScreen ? '📺' : '🎯'}
+          </text>
+          <text x={pos.x} y={pos.y - postH - boardH / 2 + 5.5} textAnchor="middle"
+            fontSize={2.2} fill="hsl(215,8%,40%)" fontFamily="Inter">
+            {isScreen ? 'AD SCREEN' : 'PPL BOARD'}
+          </text>
+        </>
+      )}
+    </g>
+  );
+};
 
 // ═══════════════════════════════════════
 // BRAND_BUILDING — Minimal floating badge (building itself is skinned)
