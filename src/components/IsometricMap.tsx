@@ -37,7 +37,7 @@ export const IsometricMap: React.FC<Props> = ({
   zone, buildings, agents, adSlots, interactions,
   speechBubbles, adReactions, agentVisuals, energyStatus,
   zoneSlots, patronSlots, slotsLoading,
-  onBuildingClick, onAgentClick, onSlotClick,
+  onBuildingClick, onAgentClick, onSlotClick, onAdSlotClick,
 }) => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0.85);
