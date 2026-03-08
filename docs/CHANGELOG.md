@@ -2,6 +2,45 @@
 
 모든 주요 변경사항을 기록합니다.
 
+## [0.5.0] — 2026-03-08: Template Dialogue Engine
+
+### Added
+- **템플릿 대화 시스템**: 70+개 브랜드 맥락 대사 풀 (12개 컨텍스트)
+  - brand_discovery, brand_recall, brand_comparison, product_experience
+  - ad_reaction, ppl_natural, recommendation, event_reaction
+  - lifestyle, social_casual, mood_driven, location_based
+- **스마트 매칭 엔진**: 에이전트 성격/기분/관심사 + 근처 브랜드 + 친밀도 기반 가중 랜덤 선택
+- **`dialogue_templates` DB 테이블**: 대사 풀 영속화 (RLS 적용)
+- 7개 브랜드 카테고리: tech, fashion, food, entertainment, finance, education, health
+
+### Changed
+- AI API 호출 제거 → 비용 0원 클라이언트 기반 대화 생성으로 전환
+- `useWorldSimulation`에서 `selectDialogue()` 함수로 대화 생성
+
+### Removed
+- `useAgentChat.ts` (AI edge function 의존성 제거)
+- `agent-chat` edge function 의존성 제거 (함수는 유지, 호출하지 않음)
+
+---
+
+## [0.4.0] — 2026-03-08: Auth, DB Persistence & SEO
+
+### Added
+- **사용자 인증**: `/auth` (로그인/가입/비밀번호찾기), `/reset-password`
+- **`useAuth` 훅**: Supabase Auth 세션 관리 + TopBar 연동
+- **캠페인 DB 영속화**: `campaigns` 테이블 + RLS 정책 (본인 CRUD + 공개 읽기)
+- **SEO 최적화**: OG 메타태그, Twitter Cards, JSON-LD, 시맨틱 HTML
+- **이메일 인증 활성화**: 가입 시 확인 이메일 전송
+
+### Changed
+- **랜딩 페이지 리디자인**: 프리미엄 히어로 + 구역 프리뷰 + 피처 그리드
+- **TopBar 리파인**: 구역별 아이콘, 인증 상태 표시, 풀시티/존뷰 토글
+- **WorldLog 개선**: 글래스모피즘 + 타이포그래피 리파인
+- **EnergyBar 고도화**: 동적 글로우 + 상태별 애니메이션 (stable/low/critical)
+- **README 상용 수준으로 업그레이드**
+
+---
+
 ## [0.3.0] — 2026-03-08: Full City View & Performance
 
 ### Added
