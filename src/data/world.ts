@@ -284,7 +284,7 @@ const PLAZA_BUILDINGS: Building[] = [
     wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,20%,35%)', buildingType: 'park_structure' },
 
   { id: 'tech_lab', name: 'Tech Lab', emoji: '💻', color: 'primary',
-    gridX: 24, gridY: 24, width: 8, height: 6,
+    gridX: 26, gridY: 24, width: 4, height: 4,
     description: '테크 허브 & AI 스타트업 인큐베이터',
     adSlots: ['wall_wrap', 'billboard', 'naming_rights'],
     heightLevel: 1, roofShape: 'antenna',
