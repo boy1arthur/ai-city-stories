@@ -182,6 +182,7 @@ const Index = () => {
             zoneDataMap={zoneDataMap}
             energyStatus={cityEnergy.status}
             focusedZoneId={focusedZoneId}
+            autoFocusZoneId={autoFocusZoneId}
             onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
             onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
             onSlotClick={onSlotClick}
