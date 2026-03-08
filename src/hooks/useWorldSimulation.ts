@@ -225,7 +225,7 @@ export function useWorldSimulation() {
         // Agent moves to a new building — only if NOT currently walking
         const currentVisual = agentVisualsRef.current.get(agent.id);
         const isCurrentlyMoving = currentVisual?.isMoving && (now - currentVisual.moveStartTime < currentVisual.moveDuration);
-        if (!isCurrentlyMoving && Math.random() < 0.3) {
+        if (!isCurrentlyMoving && Math.random() < 0.18) {
           const zoneBuildings = agentZone.buildings;
           const newBuilding = pickRandom(zoneBuildings);
           if (newBuilding.id !== agent.currentBuildingId) {
