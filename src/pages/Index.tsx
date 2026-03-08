@@ -1,28 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IsometricMap } from '@/components/IsometricMap';
 import { WorldPanel } from '@/components/WorldPanel';
 import { WorldLog } from '@/components/WorldLog';
 import { TopBar } from '@/components/TopBar';
+import { EnergyBar } from '@/components/EnergyBar';
 import { SponsorDashboard } from '@/components/SponsorDashboard';
 import { TrendingOpinions } from '@/components/TrendingOpinions';
 import { useWorldSimulation } from '@/hooks/useWorldSimulation';
+import { useCampaigns } from '@/hooks/useCampaigns';
+import { isCampaignActive } from '@/lib/adCampaign';
 import type { Building, Agent } from '@/data/world';
 
 const Index = () => {
+  const sim = useWorldSimulation();
   const {
-    agents, allAgents, adSlots, allAdSlots, worldLog, tick,
+    agents, allAgents, adSlots, allAdSlots, setAdSlots, worldLog, tick,
     isPaused, setIsPaused, placeBrandAd, buildings, interactions,
     currentZoneId, setCurrentZoneId, currentZone, zones,
     speechBubbles, adReactions, agentVisuals,
-    brandStats, highlights,
-  } = useWorldSimulation();
+    brandStats, highlights, cityEnergy,
+  } = sim;
+
+  const { campaigns, createCampaign, endCampaign, updateCampaignSlots } = useCampaigns();
 
   const [searchParams] = useSearchParams();
   const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [showDashboard, setShowDashboard] = useState(searchParams.get('tab') === 'sponsor');
   const navigate = useNavigate();
+
+  // Sync campaigns → AdSlots brand assignment
+  useEffect(() => {
+    setAdSlots(prev => prev.map(slot => {
+      // Find the most recent running campaign that includes this slot
+      const activeCampaign = campaigns
+        .filter(c => isCampaignActive(c, tick) && c.slotIds.includes(slot.id))
+        .sort((a, b) => b.startTick - a.startTick)[0];
+
+      if (activeCampaign) {
+        return slot.brand === activeCampaign.brandId ? slot : { ...slot, brand: activeCampaign.brandId };
+      }
+      return slot;
+    }));
+  }, [tick, campaigns]); // eslint-disable-line
 
   const activeAds = adSlots.filter(s => s.brand).length;
 
@@ -35,6 +56,12 @@ const Index = () => {
         currentZone={currentZone}
         brandStats={brandStats}
         highlights={highlights}
+        cityEnergy={cityEnergy}
+        campaigns={campaigns}
+        currentTick={tick}
+        zones={zones}
+        onCreateCampaign={createCampaign}
+        onEndCampaign={endCampaign}
         onBack={() => setShowDashboard(false)}
       />
     );
@@ -55,6 +82,7 @@ const Index = () => {
         }}
         onSponsorDashboard={() => setShowDashboard(true)}
         onHome={() => navigate('/')}
+        energyBar={<EnergyBar energy={cityEnergy} />}
       />
 
       <div className="flex-1 relative overflow-hidden">
@@ -67,6 +95,7 @@ const Index = () => {
           speechBubbles={speechBubbles}
           adReactions={adReactions}
           agentVisuals={agentVisuals}
+          energyStatus={cityEnergy.status}
           onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
           onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
         />

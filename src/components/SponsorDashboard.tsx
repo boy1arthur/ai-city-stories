@@ -2,9 +2,14 @@ import React from 'react';
 import type { AdSlot, Agent, Zone } from '@/data/world';
 import { SPONSOR_TIERS, ZONES, type SponsorTier } from '@/data/world';
 import type { BrandStats } from '@/lib/esv';
+import type { CityEnergyState } from '@/lib/cityEnergy';
+import type { AdCampaign } from '@/lib/adCampaign';
 import type { Highlight } from '@/components/sponsor/TodayHighlights';
 import { BrandRanking } from '@/components/sponsor/BrandRanking';
 import { TodayHighlights } from '@/components/sponsor/TodayHighlights';
+import { CampaignForm } from '@/components/sponsor/CampaignForm';
+import { CampaignList } from '@/components/sponsor/CampaignList';
+import { EnergyBar } from '@/components/EnergyBar';
 
 interface Props {
   adSlots: AdSlot[];
@@ -13,10 +18,20 @@ interface Props {
   currentZone: Zone;
   brandStats: BrandStats[];
   highlights: Highlight[];
+  cityEnergy: CityEnergyState;
+  campaigns: AdCampaign[];
+  currentTick: number;
+  zones: Zone[];
+  onCreateCampaign: (input: { brandId: string; zoneId: string; slotIds: string[]; durationTicks: number; startTick: number }) => void;
+  onEndCampaign: (id: string) => void;
   onBack: () => void;
 }
 
-export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents, currentZone, brandStats, highlights, onBack }) => {
+export const SponsorDashboard: React.FC<Props> = ({
+  adSlots, allAdSlots, agents, currentZone, brandStats, highlights,
+  cityEnergy, campaigns, currentTick, zones,
+  onCreateCampaign, onEndCampaign, onBack,
+}) => {
   const activeAds = allAdSlots.filter(s => s.brand);
   const zoneActiveAds = adSlots.filter(s => s.brand);
   const totalImpressions = activeAds.reduce((sum, s) => sum + s.impressions, 0);
@@ -40,9 +55,12 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
               {currentZone.emoji} {currentZone.name} — AI Social World 광고 경제 리포트
             </p>
           </div>
-          <button onClick={onBack} className="text-xs px-3 py-1.5 rounded border border-border hover:border-primary text-foreground transition-colors font-medium">
-            ← 월드로 돌아가기
-          </button>
+          <div className="flex items-center gap-4">
+            <EnergyBar energy={cityEnergy} />
+            <button onClick={onBack} className="text-xs px-3 py-1.5 rounded border border-border hover:border-primary text-foreground transition-colors font-medium">
+              ← 월드로 돌아가기
+            </button>
+          </div>
         </div>
 
         {/* KPI Cards */}
@@ -54,10 +72,16 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
           <KPICard label="브랜드" value={uniqueBrands.length.toString()} sub="active brands" color="primary" />
         </div>
 
-        {/* NEW: Brand Ranking + Highlights */}
+        {/* Brand Ranking + Highlights */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <BrandRanking brandStats={brandStats} />
           <TodayHighlights highlights={highlights} />
+        </div>
+
+        {/* Campaign Management */}
+        <div className="space-y-4 mb-8">
+          <CampaignForm zones={zones} allAdSlots={allAdSlots} currentTick={currentTick} onCreateCampaign={onCreateCampaign} />
+          <CampaignList campaigns={campaigns} currentTick={currentTick} onEndCampaign={onEndCampaign} />
         </div>
 
         {/* Zone Inventory */}
@@ -116,49 +140,6 @@ export const SponsorDashboard: React.FC<Props> = ({ adSlots, allAdSlots, agents,
               </ul>
             </div>
           ))}
-        </div>
-
-        {/* Active Ads Table */}
-        <div className="bg-card border border-border rounded-lg p-4 mb-8">
-          <h3 className="text-xs font-semibold text-primary uppercase tracking-wider mb-4">활성 광고 현황</h3>
-          {activeAds.length === 0 ? (
-            <p className="text-xs text-muted-foreground">아직 배치된 광고가 없습니다.</p>
-          ) : (
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="text-muted-foreground border-b border-border">
-                  <th className="text-left py-2">브랜드</th>
-                  <th className="text-left py-2">구역</th>
-                  <th className="text-left py-2">건물</th>
-                  <th className="text-left py-2">타입</th>
-                  <th className="text-left py-2">등급</th>
-                  <th className="text-right py-2">노출</th>
-                  <th className="text-right py-2">ESV</th>
-                </tr>
-              </thead>
-              <tbody>
-                {activeAds.map(ad => {
-                  const zone = ZONES.find(z => z.id === ad.zoneId);
-                  const building = zone?.buildings.find(b => b.id === ad.buildingId);
-                  return (
-                    <tr key={ad.id} className="border-b border-border/50 hover:bg-muted/30">
-                      <td className="py-2 text-foreground font-semibold">{ad.brand}</td>
-                      <td className="py-2 text-foreground">{zone?.emoji} {zone?.name}</td>
-                      <td className="py-2 text-foreground">{building?.emoji} {building?.name}</td>
-                      <td className="py-2 text-muted-foreground">{ad.type}</td>
-                      <td className="py-2">
-                        <span className={`px-1.5 py-0.5 rounded text-xs ${ad.priority === 'premium' ? 'bg-accent/20 text-accent' : ad.priority === 'standard' ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
-                          {ad.priority}
-                        </span>
-                      </td>
-                      <td className="py-2 text-right text-foreground">{ad.impressions}</td>
-                      <td className="py-2 text-right text-accent">${ad.esv}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
         </div>
 
         {/* Sentiment + Agent reactions */}
