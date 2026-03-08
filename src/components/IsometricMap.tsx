@@ -99,7 +99,7 @@ export const IsometricMap: React.FC<Props> = ({
         onWheel={onWheel}>
 
         {/* Simple dark background */}
-        <rect x="-200" y="-100" width="1400" height="900" fill={zone.id === 'residential' ? 'hsl(0,0%,96%)' : 'hsl(220,10%,6%)'} />
+        <rect x="-200" y="-100" width="1400" height="900" fill={zone.id === 'residential' ? 'hsl(0,0%,96%)' : zone.id === 'industrial' ? 'hsl(240,8%,4%)' : 'hsl(220,10%,6%)'} />
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
           {/* Layer 0: Locked zone ghost previews */}
