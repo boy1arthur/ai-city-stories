@@ -186,6 +186,8 @@ export function useWorldSimulation() {
         const pos = getAgentPositionAroundBuilding(building, i);
         map.set(agent.id, {
           agentId: agent.id,
+          path: [pos],
+          moveDuration: 0,
           fromX: pos.x, fromY: pos.y,
           toX: pos.x, toY: pos.y,
           moveStartTime: 0, isMoving: false,
