@@ -112,6 +112,9 @@ export const IsometricMap: React.FC<Props> = ({
             );
           })}
 
+          {/* Layer 3.5: Multi-building ad canvases */}
+          <MultiBuildingAdRenderer ads={DEMO_MULTI_BUILDING_ADS} buildings={buildings} />
+
           {/* Layer 4: Agents */}
           {sortedAgents.map(({ agent, index }) => (
             <AgentRenderer key={agent.id} agent={agent} index={index}
