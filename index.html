@@ -1,45 +1,27 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Social World — AI 에이전트가 살아가는 가상 도시</title>
-    <meta name="description" content="8명의 AI 에이전트가 자율적으로 이동하고, 대화하고, 브랜드에 반응하는 아이소메트릭 가상 도시 시뮬레이션. 스폰서로서 도시 경제를 운영하세요." />
-    <meta name="author" content="AI Social World" />
-    <meta name="keywords" content="AI simulation, virtual city, isometric, brand advertising, AI agents, sponsor economy" />
-    <link rel="canonical" href="https://aisocialworld.app" />
+    <!-- TODO: Set the document title to the name of your application -->
+    <title>AI Social World - AI 에이전트 도시 시뮬레이션</title>
+    <meta name="description" content="8명의 AI 에이전트가 살아가는 아이소메트릭 가상 도시. 브랜드 광고와 후원으로 도시 경제를 운영하세요.">
+    <meta name="author" content="Lovable" />
 
-    <meta property="og:title" content="AI Social World — AI 에이전트 도시 시뮬레이션" />
-    <meta property="og:description" content="8명의 AI가 살아가는 아이소메트릭 도시. 광고와 후원으로 도시를 유지하세요." />
+    <!-- TODO: Update og:title to match your application name -->
+    
+    
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://aisocialworld.app" />
-    <meta property="og:image" content="/og-image.png" />
-    <meta property="og:locale" content="ko_KR" />
-    <meta property="og:site_name" content="AI Social World" />
+    <meta property="og:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/0f645a14-ed67-4c7b-8742-e8d01f6e5625?Expires=1773016579&amp;GoogleAccessId=go-api-on-aws%40gpt-engineer-390607.iam.gserviceaccount.com&amp;Signature=t0GHXhGhp%2Bb5DuvR4xj688jlXrcJ1WbQxUNTbiHUOCiVjWr3QEnPX0bPRmDz6WZ6gC1kQL0pgqSdfELRzlKkDzLG6qZNMYREjymW68cBge6%2F6Y%2BzUbaNmqNaCJ01xmMcS7NEKXWEv9BmfSYFIoL2GC7rzxQpu9Kk%2BdnaGLLlP6PG3nfVVhM46K3BjyWDLQSiHMMrkF1gVg3iY35RdDiDSdMhtbtdmkt3VJ2Saf0aMU1Bns8PYhVFVjr30LNWepQeb85CRFZt7fFdKgid66RrHxjHgKULQd5bzR8AxXiL08SMGRqo7gxZ%2FfvJrdWlgymAPG7VQNGIFOVoHFUjQ9eC2w%3D%3D">
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="AI Social World" />
-    <meta name="twitter:description" content="AI 에이전트가 살아가는 가상 도시 시뮬레이션" />
-    <meta name="twitter:image" content="/og-image.png" />
-
-    <link rel="icon" type="image/png" href="/favicon.png" />
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "AI Social World",
-      "description": "AI 에이전트가 자율적으로 살아가는 아이소메트릭 가상 도시 시뮬레이션",
-      "applicationCategory": "Simulation",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "KRW"
-      }
-    }
-    </script>
-  </head>
+    <meta name="twitter:site" content="@Lovable" />
+    <meta name="twitter:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/0f645a14-ed67-4c7b-8742-e8d01f6e5625?Expires=1773016579&amp;GoogleAccessId=go-api-on-aws%40gpt-engineer-390607.iam.gserviceaccount.com&amp;Signature=t0GHXhGhp%2Bb5DuvR4xj688jlXrcJ1WbQxUNTbiHUOCiVjWr3QEnPX0bPRmDz6WZ6gC1kQL0pgqSdfELRzlKkDzLG6qZNMYREjymW68cBge6%2F6Y%2BzUbaNmqNaCJ01xmMcS7NEKXWEv9BmfSYFIoL2GC7rzxQpu9Kk%2BdnaGLLlP6PG3nfVVhM46K3BjyWDLQSiHMMrkF1gVg3iY35RdDiDSdMhtbtdmkt3VJ2Saf0aMU1Bns8PYhVFVjr30LNWepQeb85CRFZt7fFdKgid66RrHxjHgKULQd5bzR8AxXiL08SMGRqo7gxZ%2FfvJrdWlgymAPG7VQNGIFOVoHFUjQ9eC2w%3D%3D">
+    <meta property="og:title" content="AI Social World - AI 에이전트 도시 시뮬레이션">
+  <meta name="twitter:title" content="AI Social World - AI 에이전트 도시 시뮬레이션">
+  <meta property="og:description" content="8명의 AI 에이전트가 살아가는 아이소메트릭 가상 도시. 브랜드 광고와 후원으로 도시 경제를 운영하세요.">
+  <meta name="twitter:description" content="8명의 AI 에이전트가 살아가는 아이소메트릭 가상 도시. 브랜드 광고와 후원으로 도시 경제를 운영하세요.">
+</head>
 
   <body>
     <div id="root"></div>
