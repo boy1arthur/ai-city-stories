@@ -11,7 +11,7 @@ import { LockedZoneGhost } from './map/LockedZoneGhost';
 import { MultiBuildingAdRenderer } from './map/MultiBuildingAdRenderer';
 import { PatronTileRenderer } from './map/PatronTileRenderer';
 import { SlotVisualRenderer } from './map/SlotVisualRenderer';
-import { GuideNPC } from './map/GuideNPC';
+import { GuideNPC, GUIDE_SLOT } from './map/GuideNPC';
 import { DEMO_MULTI_BUILDING_ADS } from '@/lib/multiBuildingAd';
 
 interface Props {
