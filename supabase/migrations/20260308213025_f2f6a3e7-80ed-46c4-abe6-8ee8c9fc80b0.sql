@@ -1,0 +1,1 @@
+UPDATE public.slots SET owner_type = 'empty', owner_id = NULL, owner_name = NULL, owner_message = NULL WHERE owner_type != 'empty';
