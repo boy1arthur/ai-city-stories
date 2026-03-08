@@ -3,30 +3,30 @@ import type { Zone } from '@/data/world';
 import { getTileTypeFromMap, isRoadCenterInZone, getZonePalette } from '@/data/world';
 import { iso, diamond, TILE_W, TILE_H } from './constants';
 
-// ─── Street furniture positions ───
+// Street furniture positions for Plaza district (36x36 grid)
 const LAMPPOST_POSITIONS = [
-  { gx: 1, gy: 8 }, { gx: 5, gy: 8 }, { gx: 12, gy: 8 }, { gx: 16, gy: 8 },
-  { gx: 8, gy: 1 }, { gx: 8, gy: 5 }, { gx: 8, gy: 11 }, { gx: 8, gy: 15 },
-  { gx: 6, gy: 3 }, { gx: 6, gy: 10 }, { gx: 14, gy: 11 },
+  { gx: 2, gy: 16 }, { gx: 10, gy: 16 }, { gx: 24, gy: 16 }, { gx: 32, gy: 16 },
+  { gx: 16, gy: 2 }, { gx: 16, gy: 10 }, { gx: 16, gy: 22 }, { gx: 16, gy: 30 },
+  { gx: 12, gy: 6 }, { gx: 12, gy: 20 }, { gx: 28, gy: 22 },
 ];
 
 const BENCH_POSITIONS = [
-  { gx: 7, gy: 4, dir: 'h' as const },
-  { gx: 7, gy: 10, dir: 'h' as const },
-  { gx: 13, gy: 9, dir: 'v' as const },
-  { gx: 3, gy: 1, dir: 'h' as const },
-  { gx: 12, gy: 1, dir: 'h' as const },
-  { gx: 6, gy: 13, dir: 'v' as const },
+  { gx: 14, gy: 8, dir: 'h' as const },
+  { gx: 14, gy: 20, dir: 'h' as const },
+  { gx: 26, gy: 18, dir: 'v' as const },
+  { gx: 6, gy: 2, dir: 'h' as const },
+  { gx: 24, gy: 2, dir: 'h' as const },
+  { gx: 12, gy: 26, dir: 'v' as const },
 ];
 
 const PLANTER_POSITIONS = [
-  { gx: 7, gy: 3 }, { gx: 7, gy: 10 },
-  { gx: 14, gy: 11 }, { gx: 5, gy: 14 }, { gx: 7, gy: 17 },
+  { gx: 14, gy: 6 }, { gx: 14, gy: 20 },
+  { gx: 28, gy: 22 }, { gx: 10, gy: 28 }, { gx: 14, gy: 34 },
 ];
 
 const TRASHCAN_POSITIONS = [
-  { gx: 0, gy: 8 }, { gx: 17, gy: 8 },
-  { gx: 8, gy: 0 }, { gx: 8, gy: 17 },
+  { gx: 0, gy: 16 }, { gx: 35, gy: 16 },
+  { gx: 16, gy: 0 }, { gx: 16, gy: 35 },
 ];
 
 // ─── Decorative tree types ───
@@ -145,7 +145,7 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
 
       // Road center line
       if (isRoadCenterInZone(zone.tileMap, gx, gy, GRID)) {
-        const isVert = (gx === 8);
+        const isVert = (gx === 16 || gx === 17);
         tiles.push(
           <line key={`rm_${gx}_${gy}`}
             x1={isVert ? pos.x : pos.x - 6} y1={isVert ? pos.y - 3 : pos.y}
@@ -155,7 +155,7 @@ export const GroundLayer: React.FC<{ zone: Zone }> = React.memo(({ zone }) => {
       }
 
       // Crosswalk
-      if (type === 'road' && isRoadCenterInZone(zone.tileMap, gx, gy, GRID) && gy === 8 && gx === 8) {
+      if (type === 'road' && isRoadCenterInZone(zone.tileMap, gx, gy, GRID) && (gy === 16 || gy === 17) && (gx === 16 || gx === 17)) {
         tiles.push(
           <g key={`cw_${gx}_${gy}`}>
             {[-4, -2, 0, 2, 4].map(off => (

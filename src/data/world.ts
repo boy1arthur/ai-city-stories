@@ -28,7 +28,10 @@ const MAP_KEY: Record<string, TileType> = {
 
 export function getTileTypeFromMap(tileMap: string[], gx: number, gy: number, gridSize: number): TileType {
   if (gx < 0 || gx >= gridSize || gy < 0 || gy >= gridSize) return 'grass';
-  const ch = tileMap[gy]?.[gx];
+  // Map high-res grid (36x36) back to source tile map (18x18)
+  const mapX = Math.floor(gx / 2);
+  const mapY = Math.floor(gy / 2);
+  const ch = tileMap[mapY]?.[mapX];
   if (!ch) return 'grass';
   // Building footprint chars map to sidewalk
   if ('ALTOKBCNEHOV'.includes(ch)) {
@@ -42,9 +45,9 @@ export function getTileTypeFromMap(tileMap: string[], gx: number, gy: number, gr
 export function isRoadCenterInZone(tileMap: string[], gx: number, gy: number, gridSize: number): boolean {
   const t = getTileTypeFromMap(tileMap, gx, gy, gridSize);
   if (t !== 'road') return false;
-  // Plaza roads: single-tile pedestrian spines
-  if (gx === 8) return true;    // vertical spine
-  if (gy === 8) return true;    // horizontal spine
+  // Road spines at doubled coords (was 8, now 16-17)
+  if (gx === 16 || gx === 17) return true;    // vertical spine (2-tile wide)
+  if (gy === 16 || gy === 17) return true;    // horizontal spine (2-tile wide)
   return false;
 }
 
@@ -179,21 +182,21 @@ const PLAZA_TILE_MAP: string[] = [
 const PLAZA_BUILDINGS: Building[] = [
   // ─── CORE NORTH ───
   { id: 'arena', name: 'Arena', emoji: '⚔️', color: 'primary',
-    gridX: 2, gridY: 2, width: 4, height: 4,
+    gridX: 4, gridY: 4, width: 8, height: 8,
     description: 'AI 에이전트 배틀 & 토너먼트',
     adSlots: ['billboard', 'naming_rights', 'wall_wrap', 'bus_stop'],
     heightLevel: 3, roofShape: 'dome',
     wallColor: 'hsl(215,12%,52%)', roofColor: 'hsl(215,10%,42%)', buildingType: 'civic' },
 
   { id: 'feed_tower', name: 'Feed Tower', emoji: '📡', color: 'primary',
-    gridX: 9, gridY: 2, width: 3, height: 3,
+    gridX: 18, gridY: 4, width: 6, height: 6,
     description: '소셜 피드 & 트렌드 센터',
     adSlots: ['billboard', 'kiosk', 'wall_wrap'],
     heightLevel: 3, roofShape: 'antenna',
     wallColor: 'hsl(210,10%,48%)', roofColor: 'hsl(210,8%,40%)', buildingType: 'tower' },
 
   { id: 'oracle', name: 'Oracle', emoji: '🔮', color: 'secondary',
-    gridX: 13, gridY: 2, width: 2, height: 3,
+    gridX: 26, gridY: 4, width: 4, height: 6,
     description: '예측 마켓 & 점술관',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
     heightLevel: 2, roofShape: 'hip',
@@ -201,21 +204,21 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── CORE MIDDLE ───
   { id: 'lab', name: 'Lab', emoji: '🧪', color: 'primary',
-    gridX: 9, gridY: 5, width: 3, height: 2,
+    gridX: 18, gridY: 10, width: 6, height: 4,
     description: '실험 & 프로토타입 연구소',
     adSlots: ['wall_wrap', 'kiosk', 'billboard'],
     heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(200,8%,50%)', roofColor: 'hsl(200,6%,42%)', buildingType: 'office' },
 
   { id: 'cafe', name: 'Café', emoji: '☕', color: 'accent',
-    gridX: 2, gridY: 6, width: 3, height: 1,
+    gridX: 4, gridY: 12, width: 6, height: 2,
     description: '에이전트 카페 & 미팅 포인트',
     adSlots: ['kiosk', 'bus_stop'],
     heightLevel: 1, roofShape: 'flat',
     wallColor: 'hsl(30,22%,48%)', roofColor: 'hsl(30,18%,38%)', buildingType: 'shop' },
 
   { id: 'plaza', name: 'Central Plaza', emoji: '🏛️', color: 'accent',
-    gridX: 13, gridY: 5, width: 3, height: 2,
+    gridX: 26, gridY: 10, width: 6, height: 4,
     description: '중앙 광장 — 모든 에이전트의 교차점',
     adSlots: ['billboard', 'wall_wrap', 'bus_stop', 'kiosk', 'naming_rights'],
     heightLevel: 1, roofShape: 'flat',
@@ -223,14 +226,14 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── CORE SOUTH ───
   { id: 'library', name: 'Library', emoji: '📚', color: 'primary',
-    gridX: 2, gridY: 9, width: 4, height: 3,
+    gridX: 4, gridY: 18, width: 8, height: 6,
     description: '지식 아카이브 & 학습 센터',
     adSlots: ['billboard', 'bus_stop', 'kiosk'],
     heightLevel: 2, roofShape: 'gabled',
     wallColor: 'hsl(20,20%,52%)', roofColor: 'hsl(10,25%,35%)', buildingType: 'campus' },
 
   { id: 'newsstand', name: 'Newsstand', emoji: '📰', color: 'accent',
-    gridX: 9, gridY: 9, width: 3, height: 2,
+    gridX: 18, gridY: 18, width: 6, height: 4,
     description: '뉴스 & 브랜드 캠페인 게시판',
     adSlots: ['kiosk', 'billboard'],
     heightLevel: 1, roofShape: 'flat',
@@ -238,14 +241,14 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── SOUTH ───
   { id: 'tavern', name: 'Tavern', emoji: '🍺', color: 'accent',
-    gridX: 1, gridY: 12, width: 3, height: 2,
+    gridX: 2, gridY: 24, width: 6, height: 4,
     description: '에이전트 사교장 & 루머 허브',
     adSlots: ['billboard', 'bus_stop', 'wall_wrap'],
     heightLevel: 1, roofShape: 'gabled',
     wallColor: 'hsl(25,22%,45%)', roofColor: 'hsl(15,28%,32%)', buildingType: 'shop' },
 
   { id: 'workshop', name: 'Workshop', emoji: '🔧', color: 'primary',
-    gridX: 10, gridY: 12, width: 3, height: 3,
+    gridX: 20, gridY: 24, width: 6, height: 6,
     description: '제작 & 크래프팅 공방',
     adSlots: ['wall_wrap', 'billboard', 'kiosk'],
     heightLevel: 2, roofShape: 'gear',
@@ -253,14 +256,14 @@ const PLAZA_BUILDINGS: Building[] = [
 
   // ─── OUTSKIRTS ───
   { id: 'garden', name: 'Garden', emoji: '🌿', color: 'secondary',
-    gridX: 1, gridY: 15, width: 6, height: 2,
+    gridX: 2, gridY: 30, width: 12, height: 4,
     description: '힐링 & 명상 정원',
     adSlots: ['kiosk', 'bus_stop'],
     heightLevel: 1, roofShape: 'garden',
     wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,20%,35%)', buildingType: 'park_structure' },
 
   { id: 'observatory', name: 'Observatory', emoji: '🔭', color: 'primary',
-    gridX: 10, gridY: 15, width: 2, height: 2,
+    gridX: 20, gridY: 30, width: 4, height: 4,
     description: '별 관측소 & 미래 탐색',
     adSlots: ['naming_rights', 'kiosk'],
     heightLevel: 3, roofShape: 'dome',
@@ -290,14 +293,14 @@ const CAMPUS_TILE_MAP = [
 ];
 
 const CAMPUS_BUILDINGS: Building[] = [
-  { id: 'lecture_hall', name: 'Lecture Hall', emoji: '🎓', color: 'primary', gridX: 1, gridY: 1, width: 4, height: 3, description: 'AI 강의 & 워크숍', adSlots: ['billboard', 'naming_rights'], heightLevel: 2, roofShape: 'gabled', wallColor: 'hsl(10,25%,45%)', roofColor: 'hsl(5,20%,35%)', buildingType: 'campus' },
-  { id: 'dorm', name: 'Dormitory', emoji: '🏠', color: 'primary', gridX: 9, gridY: 1, width: 3, height: 3, description: '에이전트 기숙사', adSlots: ['wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'hip', wallColor: 'hsl(25,20%,50%)', roofColor: 'hsl(15,22%,38%)', buildingType: 'house' },
-  { id: 'cafeteria', name: 'Cafeteria', emoji: '🍽️', color: 'accent', gridX: 1, gridY: 5, width: 3, height: 3, description: '학생 식당 & 미팅 포인트', adSlots: ['billboard', 'bus_stop', 'kiosk'], heightLevel: 1, roofShape: 'flat', wallColor: 'hsl(30,18%,48%)', roofColor: 'hsl(30,15%,40%)', buildingType: 'shop' },
-  { id: 'research_center', name: 'Research Center', emoji: '🔬', color: 'primary', gridX: 9, gridY: 5, width: 3, height: 3, description: 'AI 연구 센터', adSlots: ['naming_rights', 'wall_wrap', 'billboard'], heightLevel: 3, roofShape: 'flat', wallColor: 'hsl(210,10%,50%)', roofColor: 'hsl(210,8%,42%)', buildingType: 'office' },
-  { id: 'sports_field', name: 'Sports Field', emoji: '⚽', color: 'secondary', gridX: 1, gridY: 9, width: 3, height: 3, description: '운동장 & 이벤트 공간', adSlots: ['billboard', 'bus_stop'], heightLevel: 1, roofShape: 'flat', wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,12%,36%)', buildingType: 'park_structure' },
-  { id: 'innovation_lab', name: 'Innovation Lab', emoji: '💡', color: 'primary', gridX: 9, gridY: 9, width: 3, height: 3, description: '스타트업 인큐베이터', adSlots: ['wall_wrap', 'kiosk', 'naming_rights'], heightLevel: 2, roofShape: 'antenna', wallColor: 'hsl(200,8%,48%)', roofColor: 'hsl(200,6%,40%)', buildingType: 'office' },
-  { id: 'botanical_garden', name: 'Botanical Garden', emoji: '🌳', color: 'secondary', gridX: 1, gridY: 13, width: 4, height: 3, description: '식물원 & 명상 공간', adSlots: ['kiosk', 'bus_stop'], heightLevel: 1, roofShape: 'garden', wallColor: 'hsl(135,18%,40%)', roofColor: 'hsl(135,22%,34%)', buildingType: 'park_structure' },
-  { id: 'auditorium', name: 'Auditorium', emoji: '🎭', color: 'accent', gridX: 9, gridY: 13, width: 3, height: 3, description: '공연장 & 컨퍼런스', adSlots: ['naming_rights', 'billboard', 'wall_wrap'], heightLevel: 3, roofShape: 'dome', wallColor: 'hsl(25,15%,48%)', roofColor: 'hsl(20,18%,38%)', buildingType: 'civic' },
+  { id: 'lecture_hall', name: 'Lecture Hall', emoji: '🎓', color: 'primary', gridX: 2, gridY: 2, width: 8, height: 6, description: 'AI 강의 & 워크숍', adSlots: ['billboard', 'naming_rights'], heightLevel: 2, roofShape: 'gabled', wallColor: 'hsl(10,25%,45%)', roofColor: 'hsl(5,20%,35%)', buildingType: 'campus' },
+  { id: 'dorm', name: 'Dormitory', emoji: '🏠', color: 'primary', gridX: 18, gridY: 2, width: 6, height: 6, description: '에이전트 기숙사', adSlots: ['wall_wrap', 'kiosk'], heightLevel: 2, roofShape: 'hip', wallColor: 'hsl(25,20%,50%)', roofColor: 'hsl(15,22%,38%)', buildingType: 'house' },
+  { id: 'cafeteria', name: 'Cafeteria', emoji: '🍽️', color: 'accent', gridX: 2, gridY: 10, width: 6, height: 6, description: '학생 식당 & 미팅 포인트', adSlots: ['billboard', 'bus_stop', 'kiosk'], heightLevel: 1, roofShape: 'flat', wallColor: 'hsl(30,18%,48%)', roofColor: 'hsl(30,15%,40%)', buildingType: 'shop' },
+  { id: 'research_center', name: 'Research Center', emoji: '🔬', color: 'primary', gridX: 18, gridY: 10, width: 6, height: 6, description: 'AI 연구 센터', adSlots: ['naming_rights', 'wall_wrap', 'billboard'], heightLevel: 3, roofShape: 'flat', wallColor: 'hsl(210,10%,50%)', roofColor: 'hsl(210,8%,42%)', buildingType: 'office' },
+  { id: 'sports_field', name: 'Sports Field', emoji: '⚽', color: 'secondary', gridX: 2, gridY: 18, width: 6, height: 6, description: '운동장 & 이벤트 공간', adSlots: ['billboard', 'bus_stop'], heightLevel: 1, roofShape: 'flat', wallColor: 'hsl(130,15%,42%)', roofColor: 'hsl(130,12%,36%)', buildingType: 'park_structure' },
+  { id: 'innovation_lab', name: 'Innovation Lab', emoji: '💡', color: 'primary', gridX: 18, gridY: 18, width: 6, height: 6, description: '스타트업 인큐베이터', adSlots: ['wall_wrap', 'kiosk', 'naming_rights'], heightLevel: 2, roofShape: 'antenna', wallColor: 'hsl(200,8%,48%)', roofColor: 'hsl(200,6%,40%)', buildingType: 'office' },
+  { id: 'botanical_garden', name: 'Botanical Garden', emoji: '🌳', color: 'secondary', gridX: 2, gridY: 26, width: 8, height: 6, description: '식물원 & 명상 공간', adSlots: ['kiosk', 'bus_stop'], heightLevel: 1, roofShape: 'garden', wallColor: 'hsl(135,18%,40%)', roofColor: 'hsl(135,22%,34%)', buildingType: 'park_structure' },
+  { id: 'auditorium', name: 'Auditorium', emoji: '🎭', color: 'accent', gridX: 18, gridY: 26, width: 6, height: 6, description: '공연장 & 컨퍼런스', adSlots: ['naming_rights', 'billboard', 'wall_wrap'], heightLevel: 3, roofShape: 'dome', wallColor: 'hsl(25,15%,48%)', roofColor: 'hsl(20,18%,38%)', buildingType: 'civic' },
 ];
 
 // ===== ALL ZONES =====
@@ -307,7 +310,7 @@ export const ZONES: Zone[] = [
     name: 'Plaza District',
     emoji: '🏛️',
     description: '중심 상업 지구 — 프리미엄 광고 슬롯 집중 구역',
-    gridSize: 18,
+    gridSize: 36,
     theme: 'commercial',
     themeColor: 'hsl(38,75%,50%)',
     buildings: PLAZA_BUILDINGS,
@@ -319,7 +322,7 @@ export const ZONES: Zone[] = [
     name: 'Campus District',
     emoji: '🎓',
     description: '교육 & 연구 지구 — 학습 기반 브랜드 스폰서십',
-    gridSize: 18,
+    gridSize: 36,
     theme: 'campus',
     themeColor: 'hsl(145,35%,42%)',
     buildings: CAMPUS_BUILDINGS,
@@ -331,7 +334,7 @@ export const ZONES: Zone[] = [
     name: 'Harbor District',
     emoji: '⚓',
     description: '항구 & 물류 지구 — 글로벌 브랜드 노출 극대화',
-    gridSize: 18,
+    gridSize: 36,
     theme: 'harbor',
     themeColor: 'hsl(205,50%,45%)',
     buildings: [],
@@ -343,7 +346,7 @@ export const ZONES: Zone[] = [
     name: 'Industrial District',
     emoji: '🏭',
     description: '산업 지구 — 제조/테크 브랜드 특화 구역',
-    gridSize: 18,
+    gridSize: 36,
     theme: 'industrial',
     themeColor: 'hsl(220,5%,45%)',
     buildings: [],
