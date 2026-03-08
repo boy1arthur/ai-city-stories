@@ -144,10 +144,6 @@ const WallBanner: React.FC<{ ad: MultiBuildingAd; buildings: Building[] }> = ({ 
     </g>
   );
 };
-      )}
-    </g>
-  );
-};
 
 // ════════════════════════════════════════════════
 // 2. ROOFTOP BILLBOARD — sign above roofline
