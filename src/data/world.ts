@@ -228,7 +228,7 @@ const PLAZA_BUILDINGS: Building[] = [
   { id: 'newsstand', name: 'Newsstand', emoji: '📰', color: 'accent',
     gridX: 26, gridY: 6, width: 6, height: 4,
     description: '뉴스 & 브랜드 캠페인 게시판',
-    adSlots: ['kiosk', 'billboard', 'wall_wrap'],
+    adSlots: ['kiosk'],
     heightLevel: 2, roofShape: 'flat',
     wallColor: 'hsl(38,20%,45%)', roofColor: 'hsl(38,15%,38%)', buildingType: 'shop' },
 
