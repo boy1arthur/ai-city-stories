@@ -10,11 +10,11 @@ import { iso } from './map/constants';
 // Cross layout: Plaza center, campus N, harbor E, industrial S, residential W
 // Each zone is 36×36 grid. Gap of 2 grid units between zones.
 const ZONE_GRID_OFFSETS: Record<string, { gx: number; gy: number }> = {
-  campus:      { gx: 38, gy: 0 },
-  residential: { gx: 0,  gy: 38 },
-  plaza:       { gx: 38, gy: 38 },
-  harbor:      { gx: 76, gy: 38 },
-  industrial:  { gx: 38, gy: 76 },
+  campus: { gx: 38, gy: 0 },
+  residential: { gx: 0, gy: 38 },
+  plaza: { gx: 38, gy: 38 },
+  harbor: { gx: 76, gy: 38 },
+  industrial: { gx: 38, gy: 76 },
 };
 
 // Convert grid offset to isometric pixel offset (relative to iso(0,0) of each zone)
@@ -64,7 +64,7 @@ export const FullCityMap: React.FC<Props> = ({
   onZoneFocus,
 }) => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(0.35);
+  const [zoom, setZoom] = useState(0.45);
   const [dragging, setDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
@@ -78,10 +78,10 @@ export const FullCityMap: React.FC<Props> = ({
       const offset = ZONE_GRID_OFFSETS[autoFocusZoneId];
       if (!offset) return;
       const isoOff = getIsoOffset(offset.gx + 18, offset.gy + 18);
-      const targetX = -(500 + isoOff.x) * 0.7 + window.innerWidth / 2;
-      const targetY = -(40 + isoOff.y) * 0.7 + window.innerHeight / 2;
+      const targetX = 500 - (500 + isoOff.x) * 2.0;
+      const targetY = 350 - (40 + isoOff.y) * 2.0;
       setPan({ x: targetX, y: targetY });
-      setZoom(0.7);
+      setZoom(2.0);
       onZoneFocus(autoFocusZoneId);
     }
   }, [autoFocusZoneId]); // eslint-disable-line
@@ -102,11 +102,23 @@ export const FullCityMap: React.FC<Props> = ({
     });
   }, [dragging]);
 
-  const onMouseUp = useCallback(() => setDragging(false), []);
+  const onMouseUp = useCallback((e: React.MouseEvent) => {
+    setDragging(false);
+    // If the movement distance since mouseDown is very small, we treat it as a click.
+    // This prevents accidental zone-clicking while dragging the city map.
+    const dist = Math.sqrt(
+      Math.pow(e.clientX - dragStart.current.x, 2) +
+      Math.pow(e.clientY - dragStart.current.y, 2)
+    );
+
+    // Store isClick flag to be used by child components or subsequent logic if needed,
+    // though for ZoneRenderer, it's safer to just handle the threshold here if it calls onZoneClick.
+    (e as any)._isMapClick = dist < 5;
+  }, []);
 
   const onWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault();
-    setZoom(z => Math.max(0.15, Math.min(2, z - e.deltaY * 0.001)));
+    setZoom(z => Math.max(0.15, Math.min(3, z - e.deltaY * 0.0006)));
   }, []);
 
   // Zoom to zone
@@ -114,18 +126,17 @@ export const FullCityMap: React.FC<Props> = ({
     const offset = ZONE_GRID_OFFSETS[zoneId];
     if (!offset) return;
     const isoOff = getIsoOffset(offset.gx + 18, offset.gy + 18);
-    // Center the zone in viewport: offset from iso origin (500, 40)
-    const targetX = -(500 + isoOff.x) * 0.7 + window.innerWidth / 2;
-    const targetY = -(40 + isoOff.y) * 0.7 + window.innerHeight / 2;
+    const targetX = 500 - (500 + isoOff.x) * 2.0;
+    const targetY = 350 - (40 + isoOff.y) * 2.0;
     setPan({ x: targetX, y: targetY });
-    setZoom(0.7);
+    setZoom(2.0);
     onZoneFocus(zoneId);
   }, [onZoneFocus]);
 
   // Reset to full view
   const resetView = useCallback(() => {
     setPan({ x: 0, y: 0 });
-    setZoom(0.35);
+    setZoom(0.45);
     onZoneFocus('');
   }, [onZoneFocus]);
 
@@ -166,7 +177,10 @@ export const FullCityMap: React.FC<Props> = ({
 
         <rect x="-200" y="-100" width="1400" height="900" fill="hsl(220,12%,6%)" />
 
-        <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
+        <g
+          transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}
+          style={{ transition: dragging ? 'none' : 'transform 0.5s cubic-bezier(0.2, 0, 0.2, 1)' }}
+        >
           {/* Connecting roads between zones */}
           {renderConnectingRoads()}
 
@@ -197,7 +211,12 @@ export const FullCityMap: React.FC<Props> = ({
                   onAgentClick={onAgentClick}
                   onSlotClick={onSlotClick}
                   onAdSlotClick={onAdSlotClick}
-                  onZoneClick={zoomToZone}
+                  onZoneClick={(id) => {
+                    // Only trigger if this was a "clean" click, not a drag-end
+                    if ((window.event as any)?._isMapClick !== false) {
+                      zoomToZone(id);
+                    }
+                  }}
                 />
               </g>
             );
@@ -231,7 +250,7 @@ export const FullCityMap: React.FC<Props> = ({
           className="w-8 h-8 rounded bg-card border border-border flex items-center justify-center text-foreground hover:border-primary transition-colors text-xs">
           🗺️
         </button>
-        <button onClick={() => setZoom(z => Math.min(2, z + 0.15))}
+        <button onClick={() => setZoom(z => Math.min(3, z + 0.15))}
           className="w-8 h-8 rounded bg-card border border-border flex items-center justify-center text-foreground hover:border-primary transition-colors text-sm">+</button>
         <button onClick={() => setZoom(z => Math.max(0.15, z - 0.15))}
           className="w-8 h-8 rounded bg-card border border-border flex items-center justify-center text-foreground hover:border-primary transition-colors text-sm">−</button>
@@ -242,11 +261,10 @@ export const FullCityMap: React.FC<Props> = ({
         {activeZones.map(zone => (
           <button key={zone.id}
             onClick={() => zoomToZone(zone.id)}
-            className={`text-xs px-2.5 py-1 rounded-full transition-all ${
-              focusedZoneId === zone.id
-                ? 'bg-primary/20 text-primary border border-primary/40 scale-105'
-                : 'bg-card/80 text-muted-foreground border border-border hover:border-primary/30 hover:text-foreground'
-            }`}>
+            className={`text-xs px-2.5 py-1 rounded-full transition-all ${focusedZoneId === zone.id
+              ? 'bg-primary/20 text-primary border border-primary/40 scale-105'
+              : 'bg-card/80 text-muted-foreground border border-border hover:border-primary/30 hover:text-foreground'
+              }`}>
             {zone.emoji}
           </button>
         ))}

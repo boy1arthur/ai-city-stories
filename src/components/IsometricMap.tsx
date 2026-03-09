@@ -40,8 +40,8 @@ export const IsometricMap: React.FC<Props> = ({
   zoneSlots, patronSlots, slotsLoading,
   onBuildingClick, onAgentClick, onSlotClick, onAdSlotClick,
 }) => {
-  const [pan, setPan] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(0.85);
+  const [pan, setPan] = useState({ x: -750, y: -290 });
+  const [zoom, setZoom] = useState(2.5);
   const [dragging, setDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
 
@@ -71,7 +71,7 @@ export const IsometricMap: React.FC<Props> = ({
 
   const onWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault();
-    setZoom(z => Math.max(0.25, Math.min(3, z - e.deltaY * 0.001)));
+    setZoom(z => Math.max(0.25, Math.min(3, z - e.deltaY * 0.0006)));
   }, []);
 
   const sortedBuildings = useMemo(() =>
@@ -102,7 +102,10 @@ export const IsometricMap: React.FC<Props> = ({
         {/* Simple dark background */}
         <rect x="-200" y="-100" width="1400" height="900" fill={zone.id === 'residential' ? 'hsl(30,10%,18%)' : zone.id === 'industrial' ? 'hsl(240,8%,4%)' : 'hsl(220,10%,6%)'} />
 
-        <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
+        <g
+          transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}
+          style={{ transition: dragging ? 'none' : 'transform 0.5s cubic-bezier(0.2, 0, 0.2, 1)' }}
+        >
           {/* Layer 0: Locked zone ghost previews */}
           <LockedZoneGhost activeZoneId={zone.id} />
 
