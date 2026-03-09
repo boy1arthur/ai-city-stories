@@ -41,13 +41,12 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
             <button
               key={zone.id}
               onClick={() => !zone.locked && onZoneChange(zone.id)}
-              className={`text-xs px-2 py-1 rounded-md transition-all ${
-                zone.id === currentZone.id
+              className={`text-xs px-2 py-1 rounded-md transition-all ${zone.id === currentZone.id
                   ? 'bg-primary/12 text-primary border border-primary/25 shadow-sm shadow-primary/10'
                   : zone.locked
-                  ? 'text-muted-foreground/30 cursor-not-allowed'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-              }`}
+                    ? 'text-muted-foreground/30 cursor-not-allowed'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                }`}
               title={zone.locked ? `${zone.name} — Coming Soon` : zone.name}
             >
               {zone.emoji} {zone.locked && '🔒'}
@@ -70,11 +69,10 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
         {onToggleFullView && (
           <button
             onClick={onToggleFullView}
-            className={`text-xs px-3 py-1.5 rounded-lg border transition-all font-medium hidden md:inline-flex items-center gap-1.5 ${
-              isFullView
+            className={`text-xs px-3 py-1.5 rounded-lg border transition-all font-medium hidden md:inline-flex items-center gap-1.5 ${isFullView
                 ? 'border-primary/30 text-primary bg-primary/8 shadow-sm shadow-primary/10'
                 : 'border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/25 hover:bg-muted/30'
-            }`}
+              }`}
           >
             🗺️ {isFullView ? 'Zone' : 'City'}
           </button>
