@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import type { Zone } from '@/data/world';
 import type { User } from '@supabase/supabase-js';
@@ -21,6 +22,12 @@ interface Props {
 
 export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZone, zones, onZoneChange, onSponsorDashboard, onHome, energyBar, isFullView, onToggleFullView, user, onSignOut }) => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const nextLang = i18n.language === 'ko' ? 'en' : 'ko';
+    i18n.changeLanguage(nextLang);
+  };
   return (
     <header className="h-13 bg-card/80 backdrop-blur-xl border-b border-border/50 flex items-center justify-between px-4 z-30">
       <div className="flex items-center gap-3">
@@ -42,10 +49,10 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
               key={zone.id}
               onClick={() => !zone.locked && onZoneChange(zone.id)}
               className={`text-xs px-2 py-1 rounded-md transition-all ${zone.id === currentZone.id
-                  ? 'bg-primary/12 text-primary border border-primary/25 shadow-sm shadow-primary/10'
-                  : zone.locked
-                    ? 'text-muted-foreground/30 cursor-not-allowed'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                ? 'bg-primary/12 text-primary border border-primary/25 shadow-sm shadow-primary/10'
+                : zone.locked
+                  ? 'text-muted-foreground/30 cursor-not-allowed'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                 }`}
               title={zone.locked ? `${zone.name} — Coming Soon` : zone.name}
             >
@@ -70,8 +77,8 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
           <button
             onClick={onToggleFullView}
             className={`text-xs px-3 py-1.5 rounded-lg border transition-all font-medium hidden md:inline-flex items-center gap-1.5 ${isFullView
-                ? 'border-primary/30 text-primary bg-primary/8 shadow-sm shadow-primary/10'
-                : 'border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/25 hover:bg-muted/30'
+              ? 'border-primary/30 text-primary bg-primary/8 shadow-sm shadow-primary/10'
+              : 'border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/25 hover:bg-muted/30'
               }`}
           >
             🗺️ {isFullView ? 'Zone' : 'City'}
@@ -82,7 +89,14 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
           onClick={onSponsorDashboard}
           className="text-xs px-3.5 py-1.5 rounded-lg bg-accent/10 border border-accent/25 text-accent hover:bg-accent/15 hover:border-accent/40 transition-all font-semibold shadow-sm shadow-accent/5"
         >
-          ⚡ Sponsor
+          ⚡ {t('topbar.dashboard')}
+        </button>
+
+        <button
+          onClick={toggleLanguage}
+          className="text-[10px] px-2 py-1 rounded border border-border/50 text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-all font-mono"
+        >
+          {i18n.language.toUpperCase()}
         </button>
 
         {user ? (
@@ -94,7 +108,7 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
               onClick={onSignOut}
               className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
             >
-              로그아웃
+              {t('topbar.signOut')}
             </button>
           </div>
         ) : (
@@ -102,7 +116,7 @@ export const TopBar: React.FC<Props> = ({ tick, agentCount, activeAds, currentZo
             onClick={() => navigate('/auth')}
             className="text-xs px-3 py-1.5 rounded-lg border border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/25 transition-all font-medium"
           >
-            로그인
+            Login
           </button>
         )}
       </div>

@@ -1,0 +1,42 @@
+{
+    "topbar": {
+        "live": "🔴 LIVE STREAM",
+        "energy": "City Energy",
+        "dashboard": "Sponsor Dashboard",
+        "home": "Home",
+        "signOut": "Sign Out"
+    },
+    "common": {
+        "loading": "Loading...",
+        "close": "Close",
+        "save": "Save",
+        "cancel": "Cancel"
+    },
+    "cinematic": {
+        "status": "LIVE STREAMING",
+        "intervention": "Intervention",
+        "viewerAction": "VIEWER ACTION",
+        "exitHint": "Press F9 to return to Manager Mode",
+        "liveButton": "🔴 LIVE STREAM",
+        "stopButton": "⏹ LIVE",
+        "eventDetected": "Significant Event Detected"
+    },
+    "donations": {
+        "item_drop": "Dropped an item in the city!",
+        "agent_boost": "Recharged agent energy!",
+        "announce": "Sent a city-wide announcement!",
+        "weather": "Changed the city weather!"
+    },
+    "worldlog": {
+        "title": "World Log",
+        "paused": "Paused",
+        "resume": "▶ Resume",
+        "pause": "⏸ Pause",
+        "waiting": "Waiting for simulation..."
+    },
+    "energybar": {
+        "stable": "⚡ Stable",
+        "low": "⚠️ Low",
+        "critical": "🔴 Critical"
+    }
+}

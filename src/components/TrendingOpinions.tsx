@@ -24,7 +24,7 @@ export const TrendingOpinions: React.FC<Props> = ({ highlights }) => {
             style={{ opacity }}>
             <div className="flex items-start gap-1.5">
               <span className="text-xs mt-0.5">{typeEmoji}</span>
-              <p className="text-[11px] text-foreground leading-relaxed line-clamp-2">{h.text}</p>
+              <p className="text-[11px] text-foreground leading-relaxed">{h.text}</p>
             </div>
           </div>
         );

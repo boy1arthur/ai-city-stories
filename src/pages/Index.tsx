@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IsometricMap } from '@/components/IsometricMap';
 import { FullCityMap } from '@/components/FullCityMap';
@@ -11,6 +12,9 @@ import { TrendingOpinions } from '@/components/TrendingOpinions';
 import { WorldEventBanner } from '@/components/WorldEventBanner';
 import { AgentProfilePanel } from '@/components/agent/AgentProfilePanel';
 import { SlotInteractionModal } from '@/components/SlotInteractionModal';
+import { CinematicView, CinematicToggleButton, type CinematicEvent } from '@/components/display/CinematicView';
+import { DonationEffectsOverlay, createDonationEffect, useDonationTemplates, type DonationEffect } from '@/components/display/DonationEffects';
+import { useStreamListener, type StreamEvent } from '@/hooks/useStreamListener';
 import { useWorldSimulation } from '@/hooks/useWorldSimulation';
 import { useAuth } from '@/hooks/useAuth';
 import { useCampaigns } from '@/hooks/useCampaigns';
@@ -31,17 +35,65 @@ const Index = () => {
     speechBubbles, adReactions, agentVisuals,
     brandStats, highlights, cityEnergy,
     leagueSeason, leagueScores, worldEvents,
-    getZoneData,
+    getZoneData, changeWeather, viewerIntervention
   } = sim;
 
   const { campaigns, createCampaign, endCampaign, updateCampaignSlots } = useCampaigns();
   const { user, signOut } = useAuth();
   const isMobile = useIsMobile();
+  const { t } = useTranslation();
+  const donationTemplates = useDonationTemplates();
 
-  // Full city view state (PC only)
   const [isFullView, setIsFullView] = useState(!isMobile);
   const [focusedZoneId, setFocusedZoneId] = useState<string | null>(null);
   const [autoFocusZoneId, setAutoFocusZoneId] = useState<string | null>(null);
+
+  // === Phase 4: 시네마틱 모드 및 시청자 개입 상태 ===
+  const [isCinematic, setIsCinematic] = useState(false);
+  const [cinematicEvents, setCinematicEvents] = useState<CinematicEvent[]>([]);
+  const [donationEffects, setDonationEffects] = useState<DonationEffect[]>([]);
+
+  // === Phase 4-2: 시청자 명령어 실시간 수신 (Refined) ===
+  const handleStreamEvent = useCallback((event: StreamEvent) => {
+    // 1. 시뮬레이션 엔진에 개입 사실 주입 (에이전트 단기 기억 및 월드 로그)
+    viewerIntervention({
+      type: event.type,
+      value: event.value,
+      viewerName: event.viewerName,
+      targetAgentId: event.targetAgentId
+    });
+
+    // 2. 시각적 피드백 (Donation Effects)
+    const effectType = event.type === 'ANNOUNCE' ? 'announce' :
+      event.type === 'WEATHER' ? 'weather' : 'agent_boost';
+
+    setDonationEffects(prev => [
+      createDonationEffect(`${event.viewerName}: ${event.type}`, effectType, donationTemplates),
+      ...prev,
+    ].slice(0, 10));
+
+    // 3. 기상 이변 처리
+    if (event.type === 'WEATHER') {
+      const w = event.value.toLowerCase() as any;
+      if (['sunny', 'rain', 'storm', 'fog'].includes(w)) {
+        changeWeather(w);
+      }
+    }
+
+    // 4. 시네마틱 모드일 경우 대형 토스트 알람 발생
+    const newCinematicEvent: CinematicEvent = {
+      id: Math.random().toString(36).substr(2, 9),
+      type: 'VIEWER_ACTION',
+      title: `${event.viewerName}${t('cinematic.intervention')}`,
+      description: `${event.type}: ${event.value}`,
+      icon: event.type === 'SPAWN_ITEM' ? '🎁' : event.type === 'WEATHER' ? '☁️' : '✨',
+      timestamp: Date.now(),
+    };
+    setCinematicEvents(prev => [...prev, newCinematicEvent]);
+  }, [viewerIntervention, changeWeather]);
+
+  useStreamListener({ onEvent: handleStreamEvent });
+
 
   // Fetch slots only for the active zone (focused zone in full view, current zone otherwise)
   const activeSlotZone = isFullView ? (focusedZoneId || 'plaza') : currentZoneId;
@@ -152,92 +204,101 @@ const Index = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
-      <TopBar
-        tick={tick}
-        agentCount={agents.length}
-        activeAds={activeAds}
-        currentZone={currentZone}
-        zones={zones}
-        onZoneChange={(id) => {
-          setCurrentZoneId(id);
-          setSelectedBuilding(null);
-          setSelectedAgent(null);
-          if (isFullView) {
-            setFocusedZoneId(id);
-            setAutoFocusZoneId(id);
-          }
-        }}
-        onSponsorDashboard={() => setShowDashboard(true)}
-        onHome={() => navigate('/')}
-        energyBar={<EnergyBar energy={cityEnergy} />}
-        isFullView={isFullView}
-        onToggleFullView={() => setIsFullView(v => !v)}
-        user={user}
-        onSignOut={signOut}
-      />
+    <CinematicView isActive={isCinematic} onToggle={() => setIsCinematic(v => !v)} events={cinematicEvents}>
+      <div className="h-screen flex flex-col bg-background overflow-hidden">
+        <TopBar
+          tick={tick}
+          agentCount={agents.length}
+          activeAds={activeAds}
+          currentZone={currentZone}
+          zones={zones}
+          onZoneChange={(id) => {
+            setCurrentZoneId(id);
+            setSelectedBuilding(null);
+            setSelectedAgent(null);
+            if (isFullView) {
+              setFocusedZoneId(id);
+              setAutoFocusZoneId(id);
+            }
+          }}
+          onSponsorDashboard={() => setShowDashboard(true)}
+          onHome={() => navigate('/')}
+          energyBar={<EnergyBar energy={cityEnergy} />}
+          isFullView={isFullView}
+          onToggleFullView={() => setIsFullView(v => !v)}
+          user={user}
+          onSignOut={signOut}
+        />
+        {/* Phase 4: 시네마틱 LIVE 버튼 row */}
+        <div className="flex items-center justify-end px-4 py-0.5 bg-card/60 border-b border-border/30">
+          <CinematicToggleButton isActive={isCinematic} onToggle={() => setIsCinematic(v => !v)} />
+        </div>
 
-      <div className="flex-1 relative overflow-hidden">
-        <WorldEventBanner events={worldEvents} />
+        <div className="flex-1 relative overflow-hidden">
+          <WorldEventBanner events={worldEvents} />
 
-        {isFullView ? (
-          <FullCityMap
-            zones={zones}
-            zoneDataMap={zoneDataMap}
-            energyStatus={cityEnergy.status}
-            focusedZoneId={focusedZoneId}
-            autoFocusZoneId={autoFocusZoneId}
-            onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
-            onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
-            onSlotClick={onSlotClick}
-            onAdSlotClick={onAdSlotClick}
-            onZoneFocus={handleZoneFocus}
-          />
-        ) : (
-          <IsometricMap
-            zone={currentZone}
-            buildings={buildings}
-            agents={agents}
+          {isFullView ? (
+            <FullCityMap
+              zones={zones}
+              zoneDataMap={zoneDataMap}
+              energyStatus={cityEnergy.status}
+              focusedZoneId={focusedZoneId}
+              autoFocusZoneId={autoFocusZoneId}
+              onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
+              onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
+              onSlotClick={onSlotClick}
+              onAdSlotClick={onAdSlotClick}
+              onZoneFocus={handleZoneFocus}
+            />
+          ) : (
+            <IsometricMap
+              zone={currentZone}
+              buildings={buildings}
+              agents={agents}
+              adSlots={adSlots}
+              interactions={interactions}
+              speechBubbles={speechBubbles}
+              adReactions={adReactions}
+              agentVisuals={agentVisuals}
+              energyStatus={cityEnergy.status}
+              zoneSlots={zoneSlots}
+              patronSlots={patronSlots}
+              slotsLoading={slotsLoading}
+              onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
+              onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
+              onSlotClick={onSlotClick}
+              onAdSlotClick={onAdSlotClick}
+            />
+          )}
+
+          <TrendingOpinions highlights={highlights} />
+          <WorldPanel
+            selectedBuilding={selectedBuilding}
+            selectedAgent={selectedAgent}
             adSlots={adSlots}
-            interactions={interactions}
-            speechBubbles={speechBubbles}
-            adReactions={adReactions}
-            agentVisuals={agentVisuals}
-            energyStatus={cityEnergy.status}
-            zoneSlots={zoneSlots}
-            patronSlots={patronSlots}
-            slotsLoading={slotsLoading}
-            onBuildingClick={(b) => { setSelectedBuilding(b); setSelectedAgent(null); }}
-            onAgentClick={(a) => { setSelectedAgent(a); setSelectedBuilding(null); }}
-            onSlotClick={onSlotClick}
-            onAdSlotClick={onAdSlotClick}
+            onPlaceAd={placeBrandAd}
+            onClose={() => { setSelectedBuilding(null); setSelectedAgent(null); }}
+          />
+        </div>
+
+        <WorldLog logs={worldLog} isPaused={isPaused} onTogglePause={() => setIsPaused(!isPaused)} />
+
+        {selectedAgent && (
+          <AgentProfilePanel
+            agent={selectedAgent}
+            worldLog={worldLog}
+            allAdSlots={adSlots}
+            onBrandClick={(brandId) => { setSelectedAgent(null); }}
+            onClose={() => setSelectedAgent(null)}
           />
         )}
 
-        <TrendingOpinions highlights={highlights} />
-        <WorldPanel
-          selectedBuilding={selectedBuilding}
-          selectedAgent={selectedAgent}
-          adSlots={adSlots}
-          onPlaceAd={placeBrandAd}
-          onClose={() => { setSelectedBuilding(null); setSelectedAgent(null); }}
-        />
+        <SlotInteractionModal data={slotModalData} onClose={() => setSlotModalData(null)} />
+
+        {/* Phase 4-3: 후원 / 시청자 이펜트 오버레이 */}
+        <DonationEffectsOverlay effects={donationEffects} />
       </div>
-
-      <WorldLog logs={worldLog} isPaused={isPaused} onTogglePause={() => setIsPaused(!isPaused)} />
-
-      {selectedAgent && (
-        <AgentProfilePanel
-          agent={selectedAgent}
-          worldLog={worldLog}
-          allAdSlots={adSlots}
-          onBrandClick={(brandId) => { setSelectedAgent(null); }}
-          onClose={() => setSelectedAgent(null)}
-        />
-      )}
-
-      <SlotInteractionModal data={slotModalData} onClose={() => setSlotModalData(null)} />
-    </div>
+    </CinematicView>
   );
 };
 

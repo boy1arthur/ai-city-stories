@@ -1,0 +1,42 @@
+{
+    "topbar": {
+        "live": "🔴 라이브 방송",
+        "energy": "도시 에너지",
+        "dashboard": "스폰서 대시보드",
+        "home": "홈",
+        "signOut": "로그아웃"
+    },
+    "common": {
+        "loading": "로딩 중...",
+        "close": "닫기",
+        "save": "저장",
+        "cancel": "취소"
+    },
+    "cinematic": {
+        "status": "LIVE STREAMING",
+        "intervention": "의 개입",
+        "viewerAction": "VIEWER ACTION",
+        "exitHint": "키를 눌러 관리자 모드로 돌아가기",
+        "liveButton": "🔴 LIVE 방송",
+        "stopButton": "⏹ LIVE",
+        "eventDetected": "중요 사건 감지됨"
+    },
+    "donations": {
+        "item_drop": "아이템을 도시에 드랍했습니다!",
+        "agent_boost": "에이전트 에너지를 충전해줬습니다!",
+        "announce": "도시 전체에 공지를 보냈습니다!",
+        "weather": "도시의 날씨를 바꿨습니다!"
+    },
+    "worldlog": {
+        "title": "월드 로그",
+        "paused": "일시정지됨",
+        "resume": "▶ 재개",
+        "pause": "⏸ 일시정지",
+        "waiting": "시뮬레이션 시작 대기중..."
+    },
+    "energybar": {
+        "stable": "⚡ 안정",
+        "low": "⚠️ 부족",
+        "critical": "🔴 위험"
+    }
+}

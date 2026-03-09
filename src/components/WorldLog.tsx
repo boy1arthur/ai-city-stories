@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   logs: string[];
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export const WorldLog: React.FC<Props> = ({ logs, isPaused, onTogglePause }) => {
+  const { t } = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -20,22 +22,21 @@ export const WorldLog: React.FC<Props> = ({ logs, isPaused, onTogglePause }) => 
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <div className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
-          <h3 className="text-[11px] font-bold text-foreground/80 uppercase tracking-widest">World Log</h3>
+          <h3 className="text-[11px] font-bold text-foreground/80 uppercase tracking-widest">{t('worldlog.title')}</h3>
         </div>
         <button
           onClick={onTogglePause}
-          className={`text-[11px] px-2.5 py-1 rounded-md border transition-all font-medium ${
-            isPaused
+          className={`text-[11px] px-2.5 py-1 rounded-md border transition-all font-medium ${isPaused
               ? 'border-secondary/30 text-secondary bg-secondary/8 hover:bg-secondary/12'
               : 'border-border/50 text-muted-foreground hover:border-primary/25 hover:text-foreground'
-          }`}
+            }`}
         >
-          {isPaused ? '▶ Resume' : '⏸ Pause'}
+          {isPaused ? t('worldlog.resume') : t('worldlog.pause')}
         </button>
       </div>
       <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-px scrollbar-thin">
         {logs.length === 0 && (
-          <p className="text-xs text-muted-foreground/50 italic">시뮬레이션 시작 대기중...</p>
+          <p className="text-xs text-muted-foreground/50 italic">{t('worldlog.waiting')}</p>
         )}
         {logs.map((log, i) => (
           <div

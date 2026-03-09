@@ -18,14 +18,14 @@ interface Props {
 
 // Personality → color palette for variety
 const AGENT_PALETTES: Record<string, { body: string; shirt: string; hair: string; pants: string }> = {
-  'agent_nova':   { body: 'hsl(30,60%,72%)',  shirt: 'hsl(200,65%,50%)', hair: 'hsl(30,40%,25%)',  pants: 'hsl(220,30%,35%)' },
-  'agent_echo':   { body: 'hsl(25,50%,68%)',  shirt: 'hsl(280,50%,55%)', hair: 'hsl(0,60%,35%)',   pants: 'hsl(220,25%,30%)' },
-  'agent_cipher': { body: 'hsl(35,45%,70%)',  shirt: 'hsl(160,40%,40%)', hair: 'hsl(220,15%,20%)', pants: 'hsl(200,20%,32%)' },
-  'agent_sage':   { body: 'hsl(20,55%,65%)',  shirt: 'hsl(35,60%,55%)',  hair: 'hsl(30,30%,45%)',  pants: 'hsl(25,25%,35%)' },
-  'agent_blaze':  { body: 'hsl(28,58%,70%)',  shirt: 'hsl(10,70%,50%)',  hair: 'hsl(40,80%,40%)',  pants: 'hsl(0,40%,30%)' },
-  'agent_frost':  { body: 'hsl(210,20%,75%)', shirt: 'hsl(210,40%,60%)', hair: 'hsl(210,30%,70%)', pants: 'hsl(215,25%,35%)' },
-  'agent_luna':   { body: 'hsl(330,30%,72%)', shirt: 'hsl(270,45%,60%)', hair: 'hsl(280,20%,20%)', pants: 'hsl(260,30%,30%)' },
-  'agent_bolt':   { body: 'hsl(32,55%,68%)',  shirt: 'hsl(50,70%,50%)',  hair: 'hsl(45,60%,30%)',  pants: 'hsl(220,35%,32%)' },
+  'agent_nova': { body: 'hsl(30,60%,72%)', shirt: 'hsl(200,65%,50%)', hair: 'hsl(30,40%,25%)', pants: 'hsl(220,30%,35%)' },
+  'agent_echo': { body: 'hsl(25,50%,68%)', shirt: 'hsl(280,50%,55%)', hair: 'hsl(0,60%,35%)', pants: 'hsl(220,25%,30%)' },
+  'agent_cipher': { body: 'hsl(35,45%,70%)', shirt: 'hsl(160,40%,40%)', hair: 'hsl(220,15%,20%)', pants: 'hsl(200,20%,32%)' },
+  'agent_sage': { body: 'hsl(20,55%,65%)', shirt: 'hsl(35,60%,55%)', hair: 'hsl(30,30%,45%)', pants: 'hsl(25,25%,35%)' },
+  'agent_blaze': { body: 'hsl(28,58%,70%)', shirt: 'hsl(10,70%,50%)', hair: 'hsl(40,80%,40%)', pants: 'hsl(0,40%,30%)' },
+  'agent_frost': { body: 'hsl(210,20%,75%)', shirt: 'hsl(210,40%,60%)', hair: 'hsl(210,30%,70%)', pants: 'hsl(215,25%,35%)' },
+  'agent_luna': { body: 'hsl(330,30%,72%)', shirt: 'hsl(270,45%,60%)', hair: 'hsl(280,20%,20%)', pants: 'hsl(260,30%,30%)' },
+  'agent_bolt': { body: 'hsl(32,55%,68%)', shirt: 'hsl(50,70%,50%)', hair: 'hsl(45,60%,30%)', pants: 'hsl(220,35%,32%)' },
 };
 
 const DEFAULT_PALETTE = { body: 'hsl(30,50%,70%)', shirt: 'hsl(210,40%,50%)', hair: 'hsl(30,30%,25%)', pants: 'hsl(220,25%,35%)' };
@@ -85,8 +85,8 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
       const rawT = Math.min(1, elapsed / duration);
       // Gentle ease: slow start, constant middle, slow end
       const t = rawT < 0.15 ? (rawT / 0.15) * (rawT / 0.15) * 0.15
-              : rawT > 0.85 ? 0.85 + (1 - Math.pow(1 - (rawT - 0.85) / 0.15, 2)) * 0.15
-              : 0.15 + (rawT - 0.15) * (0.7 / 0.7);
+        : rawT > 0.85 ? 0.85 + (1 - Math.pow(1 - (rawT - 0.85) / 0.15, 2)) * 0.15
+          : 0.15 + (rawT - 0.15) * (0.7 / 0.7);
       const pos = interpolatePath(visualState.path, t);
       setAnimPos(iso(pos.x, pos.y));
       if (rawT < 1) raf = requestAnimationFrame(animate);
@@ -263,8 +263,8 @@ export const AgentRenderer: React.FC<Props> = React.memo(({
         const bgColor = bubble.type === 'dialogue' ? 'hsl(0,0%,98%)' : bubble.type === 'thought' ? 'hsl(220,20%,92%)' : 'hsl(220,15%,88%)';
         const textColor = 'hsl(220,18%,15%)';
         const borderColor = bubble.type === 'dialogue' ? 'hsl(38,60%,55%)' : bubble.type === 'thought' ? 'hsl(210,30%,70%)' : 'hsl(220,10%,70%)';
-        const maxLen = 14;
-        const displayText = bubble.text.length > maxLen ? bubble.text.slice(0, maxLen) + '…' : bubble.text;
+        const maxLen = 50;
+        const displayText = bubble.text.length > maxLen ? bubble.text.slice(0, maxLen) + '...' : bubble.text;
         const boxW = Math.max(32, displayText.length * 4.5 + 12);
         return (
           <g key={bubble.id} opacity={opacity}>

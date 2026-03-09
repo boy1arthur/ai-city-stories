@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CityEnergyState } from '@/lib/cityEnergy';
 
 interface Props {
@@ -6,20 +7,21 @@ interface Props {
 }
 
 export const EnergyBar: React.FC<Props> = ({ energy }) => {
+  const { t } = useTranslation();
   const color =
     energy.status === 'stable' ? 'hsl(160, 45%, 45%)' :
-    energy.status === 'low' ? 'hsl(35, 75%, 50%)' :
-    'hsl(0, 65%, 50%)';
+      energy.status === 'low' ? 'hsl(35, 75%, 50%)' :
+        'hsl(0, 65%, 50%)';
 
   const bgGlow =
     energy.status === 'stable' ? 'hsl(160, 45%, 45%)' :
-    energy.status === 'low' ? 'hsl(35, 75%, 50%)' :
-    'hsl(0, 65%, 50%)';
+      energy.status === 'low' ? 'hsl(35, 75%, 50%)' :
+        'hsl(0, 65%, 50%)';
 
   const label =
-    energy.status === 'stable' ? '⚡ Stable' :
-    energy.status === 'low' ? '⚠️ Low' :
-    '🔴 Critical';
+    energy.status === 'stable' ? t('energybar.stable') :
+      energy.status === 'low' ? t('energybar.low') :
+        t('energybar.critical');
 
   return (
     <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-muted/30">
