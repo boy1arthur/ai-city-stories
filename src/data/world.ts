@@ -19,6 +19,10 @@ export interface Zone {
   locked: boolean;
 }
 
+export type BrandCategory = 'tech' | 'fashion' | 'food' | 'entertainment' | 'finance' | 'education' | 'health';
+export type AgentMood = 'happy' | 'curious' | 'critical' | 'neutral' | 'excited';
+export type AgentPersonality = string;
+
 // ===== TILE TYPES =====
 export type TileType = 'grass' | 'road' | 'sidewalk' | 'plaza_stone' | 'dirt' | 'water' | 'park' | 'parking' | 'field';
 
@@ -814,10 +818,8 @@ export function getZoneById(zoneId: string): Zone | undefined {
 }
 
 // ===== AGENTS =====
-export type AgentMood = 'happy' | 'curious' | 'critical' | 'neutral' | 'excited';
-
 export interface BrandAffinity {
-  category: string;
+  category: BrandCategory;
   score: number;
 }
 
@@ -825,8 +827,8 @@ export interface Agent {
   id: string;
   name: string;
   avatar: string;
-  personality: string;
-  favoriteCategories: string[];
+  personality: AgentPersonality;
+  favoriteCategories: BrandCategory[];
   currentZoneId: string;
   currentBuildingId: string;
   mood: AgentMood;
@@ -853,6 +855,7 @@ export interface AdSlot {
   buildingId: string;
   type: AdSlotType;
   brand: string | null;
+  brandCategory?: BrandCategory;
   impressions: number;
   esv: number;
   capacity: number;

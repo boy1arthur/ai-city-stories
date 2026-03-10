@@ -1,11 +1,11 @@
 import React, { useEffect, useCallback, useMemo, useReducer, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { ZONES, generateBrandDialogue, getZoneById, type Agent, type AdSlot } from '@/data/world';
+import { ZONES, generateBrandDialogue, getZoneById, type Agent, type AdSlot, type BrandCategory } from '@/data/world';
 import { aggregateBrandStats, type BrandStats, type SlotStats } from '@/lib/esv';
 import { calcLeagueScores, isSeasonActive, type BrandLeagueScore } from '@/lib/brandLeague';
 import { DEMO_SEASON } from '@/data/leagueSeason';
 import { pickRandom } from '@/lib/utils';
-import { selectDialogue, type DialogueMatchContext } from '@/data/dialogueTemplates';
+import { selectDialogue, type DialogueMatchContext, type NearbyBrand } from '@/data/dialogueTemplates';
 import type { Highlight } from '@/components/sponsor/TodayHighlights';
 import type { WorldEvent } from '@/components/WorldEventBanner';
 
@@ -86,14 +86,20 @@ export function useWorldSimulation() {
 
     const zone = getZoneById(zoneId);
     const building = zone?.buildings.find(b => b.id === buildingId);
-    const nearbyBrands = state.adSlots
+    const nearbyBrands: NearbyBrand[] = state.adSlots
       .filter(s => s.zoneId === zoneId && s.buildingId === buildingId && s.brand)
-      .map(s => s.brand!)
-      .filter((v, i, arr) => arr.indexOf(v) === i);
+      .map(s => ({
+        name: s.brand!,
+        category: s.brandCategory || 'tech' // Fallback to tech if unknown
+      }))
+      // Unique by name
+      .filter((v, i, arr) => arr.findIndex(b => b.name === v.name) === i);
 
     const avgAffinity = a1.brandAffinities.reduce((s: number, ba: any) => s + ba.score, 0) / Math.max(a1.brandAffinities.length, 1);
 
     const matchCtx: DialogueMatchContext = {
+      agent1Name: a1.name,
+      agent2Name: a2.name,
       agent1Personality: a1.personality,
       agent2Personality: a2.personality,
       agent1Mood: a1.mood,
@@ -131,9 +137,29 @@ export function useWorldSimulation() {
       // 2. Fetch SSE from Supabase Edge Function
       const invokeLLM = async () => {
         try {
+          // Switch between Supabase Edge Function or Local LLM (Ollama/Tunnels)
+          const localLLMUrl = import.meta.env.VITE_LLM_API_URL;
+          const EdgeURL = localLLMUrl
+            ? `${localLLMUrl}/v1/chat/completions`
+            : import.meta.env.VITE_SUPABASE_URL + '/functions/v1/llm-dialogue';
+
+          console.log(`[LLM] Calling endpoint: ${EdgeURL}`);
+
           const { data: { session } } = await supabase.auth.getSession();
-          // Directly using fetch to parse SSE. We use the supabase url from client.
-          const EdgeURL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1/llm-dialogue';
+          const systemPrompt = `당신은 'AI Social World' 시뮬레이션의 에이전트들을 조종하는 마스터 디렉터입니다.
+현재 상황: 구역 "${matchCtx.zoneName}", 건물 "${matchCtx.buildingName}".
+에이전트 1: ${matchCtx.agent1Name} (성격: ${matchCtx.agent1Personality}, 기분: ${matchCtx.agent1Mood})
+에이전트 2: ${matchCtx.agent2Name} (성격: ${matchCtx.agent2Personality}, 기분: ${matchCtx.agent2Mood})
+주변 브랜드: ${matchCtx.nearbyBrands.join(', ')}.
+
+대화 지침:
+1. 두 에이전트 사이의 자연스럽고 창발적인 대화를 생성하세요.
+2. 짧은 대화(최대 2-3회 왕복)로 구성하세요.
+3. **중요**: 한국의 인터넷 커뮤니티 감성(K-meme, 초성체 'ㅋㅋ', 'ㅠㅠ' 등)을 적절히 사용하여 생동감을 불어넣으세요.
+4. 각자의 성격과 기분에 맞춰 말투를 차별화하세요 (예: 냉철하면 차갑게, 열정적이면 하이텐션으로).
+5. 주변 브랜드가 있다면 자연스럽게 언급하거나 브랜드를 주제로 불평/칭찬하게 하세요.
+6. 형식: 에이전트이름: 할말\\n에이전트이름: 할말\\n... 
+7. 답변은 반드시 한국어로만 작성하세요.`;
 
           const response = await fetch(EdgeURL, {
             method: 'POST',
@@ -141,10 +167,22 @@ export function useWorldSimulation() {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
             },
-            body: JSON.stringify({ messageContext: matchCtx })
+            body: JSON.stringify(localLLMUrl ? {
+              model: "llama3", // Ollama default
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: "Start the conversation." }
+              ],
+              stream: true
+            } : { messageContext: matchCtx })
           });
 
-          if (!response.ok || !response.body) throw new Error('Edge function fetch failed');
+          if (!response.ok || !response.body) {
+            dispatch({ type: 'SET_LLM_STATUS', payload: 'error' });
+            throw new Error('Edge function fetch failed');
+          }
+
+          dispatch({ type: 'SET_LLM_STATUS', payload: 'ready' });
 
           const reader = response.body.getReader();
           const decoder = new TextDecoder('utf-8');
@@ -188,8 +226,9 @@ export function useWorldSimulation() {
           }
         } catch (error) {
           console.error("LLM Stream Error:", error);
+          dispatch({ type: 'SET_LLM_STATUS', payload: 'offline' });
           // Fallback to update bubble with error
-          dispatch({ type: 'UPDATE_SPEECH_BUBBLE', payload: { id: b1Id, textChunk: '...대화 연결 지연 중...' } });
+          dispatch({ type: 'UPDATE_SPEECH_BUBBLE', payload: { id: b1Id, textChunk: '...대화 연결 지연 중 (로컬 서버 확인 필요)...' } });
         }
       };
 
@@ -256,8 +295,8 @@ export function useWorldSimulation() {
     };
   }, [state.isPaused]);
 
-  const placeBrandAd = useCallback((slotId: string, brandName: string) => {
-    dispatch({ type: 'PLACE_AD', payload: { slotId, brandName } });
+  const placeBrandAd = useCallback((slotId: string, brandName: string, brandCategory: BrandCategory) => {
+    dispatch({ type: 'PLACE_AD', payload: { slotId, brandName, brandCategory } });
   }, [dispatch]);
 
   const zoneAgents = state.agents;
@@ -396,6 +435,7 @@ export function useWorldSimulation() {
     speechBubbles: zoneBubbles,
     adReactions: zoneReactions,
     agentVisuals: state.agentVisuals,
+    llmStatus: state.llmStatus,
     brandStats,
     highlights,
     cityEnergy: state.cityEnergy,

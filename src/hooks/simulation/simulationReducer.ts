@@ -23,6 +23,7 @@ export const INITIAL_SIMULATION_STATE: SimulationState = {
     cityEnergy: initCityEnergy(),
     worldEvents: [],
     aiConversationLog: [],
+    llmStatus: 'ready',
 };
 
 // Helper to push items to arrays within the reducer
@@ -60,12 +61,14 @@ export function simulationReducer(state: SimulationState, action: SimulationActi
         }
 
         case 'PLACE_AD': {
-            const { slotId, brandName } = action.payload;
-            const nextAdSlots = state.allAdSlots.map(s => s.id === slotId ? { ...s, brand: brandName } : s);
+            const { slotId, brandName, brandCategory } = action.payload;
+            const nextAllAdSlots = state.allAdSlots.map(s =>
+                s.id === slotId ? { ...s, brand: brandName, brandCategory } : s
+            );
             return {
                 ...state,
-                allAdSlots: nextAdSlots,
-                adSlots: nextAdSlots.filter(s => s.zoneId === state.currentZoneId),
+                allAdSlots: nextAllAdSlots,
+                adSlots: nextAllAdSlots.filter(s => s.zoneId === state.currentZoneId),
                 worldLog: pushToLog(state.worldLog, `📢 "${brandName}" 광고가 설치되었습니다`),
             };
         }
@@ -237,6 +240,9 @@ export function simulationReducer(state: SimulationState, action: SimulationActi
                 agentVisuals: nextAgentVisuals,
             };
         }
+
+        case 'SET_LLM_STATUS':
+            return { ...state, llmStatus: action.payload };
 
         default:
             return state;

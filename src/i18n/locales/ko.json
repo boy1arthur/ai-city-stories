@@ -32,7 +32,9 @@
         "paused": "일시정지됨",
         "resume": "▶ 재개",
         "pause": "⏸ 일시정지",
-        "waiting": "시뮬레이션 시작 대기중..."
+        "waiting": "시뮬레이션 시작 대기중...",
+        "llm_error": "AI가 잠시 생각에 빠졌습니다 (오류)",
+        "llm_offline": "도시가 잠시 휴식 중입니다 (서버 점검)"
     },
     "energybar": {
         "stable": "⚡ 안정",

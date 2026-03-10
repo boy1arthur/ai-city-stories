@@ -1,10 +1,11 @@
-// ===== AD CAMPAIGN SYSTEM =====
+import type { BrandCategory } from '@/data/world';
 
 export type AdCampaignStatus = 'scheduled' | 'running' | 'ended';
 
 export interface AdCampaign {
   id: string;
   brandId: string;
+  brandCategory: BrandCategory;
   zoneId: string;
   slotIds: string[];
   startTick: number;

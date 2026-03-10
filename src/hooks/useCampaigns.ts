@@ -5,11 +5,11 @@ let campaignIdCounter = 0;
 
 // Demo seed campaigns
 const DEMO_CAMPAIGNS: AdCampaign[] = [
-  { id: 'camp_demo_1', brandId: 'NovaTech', zoneId: 'plaza', slotIds: ['plaza_arena_naming_rights_0', 'plaza_arena_billboard_0'], startTick: 0, endTick: 500, status: 'running' },
-  { id: 'camp_demo_2', brandId: 'BrewBean', zoneId: 'plaza', slotIds: ['plaza_tavern_billboard_0', 'plaza_garden_kiosk_0'], startTick: 0, endTick: 400, status: 'running' },
-  { id: 'camp_demo_3', brandId: 'Lumière', zoneId: 'plaza', slotIds: ['plaza_plaza_wall_wrap_0', 'plaza_plaza_bus_stop_0'], startTick: 0, endTick: 450, status: 'running' },
-  { id: 'camp_demo_4', brandId: 'EduSpark', zoneId: 'plaza', slotIds: ['plaza_library_billboard_0', 'plaza_library_bus_stop_0'], startTick: 0, endTick: 350, status: 'running' },
-  { id: 'camp_demo_5', brandId: 'FinFlow', zoneId: 'plaza', slotIds: ['plaza_oracle_kiosk_0', 'plaza_oracle_wall_wrap_0'], startTick: 0, endTick: 300, status: 'running' },
+  { id: 'camp_demo_1', brandId: 'NovaTech', brandCategory: 'tech', zoneId: 'plaza', slotIds: ['plaza_arena_naming_rights_0', 'plaza_arena_billboard_0'], startTick: 0, endTick: 500, status: 'running' },
+  { id: 'camp_demo_2', brandId: 'BrewBean', brandCategory: 'food', zoneId: 'plaza', slotIds: ['plaza_tavern_billboard_0', 'plaza_garden_kiosk_0'], startTick: 0, endTick: 400, status: 'running' },
+  { id: 'camp_demo_3', brandId: 'Lumière', brandCategory: 'fashion', zoneId: 'plaza', slotIds: ['plaza_plaza_wall_wrap_0', 'plaza_plaza_bus_stop_0'], startTick: 0, endTick: 450, status: 'running' },
+  { id: 'camp_demo_4', brandId: 'EduSpark', brandCategory: 'education', zoneId: 'plaza', slotIds: ['plaza_library_billboard_0', 'plaza_library_bus_stop_0'], startTick: 0, endTick: 350, status: 'running' },
+  { id: 'camp_demo_5', brandId: 'FinFlow', brandCategory: 'finance', zoneId: 'plaza', slotIds: ['plaza_oracle_kiosk_0', 'plaza_oracle_wall_wrap_0'], startTick: 0, endTick: 300, status: 'running' },
 ];
 
 export function useCampaigns() {
@@ -17,6 +17,7 @@ export function useCampaigns() {
 
   const createCampaign = useCallback((input: {
     brandId: string;
+    brandCategory: import('@/data/world').BrandCategory;
     zoneId: string;
     slotIds: string[];
     durationTicks: number;
@@ -26,6 +27,7 @@ export function useCampaigns() {
     const newCampaign: AdCampaign = {
       id,
       brandId: input.brandId,
+      brandCategory: input.brandCategory,
       zoneId: input.zoneId,
       slotIds: input.slotIds,
       startTick: input.startTick,

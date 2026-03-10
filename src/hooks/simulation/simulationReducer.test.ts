@@ -39,9 +39,9 @@ describe('simulationReducer with Fake Timers', () => {
     it('should place an ad correctly', () => {
         const action = { type: 'PLACE_AD' as const, payload: { slotId: 'test-slot-1', brandName: 'TestBrand' } };
 
-        const testState = {
+        const testState: SimulationState = {
             ...INITIAL_SIMULATION_STATE,
-            allAdSlots: [{ id: 'test-slot-1', zoneId: 'plaza', brand: null, esv: 10, impressions: 0, buildingId: 'b1' }],
+            allAdSlots: [{ id: 'test-slot-1', zoneId: 'plaza', buildingId: 'b1', type: 'billboard', brand: null, impressions: 0, esv: 10, capacity: 1, priority: 'standard' }],
             currentZoneId: 'plaza',
         };
 

@@ -1,11 +1,11 @@
 // ===== DEMO SEED DATA =====
 // Pre-configured brands and ad placements for demo/showcase mode
 
-import type { AdSlot } from '@/data/world';
+import type { AdSlot, BrandCategory } from '@/data/world';
 
 export interface VirtualBrand {
   name: string;
-  category: string;
+  category: BrandCategory;
   color: string;
   tagline: string;
 }
@@ -21,20 +21,20 @@ export const VIRTUAL_BRANDS: VirtualBrand[] = [
 /** Apply demo ad placements to a set of ad slots */
 export function applyDemoSeed(slots: AdSlot[]): AdSlot[] {
   // Map of slotId patterns to brand assignments
-  const assignments: Array<{ buildingId: string; type: string; brand: string; impressions: number }> = [
+  const assignments: Array<{ buildingId: string; type: string; brand: string; brandCategory: BrandCategory; impressions: number }> = [
     // NovaTech — Arena는 BRAND_BUILDING 슬롯이므로 naming_rights 제외
     // BrewBean — Tavern billboard + Garden kiosk
-    { buildingId: 'tavern', type: 'billboard', brand: 'BrewBean', impressions: 156 },
-    { buildingId: 'garden', type: 'kiosk', brand: 'BrewBean', impressions: 98 },
+    { buildingId: 'tavern', type: 'billboard', brand: 'BrewBean', brandCategory: 'food', impressions: 156 },
+    { buildingId: 'garden', type: 'kiosk', brand: 'BrewBean', brandCategory: 'food', impressions: 98 },
     // Lumière — Central Plaza wall wrap + bus stop
-    { buildingId: 'plaza', type: 'wall_wrap', brand: 'Lumière', impressions: 264 },
-    { buildingId: 'plaza', type: 'bus_stop', brand: 'Lumière', impressions: 112 },
+    { buildingId: 'plaza', type: 'wall_wrap', brand: 'Lumière', brandCategory: 'fashion', impressions: 264 },
+    { buildingId: 'plaza', type: 'bus_stop', brand: 'Lumière', brandCategory: 'fashion', impressions: 112 },
     // EduSpark — Library billboard + bus stop
-    { buildingId: 'library', type: 'billboard', brand: 'EduSpark', impressions: 203 },
-    { buildingId: 'library', type: 'bus_stop', brand: 'EduSpark', impressions: 77 },
+    { buildingId: 'library', type: 'billboard', brand: 'EduSpark', brandCategory: 'education', impressions: 203 },
+    { buildingId: 'library', type: 'bus_stop', brand: 'EduSpark', brandCategory: 'education', impressions: 77 },
     // FinFlow — Oracle kiosk + wall wrap
-    { buildingId: 'oracle', type: 'kiosk', brand: 'FinFlow', impressions: 91 },
-    { buildingId: 'oracle', type: 'wall_wrap', brand: 'FinFlow', impressions: 145 },
+    { buildingId: 'oracle', type: 'kiosk', brand: 'FinFlow', brandCategory: 'finance', impressions: 91 },
+    { buildingId: 'oracle', type: 'wall_wrap', brand: 'FinFlow', brandCategory: 'finance', impressions: 145 },
   ];
 
   return slots.map(slot => {
@@ -42,7 +42,7 @@ export function applyDemoSeed(slots: AdSlot[]): AdSlot[] {
       a => slot.buildingId === a.buildingId && slot.type === a.type && !slot.brand
     );
     if (match) {
-      return { ...slot, brand: match.brand, impressions: match.impressions };
+      return { ...slot, brand: match.brand, brandCategory: match.brandCategory, impressions: match.impressions };
     }
     return slot;
   });

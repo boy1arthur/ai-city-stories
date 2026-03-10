@@ -35,7 +35,8 @@ const Index = () => {
     speechBubbles, adReactions, agentVisuals,
     brandStats, highlights, cityEnergy,
     leagueSeason, leagueScores, worldEvents,
-    getZoneData, changeWeather, viewerIntervention
+    getZoneData, changeWeather, viewerIntervention,
+    llmStatus
   } = sim;
 
   const { campaigns, createCampaign, endCampaign, updateCampaignSlots } = useCampaigns();
@@ -147,7 +148,9 @@ const Index = () => {
         .filter(c => isCampaignActive(c, tick) && c.slotIds.includes(slot.id))
         .sort((a, b) => b.startTick - a.startTick)[0];
       if (activeCampaign) {
-        return slot.brand === activeCampaign.brandId ? slot : { ...slot, brand: activeCampaign.brandId };
+        return (slot.brand === activeCampaign.brandId && slot.brandCategory === activeCampaign.brandCategory)
+          ? slot
+          : { ...slot, brand: activeCampaign.brandId, brandCategory: activeCampaign.brandCategory };
       }
       return slot;
     }));
@@ -281,7 +284,12 @@ const Index = () => {
           />
         </div>
 
-        <WorldLog logs={worldLog} isPaused={isPaused} onTogglePause={() => setIsPaused(!isPaused)} />
+        <WorldLog
+          logs={worldLog}
+          isPaused={isPaused}
+          onTogglePause={() => setIsPaused(!isPaused)}
+          llmStatus={llmStatus}
+        />
 
         {selectedAgent && (
           <AgentProfilePanel

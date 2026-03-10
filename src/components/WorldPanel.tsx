@@ -1,17 +1,17 @@
 import React from 'react';
-import type { Building, Agent, AdSlot } from '@/data/world';
-import { AD_SLOT_LABELS } from '@/data/world';
+import { type Building, type Agent, type AdSlot, type BrandCategory, AD_SLOT_LABELS, BRAND_CATEGORIES } from '@/data/world';
 
 interface Props {
   selectedBuilding: Building | null;
   selectedAgent: Agent | null;
   adSlots: AdSlot[];
-  onPlaceAd: (slotId: string, brand: string) => void;
+  onPlaceAd: (slotId: string, brand: string, category: BrandCategory) => void;
   onClose: () => void;
 }
 
 export const WorldPanel: React.FC<Props> = ({ selectedBuilding, selectedAgent, adSlots, onPlaceAd, onClose }) => {
   const [brandInput, setBrandInput] = React.useState('');
+  const [categoryInput, setCategoryInput] = React.useState<BrandCategory>('tech');
 
   if (!selectedBuilding && !selectedAgent) return null;
 
@@ -44,25 +44,36 @@ export const WorldPanel: React.FC<Props> = ({ selectedBuilding, selectedAgent, a
           </div>
 
           <h3 className="text-xs font-semibold text-primary mb-2 uppercase tracking-wider">광고 배치</h3>
-          <div className="flex gap-2">
-            <input
-              value={brandInput}
-              onChange={e => setBrandInput(e.target.value)}
-              placeholder="브랜드명 입력"
-              className="flex-1 bg-muted border border-border rounded px-2 py-1 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
-            />
-            <button
-              onClick={() => {
-                const emptySlot = adSlots.find(s => s.buildingId === selectedBuilding.id && !s.brand);
-                if (emptySlot && brandInput) {
-                  onPlaceAd(emptySlot.id, brandInput);
-                  setBrandInput('');
-                }
-              }}
-              className="bg-primary text-primary-foreground px-3 py-1 rounded text-xs font-semibold hover:opacity-90 transition-opacity"
+          <div className="flex flex-col gap-2">
+            <select
+              value={categoryInput}
+              onChange={e => setCategoryInput(e.target.value as BrandCategory)}
+              className="bg-muted border border-border rounded px-2 py-1 text-xs text-foreground focus:outline-none focus:border-primary"
             >
-              배치
-            </button>
+              {BRAND_CATEGORIES.map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            <div className="flex gap-2">
+              <input
+                value={brandInput}
+                onChange={e => setBrandInput(e.target.value)}
+                placeholder="브랜드명 입력"
+                className="flex-1 bg-muted border border-border rounded px-2 py-1 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
+              />
+              <button
+                onClick={() => {
+                  const emptySlot = adSlots.find(s => s.buildingId === selectedBuilding.id && !s.brand);
+                  if (emptySlot && brandInput) {
+                    onPlaceAd(emptySlot.id, brandInput, categoryInput);
+                    setBrandInput('');
+                  }
+                }}
+                className="bg-primary text-primary-foreground px-3 py-1 rounded text-xs font-semibold hover:opacity-90 transition-opacity"
+              >
+                배치
+              </button>
+            </div>
           </div>
         </div>
       )}

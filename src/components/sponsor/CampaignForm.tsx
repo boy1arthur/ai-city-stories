@@ -9,6 +9,7 @@ interface Props {
   currentTick: number;
   onCreateCampaign: (input: {
     brandId: string;
+    brandCategory: import('@/data/world').BrandCategory;
     zoneId: string;
     slotIds: string[];
     durationTicks: number;
@@ -39,8 +40,12 @@ export const CampaignForm: React.FC<Props> = ({ zones, allAdSlots, currentTick, 
 
   const handleSubmit = () => {
     if (selectedSlots.length === 0) return;
+    const brand = VIRTUAL_BRANDS.find(b => b.name === brandId);
+    if (!brand) return;
+
     onCreateCampaign({
       brandId,
+      brandCategory: brand.category,
       zoneId,
       slotIds: selectedSlots,
       durationTicks: duration,
@@ -97,11 +102,10 @@ export const CampaignForm: React.FC<Props> = ({ zones, allAdSlots, currentTick, 
             const building = availableZones.find(z => z.id === zoneId)?.buildings.find(b => b.id === slot.buildingId);
             return (
               <button key={slot.id} onClick={() => toggleSlot(slot.id)}
-                className={`text-left text-[11px] px-2 py-1.5 rounded border transition-colors ${
-                  isSelected
+                className={`text-left text-[11px] px-2 py-1.5 rounded border transition-colors ${isSelected
                     ? 'border-primary bg-primary/10 text-primary'
                     : 'border-border bg-muted/30 text-muted-foreground hover:border-primary/30'
-                }`}>
+                  }`}>
                 <span className="font-semibold">{building?.emoji} {AD_SLOT_LABELS[slot.type]}</span>
                 <span className="block text-[9px] opacity-70">{building?.name} • {slot.brand ? `🟡 ${slot.brand}` : '빈 슬롯'}</span>
               </button>
