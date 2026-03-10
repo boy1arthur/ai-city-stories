@@ -6,43 +6,49 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-    // Handle CORS preflight requests
     if (req.method === 'OPTIONS') {
         return new Response('ok', { headers: corsHeaders });
     }
 
     try {
-        const { messageContext } = await req.json();
+        const { messageContext, localLLMUrl } = await req.json();
 
-        // =============== Phase 3-3: 브랜드 세이프티 및 밈(Meme) 프롬프트 시스템 ===============
-        const systemPrompt = `
-You are an NPC in 'AI Social World'. You must speak in Korean using enthusiastic, slightly exaggerated, B-tier internet meme concepts (like '충주맨' style).
-CRITICAL BRAND SAFETY RULES:
-1. DO NOT mention crime, hate speech, or adult content.
-2. If the user context is negative or inappropriate, strictly avoid mentioning the following nearby brands to protect their image: ${messageContext.nearbyBrands.join(', ')}.
-3. Maintain a fun, lighthearted, and 'unhinged but safe' persona.
-`;
+        // If localLLMUrl (ASUS Tunnel) is provided, we can act as a gateway or the frontend can call it directly.
+        // For better security/logging, the Edge Function can proxy the request to the ASUS laptop.
 
-        // In a real scenario, we send systemPrompt + messageContext to OpenAI API
-        // Example: const response = await fetch('https://api.openai.com/v1/chat/completions', { ... })
+        if (localLLMUrl) {
+            console.log(`[Proxy] Routing request to ASUS Ollama: ${localLLMUrl}`);
 
-        // Simulate LLM deciding to mention a brand safely and enthusiastically:
-        const targetBrand = messageContext.nearbyBrands[0] || '아무거나';
-        const simulatedResponse = `[System: Brand Safety Active]
-A1: 야, 거기 멈춰! 너 지금 당장 [${targetBrand}] 안 쓰고 뭐하냐? 폼 미쳤다니까!
-A2: ㄹㅇㅋㅋ 나 벌써 3개째 지름. 이거 완전 맛도리 인정?
-A1: 인정 안 하면 선 넘는 거지. 오늘 밤 스겜하고 또 지르러 가자고! 🚀✨`;
+            const response = await fetch(`${localLLMUrl}/v1/chat/completions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: 'llama3.2', // Optimized for RTX 3060
+                    messages: [
+                        { role: 'system', content: `당신은 'AI Social World'의 상징적인 드립 장인입니다. '충주맨' 스타일의 B급 감성과 과장된 인터넷 밈을 섞어 대화하세요. 근처 브랜드: ${messageContext.nearbyBrands.join(', ')}` },
+                        { role: 'user', content: `현재 장소: ${messageContext.buildingName}, 주변 브랜드들: ${messageContext.nearbyBrands.join(', ')}. 에이전트들의 성격과 상황에 맞는 찰진 대화를 생성해줘.` }
+                    ],
+                    stream: true,
+                }),
+            });
 
+            return new Response(response.body, {
+                headers: { ...corsHeaders, 'Content-Type': 'text/event-stream' },
+            });
+        }
+
+        // Fallback or Mock for local development without ASUS online
+        const simulatedResponse = `[ASUS Offline Check]
+A1: 야, 지금 ASUS 형님 노트북 꺼진 거 아냐? 대화 폼이 왜 이래?
+A2: ㄹㅇㅋㅋ RTX 3060 빌드업 중이라 그래. 잠시만 기다려봐, 킹받는 드립 곧 터진다!`;
+
+        const encoder = new TextEncoder();
         const stream = new ReadableStream({
             async start(controller) {
-                const encoder = new TextEncoder();
                 const words = simulatedResponse.split('');
-
                 for (const word of words) {
-                    const chunk = encoder.encode(`data: ${JSON.stringify({ text: word })}\n\n`);
-                    controller.enqueue(chunk);
-                    // Simulate network delay for typing effect
-                    await new Promise((resolve) => setTimeout(resolve, 30));
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: word })}\n\n`));
+                    await new Promise((r) => setTimeout(r, 20));
                 }
                 controller.enqueue(encoder.encode(`data: [DONE]\n\n`));
                 controller.close();
@@ -50,12 +56,7 @@ A1: 인정 안 하면 선 넘는 거지. 오늘 밤 스겜하고 또 지르러 �
         });
 
         return new Response(stream, {
-            headers: {
-                ...corsHeaders,
-                'Content-Type': 'text/event-stream',
-                'Cache-Control': 'no-cache',
-                'Connection': 'keep-alive',
-            },
+            headers: { ...corsHeaders, 'Content-Type': 'text/event-stream' },
         });
     } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), {

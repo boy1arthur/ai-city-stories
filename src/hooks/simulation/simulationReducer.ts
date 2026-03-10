@@ -73,6 +73,15 @@ export function simulationReducer(state: SimulationState, action: SimulationActi
             };
         }
 
+        case 'SYNC_AD_SLOTS': {
+            const nextAllAdSlots = action.payload;
+            return {
+                ...state,
+                allAdSlots: nextAllAdSlots,
+                adSlots: nextAllAdSlots.filter(s => s.zoneId === state.currentZoneId),
+            };
+        }
+
         case 'ADD_LOG':
             return { ...state, worldLog: pushToLog(state.worldLog, action.payload) };
 

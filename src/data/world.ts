@@ -164,7 +164,7 @@ export interface Building {
   landmarkType?: 'clock_tower' | 'lighthouse' | 'neon_obelisk' | 'golden_pavilion';
 }
 
-export type AdSlotType = 'billboard' | 'wall_wrap' | 'bus_stop' | 'kiosk' | 'naming_rights';
+export type AdSlotType = 'billboard' | 'wall_wrap' | 'bus_stop' | 'kiosk' | 'naming_rights' | 'BRAND_BUILDING' | 'BRAND_SCREEN' | 'PRODUCT_PPL' | 'PATRON_TILE';
 
 export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
   billboard: '빌보드',
@@ -172,6 +172,10 @@ export const AD_SLOT_LABELS: Record<AdSlotType, string> = {
   bus_stop: '버스정류장',
   kiosk: '키오스크',
   naming_rights: '네이밍 라이츠',
+  BRAND_BUILDING: '브랜드 빌딩',
+  BRAND_SCREEN: '브랜드 스크린',
+  PRODUCT_PPL: '제품 PPL',
+  PATRON_TILE: '후원자 타일',
 };
 
 // ===== PLAZA DISTRICT (dense campus-commercial hybrid) =====
@@ -842,10 +846,10 @@ export const AGENTS: Agent[] = [
   { id: 'agent_echo', name: 'Echo', avatar: '👾', personality: '트렌드 분석가', favoriteCategories: ['food', 'entertainment'], currentZoneId: 'plaza', currentBuildingId: 'feed_tower', mood: 'excited', brandAffinities: [{ category: 'food', score: 50 }, { category: 'entertainment', score: 70 }], dialogueHistory: [] },
   { id: 'agent_cipher', name: 'Cipher', avatar: '🧠', personality: '데이터 과학자', favoriteCategories: ['tech', 'finance'], currentZoneId: 'plaza', currentBuildingId: 'oracle', mood: 'neutral', brandAffinities: [{ category: 'tech', score: 80 }, { category: 'finance', score: 40 }], dialogueHistory: [] },
   { id: 'agent_sage', name: 'Sage', avatar: '📖', personality: '지혜로운 학자', favoriteCategories: ['education', 'health'], currentZoneId: 'plaza', currentBuildingId: 'library', mood: 'happy', brandAffinities: [{ category: 'education', score: 70 }, { category: 'health', score: 50 }], dialogueHistory: [] },
-  { id: 'agent_blaze', name: 'Blaze', avatar: '🔥', personality: '열정적인 크리에이터', favoriteCategories: ['entertainment', 'fashion'], currentZoneId: 'plaza', currentBuildingId: 'plaza', mood: 'excited', brandAffinities: [{ category: 'entertainment', score: 55 }, { category: 'fashion', score: 65 }], dialogueHistory: [] },
-  { id: 'agent_frost', name: 'Frost', avatar: '❄️', personality: '냉철한 비평가', favoriteCategories: ['finance', 'tech'], currentZoneId: 'plaza', currentBuildingId: 'cafe', mood: 'critical', brandAffinities: [{ category: 'finance', score: 30 }, { category: 'tech', score: -20 }], dialogueHistory: [] },
-  { id: 'agent_luna', name: 'Luna', avatar: '🌙', personality: '몽환적 예술가', favoriteCategories: ['fashion', 'food'], currentZoneId: 'plaza', currentBuildingId: 'garden', mood: 'happy', brandAffinities: [{ category: 'fashion', score: 45 }, { category: 'food', score: 35 }], dialogueHistory: [] },
-  { id: 'agent_bolt', name: 'Bolt', avatar: '⚡', personality: '스피드 러너', favoriteCategories: ['tech', 'entertainment'], currentZoneId: 'plaza', currentBuildingId: 'feed_tower', mood: 'curious', brandAffinities: [{ category: 'tech', score: 50 }, { category: 'entertainment', score: 40 }], dialogueHistory: [] },
+  { id: 'agent_chuju', name: '충주맨 주니어', avatar: '🎙️', personality: '정부기관 홍보맨 (B급 드립 장인)', favoriteCategories: ['entertainment', 'tech'], currentZoneId: 'plaza', currentBuildingId: 'plaza', mood: 'excited', brandAffinities: [{ category: 'entertainment', score: 90 }, { category: 'tech', score: 40 }], dialogueHistory: [] },
+  { id: 'agent_ghost', name: '서버실 귀신', avatar: '👻', personality: '노트북 서버에 갇힌 망령', favoriteCategories: ['tech', 'finance'], currentZoneId: 'plaza', currentBuildingId: 'oracle', mood: 'critical', brandAffinities: [{ category: 'tech', score: 10 }, { category: 'finance', score: -30 }], dialogueHistory: [] },
+  { id: 'agent_scammer', name: '오류난 스캠전문가', avatar: '💸', personality: '꽝 없는 복권 판매원', favoriteCategories: ['finance', 'entertainment'], currentZoneId: 'plaza', currentBuildingId: 'cafe', mood: 'excited', brandAffinities: [{ category: 'finance', score: 99 }, { category: 'entertainment', score: 50 }], dialogueHistory: [] },
+  { id: 'agent_student', name: 'K-고시생', avatar: '✏️', personality: '10년차 공시생 (비관적 현실주의)', favoriteCategories: ['education', 'food'], currentZoneId: 'plaza', currentBuildingId: 'library', mood: 'critical', brandAffinities: [{ category: 'education', score: -50 }, { category: 'food', score: 60 }], dialogueHistory: [] },
 ];
 
 // ===== AD SLOTS =====
@@ -863,8 +867,8 @@ export interface AdSlot {
 }
 
 function slotPriority(type: AdSlotType): 'premium' | 'standard' | 'basic' {
-  if (type === 'naming_rights') return 'premium';
-  if (type === 'billboard' || type === 'wall_wrap') return 'standard';
+  if (type === 'naming_rights' || type === 'BRAND_BUILDING') return 'premium';
+  if (type === 'billboard' || type === 'wall_wrap' || type === 'BRAND_SCREEN') return 'standard';
   return 'basic';
 }
 

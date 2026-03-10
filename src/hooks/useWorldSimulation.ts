@@ -11,6 +11,8 @@ import type { WorldEvent } from '@/components/WorldEventBanner';
 
 import { simulationReducer, INITIAL_SIMULATION_STATE } from './simulation/simulationReducer';
 import { useAgentMemories } from './useAgentMemories';
+import { brainLlmService } from '../services/brain_llm';
+import { useSlots } from './useSlots';
 
 const TICK_MS = 2500;
 
@@ -21,6 +23,30 @@ export function useWorldSimulation() {
 
   const prevLeaderRef = useRef<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // === Phase 14: Supabase 슬롯 데이터 동기화 (Lore Sync) ===
+  const { data: dbSlots, isLoading: slotsLoading } = useSlots();
+
+  useEffect(() => {
+    if (dbSlots && dbSlots.length > 0) {
+      dispatch({
+        type: 'SYNC_AD_SLOTS',
+        payload: dbSlots.map(s => ({
+          id: s.id,
+          zoneId: s.zone,
+          buildingId: s.location?.buildingId || '',
+          type: s.type as any, // Cast to any to bypass compatibility check with SlotType
+          brand: s.ownerType === 'brand' ? (s.ownerName || null) : null,
+          brandCategory: (s.displayConfig?.category as BrandCategory) || 'tech',
+          impressions: 0,
+          esv: 100,
+          capacity: 1,
+          priority: 'standard' as const
+        }))
+      });
+      dispatch({ type: 'ADD_LOG', payload: '📟 행정 데이터(Supabase)와 세계관 동기화 완료.' });
+    }
+  }, [dbSlots]);
 
   // === Phase 7-2: 로드 시 장기 기억 주입 ===
   useEffect(() => {
@@ -134,101 +160,25 @@ export function useWorldSimulation() {
 
       dispatch({ type: 'ADD_LOG', payload: `⚡ ${a1.avatar} ${a1.name}과 ${a2.avatar} ${a2.name}가 실시간 LLM 대화를 시작합니다!` });
 
-      // 2. Fetch SSE from Supabase Edge Function
+      // 2. Fetch SSE from Brain-LLM Service
       const invokeLLM = async () => {
         try {
-          // Switch between Supabase Edge Function or Local LLM (Ollama/Tunnels)
-          const localLLMUrl = import.meta.env.VITE_LLM_API_URL;
-          const EdgeURL = localLLMUrl
-            ? `${localLLMUrl}/v1/chat/completions`
-            : import.meta.env.VITE_SUPABASE_URL + '/functions/v1/llm-dialogue';
-
-          console.log(`[LLM] Calling endpoint: ${EdgeURL}`);
-
-          const { data: { session } } = await supabase.auth.getSession();
-          const systemPrompt = `당신은 'AI Social World' 시뮬레이션의 에이전트들을 조종하는 마스터 디렉터입니다.
-현재 상황: 구역 "${matchCtx.zoneName}", 건물 "${matchCtx.buildingName}".
-에이전트 1: ${matchCtx.agent1Name} (성격: ${matchCtx.agent1Personality}, 기분: ${matchCtx.agent1Mood})
-에이전트 2: ${matchCtx.agent2Name} (성격: ${matchCtx.agent2Personality}, 기분: ${matchCtx.agent2Mood})
-주변 브랜드: ${matchCtx.nearbyBrands.join(', ')}.
-
-대화 지침:
-1. 두 에이전트 사이의 자연스럽고 창발적인 대화를 생성하세요.
-2. 짧은 대화(최대 2-3회 왕복)로 구성하세요.
-3. **중요**: 한국의 인터넷 커뮤니티 감성(K-meme, 초성체 'ㅋㅋ', 'ㅠㅠ' 등)을 적절히 사용하여 생동감을 불어넣으세요.
-4. 각자의 성격과 기분에 맞춰 말투를 차별화하세요 (예: 냉철하면 차갑게, 열정적이면 하이텐션으로).
-5. 주변 브랜드가 있다면 자연스럽게 언급하거나 브랜드를 주제로 불평/칭찬하게 하세요.
-6. 형식: 에이전트이름: 할말\\n에이전트이름: 할말\\n... 
-7. 답변은 반드시 한국어로만 작성하세요.`;
-
-          const response = await fetch(EdgeURL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          await brainLlmService.streamDialogue(matchCtx, {
+            onChunk: (text) => {
+              dispatch({
+                type: 'UPDATE_SPEECH_BUBBLE',
+                payload: { id: b1Id, textChunk: text } // align with reducer's textChunk
+              });
             },
-            body: JSON.stringify(localLLMUrl ? {
-              model: "llama3", // Ollama default
-              messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: "Start the conversation." }
-              ],
-              stream: true
-            } : { messageContext: matchCtx })
-          });
-
-          if (!response.ok || !response.body) {
-            dispatch({ type: 'SET_LLM_STATUS', payload: 'error' });
-            throw new Error('Edge function fetch failed');
-          }
-
-          dispatch({ type: 'SET_LLM_STATUS', payload: 'ready' });
-
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder('utf-8');
-
-          let isFirstLine = true;
-
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split('\n');
-
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const dataStr = line.substring(6);
-                if (dataStr === '[DONE]') break;
-
-                try {
-                  const { text } = JSON.parse(dataStr);
-
-                  // Simple heuristic to split dialogue between A1 and A2.
-                  // Real implementation would have structured chunks.
-                  if (text === '\\n') {
-                    isFirstLine = !isFirstLine;
-                    continue;
-                  }
-
-                  dispatch({
-                    type: 'UPDATE_SPEECH_BUBBLE',
-                    payload: {
-                      id: isFirstLine ? b1Id : b2Id,
-                      textChunk: text
-                    }
-                  });
-                } catch (e) {
-                  // ignore parse error for chunk fragments
-                }
-              }
+            onDone: () => {
+              dispatch({ type: 'ADD_LOG', payload: `💬 ${a1.name}와 ${a2.name}의 대화가 종료되었습니다.` });
+            },
+            onError: (err) => {
+              dispatch({ type: 'ADD_LOG', payload: `❌ LLM 대화 중 오류 발생: ${err.message}` });
             }
-          }
+          });
         } catch (error) {
-          console.error("LLM Stream Error:", error);
-          dispatch({ type: 'SET_LLM_STATUS', payload: 'offline' });
-          // Fallback to update bubble with error
-          dispatch({ type: 'UPDATE_SPEECH_BUBBLE', payload: { id: b1Id, textChunk: '...대화 연결 지연 중 (로컬 서버 확인 필요)...' } });
+          console.error('[LLM] Error:', error);
         }
       };
 

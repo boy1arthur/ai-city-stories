@@ -39,4 +39,5 @@ export type SimulationAction =
     | { type: 'VIEWER_INTERVENTION'; payload: { type: string; value: string; viewerName: string; targetAgentId?: string } }
     | { type: 'CHANGE_WEATHER'; payload: 'sunny' | 'rain' | 'storm' | 'fog' }
     | { type: 'LOAD_MEMORIES'; payload: { agent_id: string; content: string }[] }
-    | { type: 'SET_LLM_STATUS'; payload: 'ready' | 'error' | 'offline' };
+    | { type: 'SET_LLM_STATUS'; payload: 'ready' | 'error' | 'offline' }
+    | { type: 'SYNC_AD_SLOTS'; payload: AdSlot[] };
