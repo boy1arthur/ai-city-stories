@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import type { Building, Agent, InteractionEvent } from '@/data/world';
-import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/useWorldSimulation';
+import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/simulation/types';
 import { iso, MOVE_DURATION } from './constants';
 import { interpolatePath, getPathDirection } from '@/lib/pathfinding';
 

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import type { Building, Agent, AdSlot, InteractionEvent, Zone } from '@/data/world';
-import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/useWorldSimulation';
+import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/simulation/types';
 import type { CityEnergyStatus } from '@/lib/cityEnergy';
 import type { Slot } from '@/data/slots';
 import { GroundLayer } from './map/GroundLayer';

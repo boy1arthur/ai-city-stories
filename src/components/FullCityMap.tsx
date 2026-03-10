@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import type { Zone, Building, Agent, AdSlot, InteractionEvent } from '@/data/world';
-import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/useWorldSimulation';
+import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/simulation/types';
 import type { CityEnergyStatus } from '@/lib/cityEnergy';
 import type { Slot } from '@/data/slots';
 import { ZoneRenderer } from './map/ZoneRenderer';

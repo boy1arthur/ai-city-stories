@@ -37,7 +37,7 @@ describe('simulationReducer with Fake Timers', () => {
     });
 
     it('should place an ad correctly', () => {
-        const action = { type: 'PLACE_AD' as const, payload: { slotId: 'test-slot-1', brandName: 'TestBrand' } };
+        const action = { type: 'PLACE_AD' as const, payload: { slotId: 'test-slot-1', brandName: 'TestBrand', brandCategory: 'tech' as const } };
 
         const testState: SimulationState = {
             ...INITIAL_SIMULATION_STATE,
