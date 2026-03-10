@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import type { Zone, Building, AdSlot } from '@/data/world';
-import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/useWorldSimulation';
+import type { SpeechBubble, AdReaction, AgentVisualState } from '@/hooks/simulation/types';
 import type { Slot } from '@/data/slots';
 import { GroundLayer } from './GroundLayer';
 import { BuildingRenderer } from './BuildingRenderer';
