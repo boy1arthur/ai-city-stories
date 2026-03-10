@@ -253,6 +253,80 @@ export function simulationReducer(state: SimulationState, action: SimulationActi
         case 'SET_LLM_STATUS':
             return { ...state, llmStatus: action.payload };
 
+        case 'SYNC_AGENT_STATE': {
+            const { agentId, zoneId, buildingId, mood } = action.payload;
+
+            // 1. 에이전트 목록 업데이트 (Zone 포함)
+            const nextAllAgents = state.allAgents.map(a =>
+                a.id === agentId ? { ...a, currentZoneId: zoneId, currentBuildingId: buildingId, mood: mood as any } : a
+            );
+
+            // 2. 현재 활성화된 존의 정보 가져오기 (비주얼 계산용)
+            const activeZone = getZoneById(state.currentZoneId);
+            if (!activeZone) return { ...state, allAgents: nextAllAgents };
+
+            const targetZone = getZoneById(zoneId);
+            if (!targetZone) return { ...state, allAgents: nextAllAgents };
+
+            // Update visuals if the agent moved (within the same zone)
+            const nextVisuals = new Map(state.agentVisuals);
+            const agentIndex = nextAllAgents.findIndex(a => a.id === agentId);
+            const building = targetZone.buildings.find(b => b.id === buildingId);
+
+            // 현재 보고 있는 존과 데이터의 존이 같을 때만 비주얼 업데이트
+            if (building && agentIndex !== -1 && zoneId === state.currentZoneId) {
+                const pos = getAgentPositionAroundBuilding(building, agentIndex);
+                const currentVisual = state.agentVisuals.get(agentId);
+
+                // 만약 건물이 바뀌었으면 애니메이션 실행
+                if (currentVisual && (currentVisual.toX !== pos.x || currentVisual.toY !== pos.y)) {
+                    nextVisuals.set(agentId, {
+                        agentId,
+                        path: [pos],
+                        moveDuration: 3000, // 3s transition
+                        fromX: currentVisual.toX, fromY: currentVisual.toY,
+                        toX: pos.x, toY: pos.y,
+                        moveStartTime: Date.now(),
+                        isMoving: true,
+                    });
+                } else if (!currentVisual) {
+                    nextVisuals.set(agentId, {
+                        agentId, path: [pos], moveDuration: 0,
+                        fromX: pos.x, fromY: pos.y, toX: pos.x, toY: pos.y,
+                        moveStartTime: 0, isMoving: false
+                    });
+                }
+            }
+
+            return {
+                ...state,
+                allAgents: nextAllAgents,
+                agents: nextAllAgents.filter(a => a.currentZoneId === state.currentZoneId),
+                agentVisuals: nextVisuals,
+            };
+        }
+
+        case 'SYNC_CONVERSATION': {
+            const { agentId, partnerId, line1, line2, brandMentioned } = action.payload;
+            const a1 = state.allAgents.find(a => a.id === agentId);
+            const a2 = state.allAgents.find(a => a.id === partnerId);
+            if (!a1 || !a2) return state;
+
+            const now = Date.now();
+            const b1: SpeechBubble = { id: `db_${agentId}_${now}`, agentId, text: line1, emoji: '💬', timestamp: now, type: 'dialogue' };
+            const b2: SpeechBubble = { id: `db_${partnerId}_${now}`, agentId: partnerId, text: line2, emoji: '💬', timestamp: now + 1500, type: 'dialogue' };
+
+            const logMsg = brandMentioned
+                ? `💬✨ ${a1.avatar} ${a1.name} ↔ ${a2.avatar} ${a2.name}: "${line1}" / "${line2}" [${brandMentioned}]`
+                : `💬 ${a1.avatar} ${a1.name} ↔ ${a2.avatar} ${a2.name}: "${line1}" / "${line2}"`;
+
+            return {
+                ...state,
+                worldLog: pushToLog(state.worldLog, logMsg),
+                speechBubbles: [b2, b1, ...state.speechBubbles].slice(0, 15),
+            };
+        }
+
         default:
             return state;
     }

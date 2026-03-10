@@ -40,4 +40,6 @@ export type SimulationAction =
     | { type: 'CHANGE_WEATHER'; payload: 'sunny' | 'rain' | 'storm' | 'fog' }
     | { type: 'LOAD_MEMORIES'; payload: { agent_id: string; content: string }[] }
     | { type: 'SET_LLM_STATUS'; payload: 'ready' | 'error' | 'offline' }
-    | { type: 'SYNC_AD_SLOTS'; payload: AdSlot[] };
+    | { type: 'SYNC_AD_SLOTS'; payload: AdSlot[] }
+    | { type: 'SYNC_AGENT_STATE'; payload: { agentId: string; zoneId: string; buildingId: string; mood: string } }
+    | { type: 'SYNC_CONVERSATION'; payload: { agentId: string; partnerId: string; line1: string; line2: string; buildingId: string; zoneId: string; brandMentioned: string | null } };

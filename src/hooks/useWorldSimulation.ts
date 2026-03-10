@@ -59,6 +59,88 @@ export function useWorldSimulation() {
     }
   }, [memories]);
 
+  // === Phase 15: LG 서버 Headless 엔진 실시간동기화 (Step 3) ===
+  useEffect(() => {
+    // 0. 초기 상태 가져오기 (마운트 시점)
+    const fetchInitialStates = async () => {
+      const { data, error } = await supabase
+        .from('agent_states' as any)
+        .select('*');
+
+      if (error) {
+        console.error('❌ 에이전트 초기 상태 로드 실패:', error.message);
+        return;
+      }
+
+      if (data) {
+        data.forEach(newState => {
+          dispatch({
+            type: 'SYNC_AGENT_STATE',
+            payload: {
+              agentId: newState.agent_id as any,
+              zoneId: newState.zone_id as any,
+              buildingId: newState.building_id as any,
+              mood: newState.mood as any
+            }
+          } as any);
+        });
+        dispatch({ type: 'ADD_LOG', payload: `✅ LG 서버로부터 에이전트 ${data.length}명의 상태를 동기화했습니다.` });
+      }
+    };
+
+    fetchInitialStates();
+
+    // 1. 에이전트 상태 업데이트 구독 (이동, 기분)
+    // UPDATE 뿐만 아니라 모든 변경에 대해 대응하도록 변경 (upsert 대응)
+    const agentChannel = supabase
+      .channel('agent-states-sync')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'agent_states' },
+        (payload) => {
+          const newState = payload.new as any;
+          if (!newState) return;
+          dispatch({
+            type: 'SYNC_AGENT_STATE',
+            payload: {
+              agentId: newState.agent_id,
+              zoneId: newState.zone_id,
+              buildingId: newState.building_id,
+              mood: newState.mood
+            }
+          } as any);
+        }
+      )
+      .subscribe();
+
+    // 2. 대화 기록 구독 (말풍선 실시간 표시)
+    const convoChannel = supabase
+      .channel('convo-sync')
+      .on('postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'conversations' },
+        (payload) => {
+          const newConvo = payload.new as any;
+          dispatch({
+            type: 'SYNC_CONVERSATION',
+            payload: {
+              agentId: newConvo.agent_id,
+              partnerId: newConvo.partner_id,
+              line1: newConvo.line1,
+              line2: newConvo.line2,
+              buildingId: newConvo.building_id,
+              zoneId: newConvo.zone_id,
+              brandMentioned: newConvo.brand_mentioned
+            }
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(agentChannel);
+      supabase.removeChannel(convoChannel);
+    };
+  }, []);
+
   const currentZoneId = state.currentZoneId;
   const currentZone = useMemo(() => getZoneById(currentZoneId)!, [currentZoneId]);
 
@@ -85,12 +167,17 @@ export function useWorldSimulation() {
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
+  // === Phase 15.1: Local Simulation Toggle (For Sync Mode) ===
+  const isSyncMode = true; // LG 서버 엔진이 주도권을 가짐
+
   // === Streamable LLM/Template Brand Conversation Engine ===
   const brandDialogueTickRef = useRef(0);
   useEffect(() => {
-    if (state.isPaused || state.tick === 0) return;
+    if (isSyncMode || state.isPaused || state.tick === 0) return;
     if (state.tick - brandDialogueTickRef.current < 8) return;
     brandDialogueTickRef.current = state.tick;
+
+    // ... (rest of local dialogue logic)
 
     const agentsByBuilding = new Map<string, typeof state.agents>();
     state.agents.forEach(a => {
@@ -224,7 +311,7 @@ export function useWorldSimulation() {
 
   // Main Simulation Tick via requestAnimationFrame
   useEffect(() => {
-    if (state.isPaused) return;
+    if (isSyncMode || state.isPaused) return;
 
     let animationFrameId: number;
     let lastTickTime = Date.now();

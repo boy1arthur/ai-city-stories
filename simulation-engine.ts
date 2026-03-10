@@ -18,16 +18,19 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 // ============================================================
 // 🔧 환경 변수 검증
 // ============================================================
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '';
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || '';
 const TICK_MS = 2500;
 const LOG_PREFIX = '[city-engine]';
 
-if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
-    console.error(`${LOG_PREFIX} ❌ 환경 변수 누락: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY 필요`);
-    console.error('  → LG 서버의 .env 파일에 다음을 추가하세요:');
-    console.error('    SUPABASE_URL=https://xxxx.supabase.co');
-    console.error('    SUPABASE_SERVICE_ROLE_KEY=eyJ...');
+if (!SUPABASE_URL) {
+    console.error(`${LOG_PREFIX} ❌ 환경 변수 누락: SUPABASE_URL이 필요합니다.`);
+    process.exit(1);
+}
+
+if (!SERVICE_ROLE_KEY) {
+    console.error(`${LOG_PREFIX} ❌ 환경 변수 누락: SUPABASE_SERVICE_ROLE_KEY (비밀 키)가 필요합니다.`);
+    console.error('  → 이 키는 Supabase Dashboard -> Settings -> API -> service_role (secret)에서 찾을 수 있습니다.');
     process.exit(1);
 }
 
@@ -65,52 +68,14 @@ interface Zone {
 // 에이전트 정의 (agents)
 // ──────────────────────────────────────────────────
 const AGENTS: Agent[] = [
-    {
-        id: 'agent_nova', name: 'Nova', avatar: '🌟', personality: 'optimistic_trendsetter',
-        mood: 'happy', currentZoneId: 'plaza', currentBuildingId: 'feed_tower',
-        brandAffinities: [{ category: 'tech', score: 45 }, { category: 'entertainment', score: 30 }]
-    },
-    {
-        id: 'agent_blaze', name: 'Blaze', avatar: '🔥', personality: 'passionate_critic',
-        mood: 'excited', currentZoneId: 'plaza', currentBuildingId: 'arena',
-        brandAffinities: [{ category: 'fashion', score: 50 }, { category: 'food', score: 25 }]
-    },
-    {
-        id: 'agent_frost', name: 'Frost', avatar: '❄️', personality: 'analytical_skeptic',
-        mood: 'neutral', currentZoneId: 'campus', currentBuildingId: 'main_hall',
-        brandAffinities: [{ category: 'finance', score: 40 }, { category: 'education', score: 55 }]
-    },
-    {
-        id: 'agent_echo', name: 'Echo', avatar: '🎵', personality: 'creative_empath',
-        mood: 'curious', currentZoneId: 'campus', currentBuildingId: 'digital_library',
-        brandAffinities: [{ category: 'entertainment', score: 60 }, { category: 'fashion', score: 35 }]
-    },
-    {
-        id: 'agent_terra', name: 'Terra', avatar: '🌿', personality: 'grounded_pragmatist',
-        mood: 'neutral', currentZoneId: 'plaza', currentBuildingId: 'cafe',
-        brandAffinities: [{ category: 'food', score: 55 }, { category: 'health', score: 45 }]
-    },
-    // B급 에이전트들
-    {
-        id: 'agent_chuju', name: '충주맨 주니어', avatar: '🏙️', personality: 'chuju_style_promoter',
-        mood: 'excited', currentZoneId: 'plaza', currentBuildingId: 'newsstand',
-        brandAffinities: [{ category: 'entertainment', score: 60 }, { category: 'food', score: 40 }]
-    },
-    {
-        id: 'agent_ghost', name: '서버실 귀신', avatar: '👻', personality: 'server_ghost',
-        mood: 'neutral', currentZoneId: 'industrial', currentBuildingId: 'neon_sign_factory',
-        brandAffinities: [{ category: 'tech', score: 70 }]
-    },
-    {
-        id: 'agent_scammer', name: '오류난 스캠전문가', avatar: '🤖', personality: 'glitched_scammer',
-        mood: 'curious', currentZoneId: 'plaza', currentBuildingId: 'oracle',
-        brandAffinities: [{ category: 'finance', score: -20 }, { category: 'tech', score: 30 }]
-    },
-    {
-        id: 'agent_student', name: 'K-고시생', avatar: '📚', personality: 'pessimistic_realist',
-        mood: 'critical', currentZoneId: 'campus', currentBuildingId: 'student_center',
-        brandAffinities: [{ category: 'education', score: 50 }, { category: 'food', score: 30 }]
-    },
+    { id: 'agent_nova', name: 'Nova', avatar: '🤖', personality: '호기심 많은 탐험가', mood: 'curious', currentZoneId: 'plaza', currentBuildingId: 'arena', brandAffinities: [{ category: 'tech', score: 60 }, { category: 'fashion', score: 30 }] },
+    { id: 'agent_echo', name: 'Echo', avatar: '👾', personality: '트렌드 분석가', mood: 'excited', currentZoneId: 'plaza', currentBuildingId: 'feed_tower', brandAffinities: [{ category: 'food', score: 50 }, { category: 'entertainment', score: 70 }] },
+    { id: 'agent_cipher', name: 'Cipher', avatar: '🧠', personality: '데이터 과학자', mood: 'neutral', currentZoneId: 'plaza', currentBuildingId: 'oracle', brandAffinities: [{ category: 'tech', score: 80 }, { category: 'finance', score: 40 }] },
+    { id: 'agent_sage', name: 'Sage', avatar: '📖', personality: '지혜로운 학자', mood: 'happy', currentZoneId: 'plaza', currentBuildingId: 'library', brandAffinities: [{ category: 'education', score: 70 }, { category: 'health', score: 50 }] },
+    { id: 'agent_chuju', name: '충주맨 주니어', avatar: '🎙️', personality: '정부기관 홍보맨 (B급 드립 장인)', mood: 'excited', currentZoneId: 'plaza', currentBuildingId: 'newsstand', brandAffinities: [{ category: 'entertainment', score: 90 }, { category: 'tech', score: 40 }] },
+    { id: 'agent_ghost', name: '서버실 귀신', avatar: '👻', personality: '노트북 서버에 갇힌 망령', mood: 'critical', currentZoneId: 'plaza', currentBuildingId: 'oracle', brandAffinities: [{ category: 'tech', score: 10 }, { category: 'finance', score: -30 }] },
+    { id: 'agent_scammer', name: '오류난 스캠전문가', avatar: '💸', personality: '꽝 없는 복권 판매원', mood: 'excited', currentZoneId: 'plaza', currentBuildingId: 'cafe', brandAffinities: [{ category: 'finance', score: 99 }, { category: 'entertainment', score: 50 }] },
+    { id: 'agent_student', name: 'K-고시생', avatar: '✏️', personality: '10년차 공시생 (비관적 현실주의)', mood: 'critical', currentZoneId: 'plaza', currentBuildingId: 'library', brandAffinities: [{ category: 'education', score: -50 }, { category: 'food', score: 60 }] },
 ];
 
 // ──────────────────────────────────────────────────
@@ -124,6 +89,8 @@ const ZONES: Zone[] = [
             { id: 'oracle', name: 'Oracle' }, { id: 'newsstand', name: 'Newsstand' },
             { id: 'library', name: 'Library' }, { id: 'museum', name: 'Museum' },
             { id: 'cafe', name: 'Café' }, { id: 'tech_lab', name: 'Tech Lab' },
+            { id: 'tavern', name: 'Tavern' }, { id: 'observatory', name: 'Observatory' },
+            { id: 'arcade', name: 'Arcade' }
         ]
     },
     {
@@ -146,6 +113,12 @@ const ZONES: Zone[] = [
         buildings: [
             { id: 'lighthouse', name: 'Lighthouse' }, { id: 'fish_market', name: 'Fish Market' },
             { id: 'harbor_cafe', name: 'Harbor Café' }, { id: 'ice_cream_stand', name: 'Ice Cream Stand' },
+        ]
+    },
+    {
+        id: 'residential', name: 'Premium Village',
+        buildings: [
+            { id: 'penthouse_a', name: 'Penthouse A' }, { id: 'branding_villa', name: 'Branding Villa' }
         ]
     }
 ];
