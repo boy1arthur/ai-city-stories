@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_memories: {
+        Row: {
+          agent_id: string
+          content: string
+          created_at: string
+          id: string
+          importance: number
+          metadata: Json | null
+        }
+        Insert: {
+          agent_id: string
+          content: string
+          created_at?: string
+          id?: string
+          importance?: number
+          metadata?: Json | null
+        }
+        Update: {
+          agent_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          importance?: number
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
       campaigns: {
         Row: {
           brand_id: string
@@ -170,6 +197,36 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      viewer_commands: {
+        Row: {
+          command_type: string
+          command_value: string | null
+          created_at: string
+          donation_amount: number | null
+          id: string
+          target_agent_id: string | null
+          viewer_name: string | null
+        }
+        Insert: {
+          command_type: string
+          command_value?: string | null
+          created_at?: string
+          donation_amount?: number | null
+          id?: string
+          target_agent_id?: string | null
+          viewer_name?: string | null
+        }
+        Update: {
+          command_type?: string
+          command_value?: string | null
+          created_at?: string
+          donation_amount?: number | null
+          id?: string
+          target_agent_id?: string | null
+          viewer_name?: string | null
         }
         Relationships: []
       }
